@@ -1,0 +1,92 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Fira Code', monospace;
+}
+
+/* Color Theme: Dark Gray with Green/Blue Highlights */
+:root {
+    --background-color: #0d1117;
+    --text-color: #c9d1d9;
+    --primary-accent: #58a6ff;
+    --secondary-accent: #3fb950;
+    --header-bg: #161b22;
+}
+
+/* Body Styling */
+body {
+    background: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Container */
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    background: var(--header-bg);
+    text-align: center;
+    padding: 40px 0;
+    border-bottom: 2px solid var(--primary-accent);
+}
+
+header h1 {
+    color: var(--primary-accent);
+    font-size: 2.5rem;
+}
+
+header p {
+    color: var(--secondary-accent);
+    font-size: 1.2rem;
+}
+
+/* Sections */
+section {
+    margin: 50px 0;
+}
+
+h2 {
+    color: var(--primary-accent);
+    border-bottom: 2px solid var(--primary-accent);
+    display: inline-block;
+    padding-bottom: 5px;
+    font-size: 1.8rem;
+}
+
+/* Projects */
+.project {
+    background: var(--header-bg);
+    padding: 15px;
+    border-left: 4px solid var(--secondary-accent);
+    margin-bottom: 15px;
+}
+
+.project h3 {
+    color: var(--secondary-accent);
+}
+
+/* Links */
+a {
+    color: var(--primary-accent);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--secondary-accent);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--header-bg);
+    margin-top: 50px;
+}
