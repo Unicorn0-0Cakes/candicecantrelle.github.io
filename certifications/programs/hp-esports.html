@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candice Cantrelle | Game Developer & AI Researcher</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+    <header>
+        <h1>HP Esports Management & Game Development Certification</h1>
+    </header>
+
+    <section class="cert-description">
+        <p>
+            The HP Esports Management & Game Development certification program covers a range of topics, 
+            including esports business strategies, tournament organization, player management, and game 
+            development fundamentals. This program equips professionals with the necessary skills to navigate 
+            and excel in the competitive gaming industry.
+        </p>
+
+        <a href="https://credentials.edx.org/credentials/b503ee5495e9458b8d042140a83fba6f/" 
+           target="_blank" class="verify-btn">
+            ✅ Verify Certification
+        </a>
+    </section>
+
+    <section class="cert-gallery">
+        <h2>Certificates Earned</h2>
+        
+        <div class="cert-thumbnails">
+            <img src="../assets/images/hp-esports/hp-cert1.png" 
+                 onclick="openModal('https://credentials.edx.org/credentials/b503ee5495e9458b8d042140a83fba6f/')"
+                 alt="Esports Management and Game Development">
+            
+            <img src="../assets/images/hp-esports/hp-cert2.png" 
+                 onclick="openModal('https://courses.edx.org/certificates/966d2cee05bd40d58fb188efe375477c')"
+                 alt="The What and How of Esports Management!">
+            
+            <img src="../assets/images/hp-esports/hp-cert3.png" 
+                 onclick="openModal('https://courses.edx.org/certificates/5df297e6f5dd470eb734de1b1023a29c')"
+                 alt="A Complete Guide to Game Design">
+            
+            <img src="../assets/images/hp-esports/hp-cert4.png" 
+                 onclick="openModal('https://courses.edx.org/certificates/001a49a3af8d42b6ab3ddf81087dd5b8')"
+                 alt="From Code to Creation: Mastering Game Programming">
+        </div>
+    </section>
+
+    <!-- Modal Pop-Up -->
+    <div id="modal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="fullCert">
+    </div>
+
+    <script>
+        function openModal(a href) {
+            document.getElementById("modal").style.display = "block";
+            document.getElementById("fullCert").src = a href;
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
