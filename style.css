@@ -77,7 +77,6 @@ h2 {
 a {
     color: var(--secondary-accent); /* Default green */
     text-decoration: none;
-    font-weight: normal;
     transition: color 0.3s ease, font-weight 0.3s ease; /* Smooth transition */
 }
 
@@ -152,18 +151,54 @@ footer {
     background: var(--header-bg);
     margin-top: 50px;
 }
-/* Make the name a link but keep it looking the same */
+
+
+/* Make the name bold at all times and behave as a static link */
 .static-link {
-    text-decoration: none;  /* No underline */
-    color: inherit;         /* Uses the default text color */
-    cursor: pointer;        /* Shows it's clickable */
+    text-decoration: none;  /* Remove underline */
+    color: inherit;         /* Keep default text color */
+    font-weight: bold;      /* Make bold by default */
+    cursor: pointer;        /* Indicates clickability */
 }
 
-/* Override any link styles */
+/* Prevent any hover, visited, or active effects */
 .static-link:hover,
 .static-link:visited,
 .static-link:active {
-    color: inherit !important;  /* Prevents color changes */
-    text-decoration: none !important;  /* No underline ever */
-    font-weight: inherit !important;  /* No bolding */
+    color: inherit !important;  /* No color change */
+    text-decoration: none !important;  /* No underline */
+    font-weight: bold !important;  /* Keep it bold */
+}
+
+
+/* Contact Section Styling */
+.contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--header-bg);
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: transform 0.2s ease-in-out;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.contact-item:hover {
+    transform: scale(1.05);
+}
+
+.contact-item img {
+    width: 20px;
+    height: 20px;
+    filter: invert(80%); /* Makes icons match your theme */
 }

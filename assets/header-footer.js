@@ -17,9 +17,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="container">
                     <h2>~ Contact Me</h2>
                     <p>Let's connect! Reach out to discuss potential collaborations or just to chat about AI and game development.</p>
-                    <p>Email: <a href="mailto:dev@candicecantrelle.com">dev@candicecantrelle.com</a></p>
-                    <p>GitHub: <a href="https://github.com/Unicorn0-0Cakes" target="_blank">@Unicorn0-0Cakes</a></p>
-                    <p>LinkedIn: <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435" target="_blank">@Candice Cantrelle</a></p>
+
+                    <div class="contact-links">
+                        <a href="mailto:dev@candicecantrelle.com" class="contact-item">
+                            <img src="../../assets/icons/email.svg" alt="Email Icon">
+                            dev@candicecantrelle.com
+                        </a>
+
+                        <a href="https://github.com/Unicorn0-0Cakes" target="_blank" class="contact-item">
+                            <img src="../../assets/icons/github.svg" alt="GitHub Icon">
+                            @Unicorn0-0Cakes
+                        </a>
+
+                        <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435" target="_blank" class="contact-item">
+                            <img src="../../assets/icons/linkedin.svg" alt="LinkedIn Icon">
+                            @Candice Cantrelle
+                        </a>
+                    </div>
                 </div>
             </section>
             <div class="container">
@@ -27,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         </footer>
     `;
+
 
     // Insert header at the top of the body
     document.body.insertAdjacentHTML("afterbegin", headerHTML);
