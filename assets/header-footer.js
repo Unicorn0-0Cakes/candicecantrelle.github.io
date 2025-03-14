@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="container">
                 <h2>~ Contact Me</h2>
                 <p>Let's connect! </p>
+                <br>
                 <p>Reach out to discuss potential collaborations</p>
                 <p>or just to chat about AI and game development.</p>
 
