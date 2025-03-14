@@ -152,3 +152,18 @@ footer {
     background: var(--header-bg);
     margin-top: 50px;
 }
+/* Make the name a link but keep it looking the same */
+.static-link {
+    text-decoration: none;  /* No underline */
+    color: inherit;         /* Uses the default text color */
+    cursor: pointer;        /* Shows it's clickable */
+}
+
+/* Override any link styles */
+.static-link:hover,
+.static-link:visited,
+.static-link:active {
+    color: inherit !important;  /* Prevents color changes */
+    text-decoration: none !important;  /* No underline ever */
+    font-weight: inherit !important;  /* No bolding */
+}
