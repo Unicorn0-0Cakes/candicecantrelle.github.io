@@ -16,12 +16,14 @@ document.addEventListener("DOMContentLoaded", function () {
         <section id="contact">
             <div class="container">
                 <h2>~ Contact Me</h2>
-                <p>Let's connect! Reach out to discuss potential collaborations or just to chat about AI and game development.</p>
+                <p>Let's connect! </p>
+                <p>Reach out to discuss potential collaborations</p>
+                <p>or just to chat about AI and game development.</p>
 
                 <div class="contact-links">
                     <a href="mailto:dev@candicecantrelle.com" class="contact-item">📧 dev@candicecantrelle.com</a>
-                    <a href="https://github.com/Unicorn0-0Cakes" target="_blank" class="contact-item">🐙 @Unicorn0-0Cakes</a>
-                    <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435" target="_blank" class="contact-item">🔗 @Candice Cantrelle</a>
+                    <a href="https://github.com/Unicorn0-0Cakes" target="_blank" class="contact-item">🐙 GitHub @Unicorn0-0Cakes</a>
+                    <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435" target="_blank" class="contact-item">🔗 Linkedin @Candice Cantrelle</a>
                 </div>
             </div>
         </section>
