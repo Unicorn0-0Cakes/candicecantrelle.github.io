@@ -112,9 +112,9 @@ a:active {
 .cert-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px; /* Restored spacing for better balance */
+    gap: 30px; /* Was 20px */
     justify-items: center;
-    margin-top: 30px; /* More spacing above the grid */
+    margin-top: 30px;
 }
 
 .cert-item {
@@ -143,9 +143,10 @@ a:active {
 
 /* Certificate Titles */
 .cert-item h3 {
-    margin-top: 12px;
+    margin-top: 10px;
     color: var(--primary-accent);
-    font-size: 1.2rem;
+    font-weight: bold;
+    font-size: 1.3rem;
 }
 
 /* Certificate Descriptions */
@@ -220,4 +221,24 @@ footer {
     color: inherit !important;
     text-decoration: none !important;
     font-weight: bold !important;
+}
+
+
+.cert-back {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.cert-back .btn {
+    background: var(--primary-accent);
+    color: var(--background-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.cert-back .btn:hover {
+    background: var(--secondary-accent);
 }
