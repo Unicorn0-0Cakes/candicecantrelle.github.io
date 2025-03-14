@@ -1,4 +1,6 @@
-/* General Reset */
+/* ================================= */
+/* 🔹 1. Global Reset & Theme Colors */
+/* ================================= */
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +8,6 @@
     font-family: 'Fira Code', monospace;
 }
 
-/* Color Theme: Dark Gray with Green/Blue Highlights */
 :root {
     --background-color: #0d1117;
     --text-color: #c9d1d9;
@@ -15,14 +16,15 @@
     --header-bg: #161b22;
 }
 
-/* Body Styling */
+/* ================================= */
+/* 🔹 2. General Body & Container */
+/* ================================= */
 body {
     background: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
 }
 
-/* Container */
 .container {
     width: 90%;
     max-width: 900px;
@@ -30,7 +32,9 @@ body {
     padding: 20px;
 }
 
-/* Header */
+/* ================================= */
+/* 🔹 3. Header Styling */
+/* ================================= */
 header {
     background: var(--header-bg);
     text-align: center;
@@ -48,7 +52,9 @@ header p {
     font-size: 1.2rem;
 }
 
-/* Sections */
+/* ================================= */
+/* 🔹 4. Sections & Headings */
+/* ================================= */
 section {
     margin: 50px 0;
 }
@@ -61,7 +67,9 @@ h2 {
     font-size: 1.8rem;
 }
 
-/* Projects */
+/* ================================= */
+/* 🔹 5. Project Cards */
+/* ================================= */
 .project {
     background: var(--header-bg);
     padding: 15px;
@@ -73,125 +81,123 @@ h2 {
     color: var(--secondary-accent);
 }
 
-/* Links */
+/* ================================= */
+/* 🔹 6. Links (General + Hover Effects) */
+/* ================================= */
 a {
-    color: var(--secondary-accent); /* Default green */
+    color: var(--secondary-accent);
     text-decoration: none;
-    transition: color 0.3s ease, font-weight 0.3s ease; /* Smooth transition */
+    transition: color 0.3s ease, font-weight 0.3s ease;
 }
 
 /* Visited Links */
 a:visited {
-    color: #2ea043; /* Slightly darker green for visited links */
+    color: #2ea043;
 }
 
-/* Hover Effect */
+/* Hover & Active Effects */
 a:hover {
-    color: var(--primary-accent); /* Change to blue on hover */
-    font-weight: bold; /* Bold on hover */
+    color: var(--primary-accent);
+    font-weight: bold;
+    text-decoration: underline;
 }
 
-/* Active (When Clicked) */
 a:active {
-    color: #f0a500; /* Golden color for a quick effect when clicked */
+    color: #f0a500;
 }
 
-/* Certificate Grid Layout */
+/* ================================= */
+/* 🔹 7. Certification Grid Layout */
+/* ================================= */
 .cert-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px; /* More compact layout */
     justify-items: center;
-    margin-top: 20px;
 }
 
-/* Individual Certificate Box */
 .cert-item {
     background: var(--header-bg);
     padding: 15px;
     text-align: center;
-    border-radius: 8px;
+    border-radius: 6px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease-in-out;
 }
 
-/* Certificate Image */
 .cert-item img {
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 250px;
     object-fit: contain;
     border-radius: 5px;
     transition: transform 0.2s ease-in-out;
 }
 
-/* Hover Effect */
 .cert-item:hover {
     transform: scale(1.05);
 }
 
-/* Certificate Titles */
-.cert-item h3 {
-    margin-top: 10px;
-    color: var(--primary-accent);
-    font-size: 1.2rem;
-}
-
-/* Certificate Descriptions */
-.cert-item p {
-    color: var(--text-color);
-    font-size: 0.9rem;
-    margin-top: 5px;
-}
-
-
-/* Footer */
+/* ================================= */
+/* 🔹 8. Footer & Contact Styling */
+/* ================================= */
 footer {
     text-align: center;
-    padding: 20px;
+    padding: 30px 0;
     background: var(--header-bg);
     margin-top: 50px;
 }
 
-
-/* Make the name bold at all times and behave as a static link */
-.static-link {
-    text-decoration: none;  /* Remove underline */
-    color: inherit;         /* Keep default text color */
-    font-weight: bold;      /* Make bold by default */
-    cursor: pointer;        /* Indicates clickability */
+#contact .container {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-/* Prevent any hover, visited, or active effects */
-.static-link:hover,
-.static-link:visited,
-.static-link:active {
-    color: inherit !important;  /* No color change */
-    text-decoration: none !important;  /* No underline */
-    font-weight: bold !important;  /* Keep it bold */
-}
-
-
-/* Contact Section Styling */
+/* Contact Links */
 .contact-links {
     display: flex;
     justify-content: center;
     gap: 20px;
-    margin-top: 15px;
     flex-wrap: wrap;
+    margin-top: 10px;
 }
 
 .contact-item {
     background: var(--header-bg);
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: transform 0.2s ease-in-out;
+    padding: 10px 20px;
+    border-radius: 6px;
     text-decoration: none;
     color: var(--text-color);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: bold;
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
+/* Contact Links Hover */
 .contact-item:hover {
     transform: scale(1.05);
     color: var(--secondary-accent);
+}
+
+/* Dividers Between Contact Links */
+.contact-item:not(:last-child) {
+    border-right: 1px solid var(--primary-accent);
+    padding-right: 15px;
+}
+
+/* ================================= */
+/* 🔹 9. Static Name Link (Bold Always) */
+/* ================================= */
+.static-link {
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+    padding-bottom: 5px;
+}
+
+.static-link:hover,
+.static-link:visited,
+.static-link:active {
+    color: inherit !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
 }
