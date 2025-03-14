@@ -75,12 +75,26 @@ h2 {
 
 /* Links */
 a {
-    color: var(--primary-accent);
+    color: var(--secondary-accent); /* Default green */
     text-decoration: none;
+    font-weight: normal;
+    transition: color 0.3s ease, font-weight 0.3s ease; /* Smooth transition */
 }
 
+/* Visited Links */
+a:visited {
+    color: #2ea043; /* Slightly darker green for visited links */
+}
+
+/* Hover Effect */
 a:hover {
-    color: var(--secondary-accent);
+    color: var(--primary-accent); /* Change to blue on hover */
+    font-weight: bold; /* Bold on hover */
+}
+
+/* Active (When Clicked) */
+a:active {
+    color: #f0a500; /* Golden color for a quick effect when clicked */
 }
 
 /* Footer */
