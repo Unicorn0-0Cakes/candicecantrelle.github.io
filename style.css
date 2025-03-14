@@ -97,6 +97,54 @@ a:active {
     color: #f0a500; /* Golden color for a quick effect when clicked */
 }
 
+/* Certificate Grid Layout */
+.cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    margin-top: 20px;
+}
+
+/* Individual Certificate Box */
+.cert-item {
+    background: var(--header-bg);
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Certificate Image */
+.cert-item img {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+    border-radius: 5px;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Hover Effect */
+.cert-item:hover {
+    transform: scale(1.05);
+}
+
+/* Certificate Titles */
+.cert-item h3 {
+    margin-top: 10px;
+    color: var(--primary-accent);
+    font-size: 1.2rem;
+}
+
+/* Certificate Descriptions */
+.cert-item p {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+
 /* Footer */
 footer {
     text-align: center;
