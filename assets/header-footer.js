@@ -12,35 +12,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Footer HTML
     const footerHTML = `
-        <footer>
-            <section id="contact">
-                <div class="container">
-                    <h2>~ Contact Me</h2>
-                    <p>Let's connect! Reach out to discuss potential collaborations or just to chat about AI and game development.</p>
-
-                    <div class="contact-links">
-                        <a href="mailto:dev@candicecantrelle.com" class="contact-item">
-                            <img src="../../assets/icons/email.svg" alt="Email Icon">
-                            dev@candicecantrelle.com
-                        </a>
-
-                        <a href="https://github.com/Unicorn0-0Cakes" target="_blank" class="contact-item">
-                            <img src="../../assets/icons/github.svg" alt="GitHub Icon">
-                            @Unicorn0-0Cakes
-                        </a>
-
-                        <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435" target="_blank" class="contact-item">
-                            <img src="../../assets/icons/linkedin.svg" alt="LinkedIn Icon">
-                            @Candice Cantrelle
-                        </a>
-                    </div>
-                </div>
-            </section>
+    <footer>
+        <section id="contact">
             <div class="container">
-                <p>&copy; 2025 Candice Cantrelle. All Rights Reserved.</p>
+                <h2>~ Contact Me</h2>
+                <p>Let's connect! Reach out to discuss potential collaborations or just to chat about AI and game development.</p>
+
+                <div class="contact-links">
+                    <a href="mailto:dev@candicecantrelle.com" class="contact-item">📧 dev@candicecantrelle.com</a>
+                    <a href="https://github.com/Unicorn0-0Cakes" target="_blank" class="contact-item">🐙 @Unicorn0-0Cakes</a>
+                    <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435" target="_blank" class="contact-item">🔗 @Candice Cantrelle</a>
+                </div>
             </div>
-        </footer>
-    `;
+        </section>
+        <div class="container">
+            <p>&copy; 2025 Candice Cantrelle. All Rights Reserved.</p>
+        </div>
+    </footer>
+`;
+
 
 
     // Insert header at the top of the body

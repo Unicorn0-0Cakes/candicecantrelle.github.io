@@ -181,9 +181,6 @@ footer {
 }
 
 .contact-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
     background: var(--header-bg);
     padding: 10px 15px;
     border-radius: 5px;
@@ -191,14 +188,10 @@ footer {
     text-decoration: none;
     color: var(--text-color);
     font-size: 0.9rem;
+    font-weight: bold;
 }
 
 .contact-item:hover {
     transform: scale(1.05);
-}
-
-.contact-item img {
-    width: 20px;
-    height: 20px;
-    filter: invert(80%); /* Makes icons match your theme */
+    color: var(--secondary-accent);
 }
