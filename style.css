@@ -242,3 +242,23 @@ footer {
 .cert-back .btn:hover {
     background: var(--secondary-accent);
 }
+
+.cert-links {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .cert-links li {
+    margin: 6px 0;
+    font-size: 1.1em;
+  }
+  
+  .cert-links a {
+    color: #00aaff;
+    text-decoration: none;
+  }
+  
+  .cert-links a:hover {
+    text-decoration: underline;
+  }
+  
