@@ -81,6 +81,29 @@ h2 {
     color: var(--secondary-accent);
 }
 
+/* Services Section */
+.service-item {
+    background: var(--header-bg); /* Same as .project */
+    padding: 15px;
+    border-left: 4px solid var(--primary-accent); /* Different accent color */
+    margin-bottom: 20px; /* Slightly more spacing */
+}
+
+.service-item h3 {
+    color: var(--primary-accent); /* Align with section titles */
+    margin-bottom: 8px;
+}
+
+.service-item p {
+    margin-bottom: 10px;
+}
+
+.service-item .why-it-fits {
+    font-size: 0.9em;
+    color: var(--secondary-accent); /* Use a different accent for this text */
+    margin-top: 5px;
+}
+
 /* ================================= */
 /* 🔹 6. Links (General + Hover Effects) */
 /* ================================= */
@@ -223,6 +246,71 @@ footer {
     font-weight: bold !important;
 }
 
+/* ================================= */
+/* 🔹 10. Contact Form Styling      */
+/* ================================= */
+#contact-form-section .container p {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--header-bg); /* Subtle border */
+    background-color: #0A0C10; /* Slightly lighter than main bg */
+    color: var(--text-color);
+    border-radius: 4px;
+    font-family: inherit; /* Ensure font consistency */
+    font-size: 1rem;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 2px var(--primary-accent);
+}
+
+.form-group textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 120px;
+}
+
+#contact-form-section .btn {
+    display: block;
+    width: 100%;
+    max-width: 250px; /* Max width for the button */
+    margin: 20px auto 0 auto; /* Center the button */
+    padding: 12px 20px;
+    background-color: var(--primary-accent);
+    color: var(--background-color);
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#contact-form-section .btn:hover {
+    background-color: var(--secondary-accent);
+    color: var(--background-color); /* Ensure text color remains contrasty */
+}
 
 .cert-back {
     text-align: center;
