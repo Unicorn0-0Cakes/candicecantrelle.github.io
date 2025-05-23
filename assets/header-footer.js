@@ -6,6 +6,15 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="container">
                 <h1><a href="/" class="static-link">>_ Candice Cantrelle</a></h1>
                 <p>Game Developer | AI Researcher | Neural Networks & Procedural Generation</p>
+                <nav>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/#projects">Projects</a></li>
+                        <li><a href="/#services">Services</a></li>
+                        <li><a href="/certifications/certifications.html">Certifications</a></li>
+                        <li><a href="/#contact-form-section">Contact</a></li>
+                    </ul>
+                </nav>
             </div>
         </header>
     `;
