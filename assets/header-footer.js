@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <section id="contact-form-section">
             <div class="container">
               <h2>// Get In Touch</h2>
+              <br>
               <p>Interested in collaborating or have a question? Reach out using the form below.</p>
               <form action="YOUR_FORMSPREE_ENDPOINT_HERE" method="POST"> <!-- Placeholder action -->
                 <div class="form-group">
@@ -38,13 +39,13 @@ document.addEventListener("DOMContentLoaded", function () {
         <section id="contact">
             <div class="container">
                 <h2>~ Contact Me</h2>
+                <br>
                 <p>Let's connect! </p>
                 <br>
                 <p>Reach out to discuss potential collaborations</p>
                 <p>or just to chat about AI and game development.</p>
 
                 <div class="contact-links">
-                    <a href="mailto:dev@candicecantrelle.com" class="contact-item">📧 dev@candicecantrelle.com</a>
                     <a href="https://github.com/Unicorn0-0Cakes" target="_blank" class="contact-item">🐙 GitHub @Unicorn0-0Cakes</a>
                     <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435/" target="_blank" class="contact-item">🔗 Linkedin @Candice Cantrelle</a>
                 </div>
