@@ -11,8 +11,8 @@
 :root {
     --background-color: #0d1117;
     --text-color: #c9d1d9;
-    --primary-accent: #58a6ff;
-    --secondary-accent: #3fb950;
+    --primary-accent: #61dafb;
+    --secondary-accent: #00c7b7;
     --header-bg: #161b22;
 }
 
@@ -53,6 +53,38 @@ header p {
 }
 
 /* ================================= */
+/* 🔹 3a. Navigation Styling      */
+/* ================================= */
+header nav {
+    margin-top: 20px;
+}
+
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+header nav ul li {
+    margin: 5px 15px; /* Adjusted for wrapping */
+}
+
+header nav ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover,
+header nav ul li a:active {
+    color: var(--primary-accent);
+    text-decoration: underline; /* Optional: adds underline on hover/active */
+}
+
+/* ================================= */
 /* 🔹 4. Sections & Headings */
 /* ================================= */
 section {
@@ -72,13 +104,26 @@ h2 {
 /* ================================= */
 .project {
     background: var(--header-bg);
-    padding: 15px;
+    padding: 20px; /* Final value, from second rule */
     border-left: 4px solid var(--secondary-accent);
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Final value, from second rule */
+    text-align: center; /* From second rule */
 }
 
 .project h3 {
     color: var(--secondary-accent);
+    margin-bottom: 10px; /* Add space below title */
+}
+
+.project img {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Services Section */
@@ -349,4 +394,169 @@ footer {
   .cert-links a:hover {
     text-decoration: underline;
   }
-  
+
+/* ================================= */
+/* 🔹 10a. Project Detail Page Styling */
+/* ================================= */
+#project-title-banner {
+    background: var(--header-bg);
+    text-align: center;
+    padding: 30px 0; /* Slightly reduced padding */
+    border-bottom: 2px solid var(--primary-accent);
+    margin-bottom: 30px; /* Space before next section */
+}
+
+#project-title-banner h1 {
+    color: var(--primary-accent);
+    font-size: 2.2rem; /* Slightly smaller than main site H1 */
+    margin-bottom: 5px; /* Space between H1 and P */
+}
+
+#project-title-banner p {
+    color: var(--secondary-accent);
+    font-size: 1.1rem; /* Slightly smaller */
+    margin-top: 5px;
+}
+
+/* ================================= */
+/* 🔹 11. Utility & Component Styling */
+/* ================================= */
+.ai-concept-box {
+    background-color: var(--header-bg); /* Matches .project and .service-item */
+    border-left: 4px solid var(--primary-accent); /* Using primary accent for showcase */
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 4px;
+    color: var(--text-color);
+}
+
+.ai-concept-box p strong {
+    color: var(--primary-accent); /* Make "Example Concept:" stand out */
+}
+
+.ai-concept-box em { /* For the "This is a placeholder" note */
+    font-size: 0.9em;
+    color: var(--secondary-accent);
+}
+
+.demo-note {
+    font-size: 0.9em;
+    color: var(--text-color);
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.demo-note-secondary {
+    color: var(--secondary-accent); /* Override for secondary accent color */
+}
+
+/* ================================= */
+/* 🔹 12. Responsive Design         */ /* Renumbering this section */
+/* ================================= */
+
+/* Common Breakpoint: Tablets and Large Phones (max-width: 768px) */
+@media (max-width: 768px) {
+    .container {
+        width: 95%; /* Slightly more width for content */
+    }
+
+    header h1 {
+        font-size: 2rem; /* Reduced font size */
+    }
+
+    header p {
+        font-size: 1rem; /* Reduced font size */
+    }
+
+    header nav ul li {
+        margin: 5px 10px; /* Reduced horizontal margin */
+    }
+
+    h2 { /* Section headings */
+        font-size: 1.6rem; /* Reduced font size */
+    }
+
+    .project {
+        padding: 15px; /* Reduced padding */
+    }
+
+    .project img {
+        max-width: 300px; /* Slightly smaller max-width for images within projects */
+    }
+
+    .cert-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust for smaller cards */
+        gap: 20px;
+    }
+
+    .cert-item img {
+        width: 230px; /* Adjust cert image size */
+        height: 230px;
+    }
+}
+
+/* Extra Small Screens: Mobile Phones (max-width: 480px) */
+@media (max-width: 480px) {
+    .container {
+        padding: 15px; /* Reduced container padding */
+    }
+
+    header {
+        padding: 30px 0; /* Reduced header padding */
+    }
+
+    header h1 {
+        font-size: 1.8rem; /* Further reduced font size */
+    }
+
+    header p {
+        font-size: 0.9rem; /* Further reduced font size */
+    }
+
+    header nav ul {
+        flex-direction: column; /* Stack nav items vertically */
+        align-items: center;
+    }
+
+    header nav ul li {
+        margin: 8px 0; /* Adjusted margin for vertical layout */
+    }
+
+    h2 { /* Section headings */
+        font-size: 1.4rem; /* Further reduced font size */
+    }
+
+    .project {
+        margin-bottom: 15px; /* Reduced margin */
+        padding: 10px;
+    }
+
+    .project img {
+        max-width: 100%; /* Allow image to fill container width if needed */
+    }
+
+    #contact-form-section .btn { /* Form button */
+        max-width: 100%; /* Button takes full available width */
+    }
+
+    .contact-links {
+        flex-direction: column; /* Stack contact links */
+        gap: 10px;
+    }
+
+    .contact-item:not(:last-child) {
+        border-right: none; /* Remove border for stacked items */
+        padding-right: 10px; /* Reset padding */
+        border-bottom: 1px solid var(--primary-accent); /* Add bottom border instead */
+        padding-bottom: 10px;
+    }
+
+    .cert-item {
+        padding: 15px;
+    }
+
+    .cert-item img {
+        width: 200px;
+        height: 200px;
+    }
+}
