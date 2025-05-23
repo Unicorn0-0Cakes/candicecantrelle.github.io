@@ -13,6 +13,28 @@ document.addEventListener("DOMContentLoaded", function () {
     // Footer HTML
     const footerHTML = `
     <footer>
+          <!-- CONTACT FORM -->
+          <section id="contact-form-section">
+            <div class="container">
+              <h2>// Get In Touch</h2>
+              <p>Interested in collaborating or have a question? Reach out using the form below.</p>
+              <form action="YOUR_FORMSPREE_ENDPOINT_HERE" method="POST"> <!-- Placeholder action -->
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+              </form>
+            </div>
+          </section>
         <section id="contact">
             <div class="container">
                 <h2>~ Contact Me</h2>
@@ -24,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="contact-links">
                     <a href="mailto:dev@candicecantrelle.com" class="contact-item">📧 dev@candicecantrelle.com</a>
                     <a href="https://github.com/Unicorn0-0Cakes" target="_blank" class="contact-item">🐙 GitHub @Unicorn0-0Cakes</a>
-                    <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435" target="_blank" class="contact-item">🔗 Linkedin @Candice Cantrelle</a>
+                    <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435/" target="_blank" class="contact-item">🔗 Linkedin @Candice Cantrelle</a>
                 </div>
             </div>
         </section>
