@@ -98,17 +98,32 @@ h2 {
     padding-bottom: 5px;
     font-size: 1.8rem;
 }
-img {
-  transition: transform 0.3s ease;
+
+/* Style for meme section */
+#about-me-meme figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px auto;
+  max-width: 800px;
 }
-img:hover {
-  transform: scale(1.02);
+
+#about-me-meme img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
-.caption {
-  text-align: center;
+
+#about-me-meme figcaption {
+  margin-top: 12px;
+  font-size: 1rem;
   font-style: italic;
-  color: #ccc;
+  color: var(--text-muted, #aaa);
+  text-align: center;
+  max-width: 90%;
 }
+
 
 
 /* ================================= */
