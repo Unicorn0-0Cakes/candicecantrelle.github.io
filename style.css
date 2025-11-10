@@ -1,589 +1,388 @@
-/* ================================= */
-/* 🔹 1. Global Reset & Theme Colors */
-/* ================================= */
+/* =================================
+   Luxury Brand Styling
+   Elegant colors, gold accents, sophisticated design
+   ================================= */
+
+/* Global Reset & Theme Colors */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Fira Code', 'Georgia', serif;
 }
 
 :root {
-    --background-color: #0d1117;
-    --text-color: #c9d1d9;
-    --primary-accent: #61dafb;
-    --secondary-accent: #00c7b7;
-    --header-bg: #161b22;
+    /* Luxury Color Palette */
+    --background-light: #FAFAFA;
+    --background-white: #FFFFFF;
+    --text-primary: #2C2C2C;
+    --text-secondary: #555555;
+    --gold-accent: #D4AF37;
+    --emerald-accent: #50C878;
+    --sapphire-accent: #0F52BA;
+    --rose-gold: #B76E79;
+    --cream: #FFF8E7;
+    --border-light: #E5E5E5;
 }
 
-/* ================================= */
-/* 🔹 2. General Body & Container */
-/* ================================= */
+/* Body & General Styling */
 body {
-    background: var(--background-color);
-    color: var(--text-color);
-    line-height: 1.6;
+    background: linear-gradient(135deg, var(--cream) 0%, var(--background-white) 100%);
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 16px;
 }
 
 .container {
     width: 90%;
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 20px;
 }
 
-/* ================================= */
-/* 🔹 3. Header Styling */
-/* ================================= */
-header {
-    background: var(--header-bg);
+/* Hero Section */
+#hero {
+    background: linear-gradient(135deg, var(--gold-accent) 0%, var(--rose-gold) 100%);
+    color: var(--background-white);
     text-align: center;
-    padding: 40px 0;
-    border-bottom: 2px solid var(--primary-accent);
+    padding: 100px 20px;
+    position: relative;
+    overflow: hidden;
 }
 
-header h1 {
-    color: var(--primary-accent);
-    font-size: 2.5rem;
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+    opacity: 0.3;
 }
 
-header p {
-    color: var(--secondary-accent);
-    font-size: 1.2rem;
+#hero .container {
+    position: relative;
+    z-index: 1;
 }
 
-/* ================================= */
-/* 🔹 3a. Navigation Styling      */
-/* ================================= */
-header nav {
-    margin-top: 20px;
+#hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: 1px;
 }
 
-header nav ul {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-header nav ul li {
-    margin: 5px 15px; /* Adjusted for wrapping */
-}
-
-header nav ul li a {
-    color: var(--text-color);
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-header nav ul li a:hover,
-header nav ul li a:active {
-    color: var(--primary-accent);
-    text-decoration: underline; /* Optional: adds underline on hover/active */
-}
-
-/* ================================= */
-/* 🔹 4. Sections & Headings */
-/* ================================= */
-section {
-    margin: 50px 0;
-}
-
-h2 {
-    color: var(--primary-accent);
-    border-bottom: 2px solid var(--primary-accent);
-    display: inline-block;
-    padding-bottom: 5px;
-    font-size: 1.8rem;
-}
-
-/* Style for meme section */
-#about-me-meme figure {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 40px auto;
-  max-width: 800px;
-}
-
-#about-me-meme img {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-#about-me-meme figcaption {
-  margin-top: 12px;
-  font-size: 1rem;
-  font-style: italic;
-  color: var(--text-muted, #aaa);
-  text-align: center;
-  max-width: 90%;
-}
-
-
-
-/* ================================= */
-/* 🔹 5. Project Cards */
-/* ================================= */
-.project {
-    background: var(--header-bg);
-    padding: 20px; /* Final value, from second rule */
-    border-left: 4px solid var(--secondary-accent);
-    margin-bottom: 20px; /* Final value, from second rule */
-    text-align: center; /* From second rule */
-}
-
-.project h3 {
-    color: var(--secondary-accent);
-    margin-bottom: 10px; /* Add space below title */
-}
-
-.project img {
-    width: 100%;
-    max-width: 350px;
-    height: auto;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    display: block;
+.hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    font-weight: 300;
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* Services Section */
-.service-item {
-    background: var(--header-bg); /* Same as .project */
-    padding: 15px;
-    border-left: 4px solid var(--primary-accent); /* Different accent color */
-    margin-bottom: 20px; /* Slightly more spacing */
-}
-
-.service-item h3 {
-    color: var(--primary-accent); /* Align with section titles */
-    margin-bottom: 8px;
-}
-
-.service-item p {
-    margin-bottom: 10px;
-}
-
-.service-item .why-it-fits {
-    font-size: 0.9em;
-    color: var(--secondary-accent); /* Use a different accent for this text */
-    margin-top: 5px;
-}
-
-/* ================================= */
-/* 🔹 6. Links (General + Hover Effects) */
-/* ================================= */
-a {
-    color: var(--secondary-accent);
+/* CTA Buttons */
+.cta-btn, .cta-btn-large {
+    display: inline-block;
+    padding: 15px 40px;
+    background: var(--background-white);
+    color: var(--gold-accent);
     text-decoration: none;
-    transition: color 0.3s ease, font-weight 0.3s ease;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 2px solid transparent;
 }
 
-/* Visited Links */
-a:visited {
-    color: #2ea043;
+.cta-btn:hover, .cta-btn-large:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    background: var(--gold-accent);
+    color: var(--background-white);
+    border-color: var(--background-white);
 }
 
-/* Hover & Active Effects */
-a:hover {
-    color: var(--primary-accent);
-    font-weight: bold;
+.cta-btn-large {
+    padding: 18px 50px;
+    font-size: 1.2rem;
+}
+
+/* Sections */
+section {
+    margin: 60px 0;
+    padding: 40px 0;
+}
+
+h2 {
+    color: var(--gold-accent);
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold-accent), var(--rose-gold));
+}
+
+h3 {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+/* Solution Cards */
+.solution-card {
+    background: var(--background-white);
+    padding: 40px;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-left: 5px solid var(--gold-accent);
+    transition: all 0.3s ease;
+}
+
+.solution-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    border-left-color: var(--emerald-accent);
+}
+
+.solution-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.solution-cta {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 25px;
+    background: var(--gold-accent);
+    color: var(--background-white);
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.solution-cta:hover {
+    background: var(--emerald-accent);
+    transform: translateX(5px);
+}
+
+/* Service Items */
+.service-item {
+    background: var(--background-white);
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    border-left: 4px solid var(--sapphire-accent);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+
+.service-item:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transform: translateX(5px);
+}
+
+.service-item.luxury {
+    border-left-color: var(--gold-accent);
+}
+
+/* Portfolio Preview */
+#portfolio-preview {
+    background: var(--cream);
+    border-radius: 15px;
+    padding: 50px 0;
+}
+
+.portfolio-note {
+    background: var(--background-white);
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 30px;
+    border: 2px dashed var(--gold-accent);
+    text-align: center;
+}
+
+/* Testimonials */
+.testimonial-box {
+    background: var(--background-white);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-top: 4px solid var(--gold-accent);
+    position: relative;
+}
+
+.testimonial-box::before {
+    content: '\201C';
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-size: 5rem;
+    color: var(--gold-accent);
+    opacity: 0.2;
+}
+
+.testimonial-quote {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.testimonial-author {
+    text-align: right;
+    color: var(--gold-accent);
+    font-weight: 600;
+}
+
+/* Certifications */
+.cert-preview {
+    list-style: none;
+    padding: 0;
+}
+
+.cert-preview li {
+    margin: 15px 0;
+    font-size: 1.1rem;
+    padding: 10px 0;
+}
+
+.cert-preview a {
+    color: var(--sapphire-accent);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.cert-preview a:hover {
+    color: var(--gold-accent);
     text-decoration: underline;
 }
 
-a:active {
-    color: #f0a500;
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: var(--gold-accent);
+    color: var(--background-white);
+    text-decoration: none;
+    border-radius: 25px;
+    margin-top: 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-/* ================================= */
-/* 🔹 7. Certification Grid Layout */
-/* ================================= */
-.cert-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px; /* Was 20px */
-    justify-items: center;
+.btn:hover {
+    background: var(--emerald-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Contact CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--sapphire-accent) 100%);
+    color: var(--background-white);
+    border-radius: 20px;
+    padding: 60px 20px;
+    text-align: center;
+    margin: 60px 0;
+}
+
+.cta-section h2 {
+    color: var(--background-white);
+}
+
+.cta-section h2::after {
+    background: var(--background-white);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.contact-info {
     margin-top: 30px;
 }
 
-.cert-item {
-    background: var(--header-bg);
-    padding: 20px;
-    text-align: center;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out;
-    max-width: 320px; /* Prevents them from stretching too wide */
-}
-
-/* Certificate Image */
-.cert-item img {
-    width: 280px;
-    height: 280px;
-    object-fit: contain;
-    border-radius: 6px;
-    transition: transform 0.2s ease-in-out;
-}
-
-/* Hover Effect */
-.cert-item:hover {
-    transform: scale(1.05);
-}
-
-/* Certificate Titles */
-.cert-item h3 {
-    margin-top: 10px;
-    color: var(--primary-accent);
-    font-weight: bold;
-    font-size: 1.3rem;
-}
-
-/* Certificate Descriptions */
-.cert-item p {
-    color: var(--text-color);
-    font-size: 0.95rem;
-    margin-top: 8px;
-}
-
-
-
-/* ================================= */
-/* 🔹 8. Footer & Contact Styling */
-/* ================================= */
-footer {
-    text-align: center;
-    padding: 30px 0;
-    background: var(--header-bg);
-    margin-top: 50px;
-}
-
-#contact .container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-/* Contact Links */
-.contact-links {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-}
-
-.contact-item {
-    background: var(--header-bg);
-    padding: 10px 20px;
-    border-radius: 6px;
-    text-decoration: none;
-    color: var(--text-color);
-    font-size: 0.95rem;
-    font-weight: bold;
-    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
-}
-
-/* Contact Links Hover */
-.contact-item:hover {
-    transform: scale(1.05);
-    color: var(--secondary-accent);
-}
-
-/* Dividers Between Contact Links */
-.contact-item:not(:last-child) {
-    border-right: 1px solid var(--primary-accent);
-    padding-right: 15px;
-}
-
-/* ================================= */
-/* 🔹 9. Static Name Link (Bold Always) */
-/* ================================= */
-.static-link {
-    font-weight: bold;
-    text-decoration: none;
-    color: inherit;
-    padding-bottom: 5px;
-}
-
-.static-link:hover,
-.static-link:visited,
-.static-link:active {
-    color: inherit !important;
-    text-decoration: none !important;
-    font-weight: bold !important;
-}
-
-/* ================================= */
-/* 🔹 10. Contact Form Styling      */
-/* ================================= */
-#contact-form-section .container p {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--text-color);
-    font-weight: bold;
-}
-
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--header-bg); /* Subtle border */
-    background-color: #0A0C10; /* Slightly lighter than main bg */
-    color: var(--text-color);
-    border-radius: 4px;
-    font-family: inherit; /* Ensure font consistency */
-    font-size: 1rem;
-}
-
-.form-group input[type="text"]:focus,
-.form-group input[type="email"]:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary-accent);
-    box-shadow: 0 0 0 2px var(--primary-accent);
-}
-
-.form-group textarea {
-    resize: vertical; /* Allow vertical resizing */
-    min-height: 120px;
-}
-
-#contact-form-section .btn {
-    display: block;
-    width: 100%;
-    max-width: 250px; /* Max width for the button */
-    margin: 20px auto 0 auto; /* Center the button */
-    padding: 12px 20px;
-    background-color: var(--primary-accent);
-    color: var(--background-color);
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#contact-form-section .btn:hover {
-    background-color: var(--secondary-accent);
-    color: var(--background-color); /* Ensure text color remains contrasty */
-}
-
-.cert-back {
-    text-align: center;
-    margin-top: 40px;
-}
-
-.cert-back .btn {
-    background: var(--primary-accent);
-    color: var(--background-color);
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background 0.3s ease;
-}
-
-.cert-back .btn:hover {
-    background: var(--secondary-accent);
-}
-
-.cert-links {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  .cert-links li {
-    margin: 6px 0;
-    font-size: 1.1em;
-  }
-  
-  .cert-links a {
-    color: #00aaff;
-    text-decoration: none;
-  }
-  
-  .cert-links a:hover {
+.contact-info a {
+    color: var(--cream);
+    font-weight: 600;
     text-decoration: underline;
-  }
-
-/* ================================= */
-/* 🔹 10a. Project Detail Page Styling */
-/* ================================= */
-#project-title-banner {
-    background: var(--header-bg);
-    text-align: center;
-    padding: 30px 0; /* Slightly reduced padding */
-    border-bottom: 2px solid var(--primary-accent);
-    margin-bottom: 30px; /* Space before next section */
 }
 
-#project-title-banner h1 {
-    color: var(--primary-accent);
-    font-size: 2.2rem; /* Slightly smaller than main site H1 */
-    margin-bottom: 5px; /* Space between H1 and P */
+.contact-info a:hover {
+    color: var(--background-white);
 }
 
-#project-title-banner p {
-    color: var(--secondary-accent);
-    font-size: 1.1rem; /* Slightly smaller */
-    margin-top: 5px;
+/* Links */
+a {
+    color: var(--gold-accent);
+    transition: color 0.3s ease;
 }
 
-/* ================================= */
-/* 🔹 11. Utility & Component Styling */
-/* ================================= */
-.ai-concept-box {
-    background-color: var(--header-bg); /* Matches .project and .service-item */
-    border-left: 4px solid var(--primary-accent); /* Using primary accent for showcase */
-    padding: 15px;
-    margin-top: 20px;
-    border-radius: 4px;
-    color: var(--text-color);
+a:visited {
+    color: var(--rose-gold);
 }
 
-.ai-concept-box p strong {
-    color: var(--primary-accent); /* Make "Example Concept:" stand out */
+a:hover {
+    color: var(--emerald-accent);
 }
 
-.ai-concept-box em { /* For the "This is a placeholder" note */
-    font-size: 0.9em;
-    color: var(--secondary-accent);
-}
-
-.demo-note {
-    font-size: 0.9em;
-    color: var(--text-color);
-    margin-top: 10px;
-    font-style: italic;
-}
-
-.demo-note-secondary {
-    color: var(--secondary-accent); /* Override for secondary accent color */
-}
-
-/* ================================= */
-/* 🔹 12. Responsive Design         */ /* Renumbering this section */
-/* ================================= */
-
-/* Common Breakpoint: Tablets and Large Phones (max-width: 768px) */
+/* Responsive Design */
 @media (max-width: 768px) {
+    #hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    .solution-card, .service-item {
+        padding: 25px;
+    }
+    
     .container {
-        width: 95%; /* Slightly more width for content */
-    }
-
-    header h1 {
-        font-size: 2rem; /* Reduced font size */
-    }
-
-    header p {
-        font-size: 1rem; /* Reduced font size */
-    }
-
-    header nav ul li {
-        margin: 5px 10px; /* Reduced horizontal margin */
-    }
-
-    h2 { /* Section headings */
-        font-size: 1.6rem; /* Reduced font size */
-    }
-
-    .project {
-        padding: 15px; /* Reduced padding */
-    }
-
-    .project img {
-        max-width: 300px; /* Slightly smaller max-width for images within projects */
-    }
-
-    .cert-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust for smaller cards */
-        gap: 20px;
-    }
-
-    .cert-item img {
-        width: 230px; /* Adjust cert image size */
-        height: 230px;
+        width: 95%;
+        padding: 20px 10px;
     }
 }
 
-/* Extra Small Screens: Mobile Phones (max-width: 480px) */
 @media (max-width: 480px) {
-    .container {
-        padding: 15px; /* Reduced container padding */
+    #hero {
+        padding: 60px 15px;
     }
-
-    header {
-        padding: 30px 0; /* Reduced header padding */
+    
+    #hero h1 {
+        font-size: 2rem;
     }
-
-    header h1 {
-        font-size: 1.8rem; /* Further reduced font size */
+    
+    .hero-subtitle {
+        font-size: 1rem;
     }
-
-    header p {
-        font-size: 0.9rem; /* Further reduced font size */
+    
+    h2 {
+        font-size: 1.7rem;
     }
-
-    header nav ul {
-        flex-direction: column; /* Stack nav items vertically */
-        align-items: center;
-    }
-
-    header nav ul li {
-        margin: 8px 0; /* Adjusted margin for vertical layout */
-    }
-
-    h2 { /* Section headings */
-        font-size: 1.4rem; /* Further reduced font size */
-    }
-
-    .project {
-        margin-bottom: 15px; /* Reduced margin */
-        padding: 10px;
-    }
-
-    .project img {
-        max-width: 100%; /* Allow image to fill container width if needed */
-    }
-
-    #contact-form-section .btn { /* Form button */
-        max-width: 100%; /* Button takes full available width */
-    }
-
-    .contact-links {
-        flex-direction: column; /* Stack contact links */
-        gap: 10px;
-    }
-
-    .contact-item:not(:last-child) {
-        border-right: none; /* Remove border for stacked items */
-        padding-right: 10px; /* Reset padding */
-        border-bottom: 1px solid var(--primary-accent); /* Add bottom border instead */
-        padding-bottom: 10px;
-    }
-
-    .cert-item {
-        padding: 15px;
-    }
-
-    .cert-item img {
-        width: 200px;
-        height: 200px;
+    
+    .cta-btn, .cta-btn-large {
+        padding: 12px 25px;
+        font-size: 1rem;
     }
 }
