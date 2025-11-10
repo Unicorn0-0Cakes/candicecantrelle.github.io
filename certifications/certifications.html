@@ -1,154 +1,224 @@
-<!-- 
-  ╭──────────────────────────────────────────────────────────╮
-  │  © 2025 Candice Cantrelle | candicecantrelle.com         │
-  │  Creative Dev · Machine Learning Engineer · UX Futurist  │
-  │  Built with clarity, creativity, and purpose.            │
-  ╰──────────────────────────────────────────────────────────╯
+<!--
+    © 2025 Candice Cantrelle | candicecantrelle.com
+    Signature Visual Solutions for Luxury Brands
+    Credentials & Excellence
 -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Candice Cantrelle’s full certification gallery — MIT, IBM, Google, and more.">
-  <title>Certifications | Candice Cantrelle</title>
-  <link rel="stylesheet" href="../style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Credentials & Excellence - MIT, IBM, and Google certified expertise for luxury brands. Trusted by discerning professionals." />
+    <title>Credentials & Excellence | Candice Cantrelle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+        .credentials-hero {
+            background: linear-gradient(135deg, var(--gold-accent) 0%, var(--rose-gold) 100%);
+            color: var(--background-white);
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 60px;
+        }
+        
+        .credentials-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--background-white);
+        }
+        
+        .credentials-hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        .cert-grid-premium {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin: 60px 0;
+        }
+        
+        .cert-card-premium {
+            background: var(--background-white);
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--gold-accent);
+        }
+        
+        .cert-card-premium:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+        
+        .cert-logo {
+            height: 60px;
+            margin-bottom: 25px;
+            object-fit: contain;
+        }
+        
+        .cert-card-premium h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .cert-card-premium p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .cert-category {
+            margin: 80px 0;
+        }
+        
+        .cert-category h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--gold-accent);
+            margin-bottom: 40px;
+        }
+        
+        .excellence-statement {
+            background: var(--cream);
+            padding: 60px 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 80px 0;
+        }
+        
+        .excellence-statement p {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin: 60px 0;
+        }
+        
+        .back-link a {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--gold-accent);
+            color: var(--background-white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link a:hover {
+            background: var(--emerald-accent);
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
 <body>
 
 <main>
+    <!-- HERO SECTION -->
+    <section class="credentials-hero">
+        <div class="container">
+            <h1>Credentials & Excellence</h1>
+            <p>Distinguished certifications from world-class institutions. Your brand receives the highest caliber of service—sophisticated technology executed with timeless elegance.</p>
+        </div>
+    </section>
 
-  <section id="cert-header">
-    <div class="container">
-      <h1>// Full Certification Gallery</h1>
-      <p>Verified credentials in AI, data science, cybersecurity, game development, and UX — grouped by issuing institution for clarity.</p>
+    <!-- PRIMARY CERTIFICATIONS -->
+    <section class="cert-category">
+        <div class="container">
+            <h2>Premier Credentials</h2>
+            
+            <div class="cert-grid-premium">
+                <div class="cert-card-premium">
+                    <img src="../assets/images/mit/mit-logo.png" alt="MIT" class="cert-logo">
+                    <h3>MIT Applied Data Science</h3>
+                    <p>MIT-trained expertise powering custom strategies and innovative solutions for luxury brands.</p>
+                </div>
+                
+                <div class="cert-card-premium">
+                    <img src="../assets/images/ibm/ibm-logo.png" alt="IBM" class="cert-logo">
+                    <h3>IBM AI Development</h3>
+                    <p>Pioneering innovation and cutting-edge technology for high-impact visual solutions.</p>
+                </div>
+                
+                <div class="cert-card-premium">
+                    <img src="../assets/images/google/google-logo.png" alt="Google" class="cert-logo">
+                    <h3>Google UX Design</h3>
+                    <p>Human-centered design principles for unforgettable brand experiences that resonate.</p>
+                </div>
+                
+                <div class="cert-card-premium">
+                    <img src="../assets/images/ibm/ibm-logo.png" alt="IBM" class="cert-logo">
+                    <h3>IBM Full-Stack Development</h3>
+                    <p>Comprehensive technical capabilities ensuring seamless execution and flawless delivery.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXCELLENCE STATEMENT -->
+    <section class="excellence-statement">
+        <div class="container">
+            <p><strong>Every partnership is backed by best-in-class credentials</strong>—ensuring your brand receives world-class solutions delivered with discretion, artistry, and unwavering commitment to excellence.</p>
+        </div>
+    </section>
+
+    <!-- ADDITIONAL CREDENTIALS -->
+    <section class="cert-category">
+        <div class="container">
+            <h2>Additional Expertise</h2>
+            
+            <div class="cert-grid-premium">
+                <div class="cert-card-premium" style="border-top-color: var(--sapphire-accent);">
+                    <h3>Advanced Data Science</h3>
+                    <p>Specialized training in machine learning, predictive analytics, and strategic data applications.</p>
+                </div>
+                
+                <div class="cert-card-premium" style="border-top-color: var(--sapphire-accent);">
+                    <h3>Cloud Architecture</h3>
+                    <p>Enterprise-level infrastructure expertise for scalable, secure digital solutions.</p>
+                </div>
+                
+                <div class="cert-card-premium" style="border-top-color: var(--sapphire-accent);">
+                    <h3>Cybersecurity Principles</h3>
+                    <p>Comprehensive security foundations ensuring protection of your valuable digital assets.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRUST STATEMENT -->
+    <section style="margin: 80px 0; text-align: center;">
+        <div class="container">
+            <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                Recognized by global leaders in technology and innovation. Trusted by discerning professionals who demand excellence without compromise.
+            </p>
+        </div>
+    </section>
+
+    <!-- BACK TO HOME -->
+    <div class="back-link">
+        <a href="../index.html">← Return to Home</a>
     </div>
-  </section>
-
-  <!-- MIT -->
-  <section class="cert-group">
-    <div class="container">
-      <h2>🧠 MIT</h2>
-      <div class="cert-grid">
-        <div class="cert-item">
-          <a href="../certifications/programs/mit-applied-data-science.html">
-            <img src="../assets/images/mit/mit-logo.png" alt="MIT Applied Data Science" />
-            <h3>Applied Data Science</h3>
-          </a>
-          <p>Machine learning, predictive analytics, and AI decision-making for business and research.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- IBM -->
-  <section class="cert-group">
-    <div class="container">
-      <h2>🤖 IBM</h2>
-      <div class="cert-grid">
-        <div class="cert-item">
-          <a href="../certifications/programs/ibm-ai-developer.html">
-            <img src="../assets/images/ibm/ibm-logo.png" alt="IBM AI Developer" />
-            <h3>AI Developer</h3>
-          </a>
-          <p>Watson AI, prompt engineering, Flask APIs, and generative AI foundations.</p>
-        </div>
-
-        <div class="cert-item">
-          <a href="../certifications/programs/ibm-ai-engineering.html">
-            <img src="../assets/images/ibm/ibm-logo.png" alt="IBM AI Engineering" />
-            <h3>AI Engineering</h3>
-          </a>
-          <p>PyTorch, TensorFlow, transformer models, and LLM-based projects.</p>
-        </div>
-
-        <div class="cert-item">
-          <a href="../certifications/programs/ibm-cybersecurity-analyst.html">
-            <img src="../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Analyst" />
-            <h3>Cybersecurity Analyst</h3>
-          </a>
-          <p>SIEM tools, threat modeling, forensics, and incident response systems.</p>
-        </div>
-
-        <div class="cert-item">
-          <a href="../certifications/programs/ibm-full-stack.html">
-            <img src="../assets/images/ibm/ibm-logo.png" alt="IBM Full Stack Cloud Dev" />
-            <h3>Full Stack Cloud Dev</h3>
-          </a>
-          <p>React, Node.js, Docker, Django, and scalable app architecture in IBM Cloud.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- GOOGLE -->
-  <section class="cert-group">
-    <div class="container">
-      <h2>🎨 Google</h2>
-      <div class="cert-grid">
-        <div class="cert-item">
-          <a href="../certifications/programs/google-ux-design.html">
-            <img src="../assets/images/google/google-logo.png" alt="Google UX Design" />
-            <h3>UX Design</h3>
-          </a>
-          <p>Figma prototyping, equity-focused design, accessibility, and UX research.</p>
-        </div>
-        <!-- Additional Google certs can go here -->
-      </div>
-    </div>
-  </section>
-
-  <!-- HP -->
-  <section class="cert-group">
-    <div class="container">
-      <h2>🎮 HP x edX</h2>
-      <div class="cert-grid">
-        <div class="cert-item">
-          <a href="../certifications/programs/hp-esports.html">
-            <img src="../assets/images/hp-esports/hp-cert1.png" alt="HP Esports" />
-            <h3>Esports & Game Dev</h3>
-          </a>
-          <p>Esports team management, marketing, game design, and coding logic.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MATH / ENGINEERING -->
-  <section class="cert-group">
-    <div class="container">
-      <h2>📐 Engineering</h2>
-      <div class="cert-grid">
-        <div class="cert-item">
-          <a href="../certifications/programs/math-for-engineers.html">
-            <img src="../assets/images/uhk/uhk-logo.png" alt="Math for Engineers" />
-            <h3>Mathematics for Engineers</h3>
-          </a>
-          <p>Vector calculus, matrix algebra, differential equations, and MATLAB simulations.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- INDIVIDUAL -->
-  <section class="cert-group">
-    <div class="container">
-      <h2>📘 Individual Courses</h2>
-      <div class="cert-grid">
-        <div class="cert-item">
-          <a href="../certifications/individual-certifications.html">
-            <img src="../assets/images/individual/intellectual-humility-theory.jpeg" alt="Intellectual Humility" />
-            <h3>Intellectual Humility</h3>
-          </a>
-          <p>Philosophical & psychological study from the University of Edinburgh.</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
 </main>
 
+<!-- HEADER/FOOTER -->
 <script src="../assets/header-footer.js"></script>
 
 </body>
