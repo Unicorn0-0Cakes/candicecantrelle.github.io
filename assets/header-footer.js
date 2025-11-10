@@ -4,15 +4,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const headerHTML = `
         <header>
             <div class="container">
-                <h1><a href="/" class="static-link">>_ Candice Cantrelle</a></h1>
-                <p>Game Developer | AI Researcher | Neural Networks & Procedural Generation</p>
+                <h1><a href="/" class="static-link">Candice Cantrelle</a></h1>
+                <p>Signature Visual Solutions for Luxury Brands</p>
                 <nav>
                     <ul>
                         <li><a href="/">Home</a></li>
-                        <li><a href="/#projects">Projects</a></li>
                         <li><a href="/#services">Services</a></li>
-                        <li><a href="/certifications/certifications.html">Certifications</a></li>
-                        <li><a href="/#contact-form-section">Contact</a></li>
+                        <li><a href="/certifications/certifications.html">Credentials</a></li>
+                        <li><a href="/#consultation">Contact</a></li>
                     </ul>
                 </nav>
             </div>
@@ -21,52 +20,50 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Footer HTML
     const footerHTML = `
-    <footer>
-          <!-- CONTACT FORM -->
-          <section id="contact-form-section">
-            <div class="container">
-              <h2>// Get In Touch</h2>
-              <br>
-              <p>Interested in collaborating or have a question? Reach out using the form below.</p>
-              <form action="YOUR_FORMSPREE_ENDPOINT_HERE" method="POST"> <!-- Placeholder action -->
-                <div class="form-group">
-                  <label for="name">Name</label>
-                  <input type="text" id="name" name="name" required>
+        <footer>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Candice Cantrelle</h3>
+                    <p>Crafting elevated digital experiences for iconic brands and luxury professionals.</p>
                 </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" name="email" required>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Services</h4>
+                        <ul>
+                            <li><a href="/#services">Bespoke AI Visual Creation</a></li>
+                            <li><a href="/#services">Luxury Virtual Staging</a></li>
+                            <li><a href="/#services">Brand Identity & Strategy</a></li>
+                            <li><a href="/#services">Interactive Experiences</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>About</h4>
+                        <ul>
+                            <li><a href="/#portfolio">Portfolio Highlights</a></li>
+                            <li><a href="/certifications/certifications.html">Credentials</a></li>
+                            <li><a href="/#testimonials">Client Testimonials</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <ul>
+                            <li><a href="mailto:hello@candicecantrelle.com">hello@candicecantrelle.com</a></li>
+                            <li><a href="https://linkedin.com/in/candice-cantrelle-6b832435" target="_blank">LinkedIn</a></li>
+                            <li><a href="https://github.com/Unicorn0-0Cakes" target="_blank">GitHub</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="form-group">
-                  <label for="message">Message</label>
-                  <textarea id="message" name="message" rows="5" required></textarea>
-                </div>
-                <button type="submit" class="btn">Send Message</button>
-              </form>
             </div>
-          </section>
-        <section id="contact">
-            <div class="container">
-                <h2>~ Contact Me</h2>
-                <br>
-                <p>Let's connect! </p>
-                <br>
-                <p>Reach out to discuss potential collaborations</p>
-                <p>or just to chat about AI and game development.</p>
-
-                <div class="contact-links">
-                    <a href="https://github.com/Unicorn0-0Cakes" target="_blank" class="contact-item">🐙 GitHub @Unicorn0-0Cakes</a>
-                    <a href="https://www.linkedin.com/in/candice-cantrelle-6b032435/" target="_blank" class="contact-item">🔗 Linkedin @Candice Cantrelle</a>
-                </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Candice Cantrelle. All Rights Reserved.</p>
+                <p class="footer-tagline">Discretion. Excellence. Artistry.</p>
             </div>
-        </section>
-        <div class="container">
-            <p>&copy; 2025 Candice Cantrelle. All Rights Reserved.</p>
-        </div>
-    </footer>
-`;
-
-
+        </footer>
+    `;
 
     // Insert header at the top of the body
     document.body.insertAdjacentHTML("afterbegin", headerHTML);
