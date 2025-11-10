@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/#services">Services</a></li>
-                        <li><a href="/certifications/certifications.html">Credentials</a></li>
+                        <li><a href="/certifications/certifications.html">Credentials</a></li>                                 <li><a href="/jewelry/">Jewelry Visualization</a></li>
                         <li><a href="/#consultation">Contact</a></li>
                     </ul>
                 </nav>
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <h4>About</h4>
                         <ul>
                             <li><a href="/#portfolio">Portfolio Highlights</a></li>
-                            <li><a href="/certifications/certifications.html">Credentials</a></li>
+                            <li><a href="/certifications/certifications.html">Credentials</a></li>                                 <li><a href="/jewelry/">Jewelry Visualization</a></li>
                             <li><a href="/#testimonials">Client Testimonials</a></li>
                         </ul>
                     </div>
