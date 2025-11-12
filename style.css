@@ -403,14 +403,12 @@ h3 {
 .cta-section {
     background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--sapphire-accent) 100%);
     color: var(--background-white);
-    border-radius: 20px;
-    padding: 60px 20px;
-    text-align: center;
-    margin: 60px 0;
+    
+    padding: 80px 40px;    text-align: center;
+    margin: 0;
 }
 
 .cta-section h2 {
-    color: var(--background-white);
 }
 
 .cta-section h2::after {
