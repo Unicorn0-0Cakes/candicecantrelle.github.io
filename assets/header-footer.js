@@ -4,8 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const headerHTML = `
         <header>
             <div class="container">
+                            <div class="header-brand">
                 <h1><a href="/" class="static-link">Candice Cantrelle</a></h1>
                 <p>Signature Visual Solutions for Luxury Brands</p>
+                            </div>
                 <nav>
                     <ul>
                         <li><a href="/">Home</a></li>
