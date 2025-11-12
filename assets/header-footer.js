@@ -23,10 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Footer HTML
     const footerHTML = `
         <footer>
-            <div class="container">
+            
                 <!-- CONTACT & PRIVATE CONSULTATION -->
                 <section id="consultation" class="cta-section">
-                    <div class="container">
                         <h2>Contact & Private Consultation</h2>
                         <p>Discretion and excellence are at the heart of every partnership. Schedule a private conversation to explore how signature visual artistry can elevate your brand.</p>
                         <p class="consultation-details">For inquiries or to book a confidential consult, use the form below or email hello@candicecantrelle.com</p>
@@ -36,8 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         <div class="contact-info">
                             <p>Connect: <a href="https://linkedin.com/in/candicecantrelle">LinkedIn</a> | <a href="https://github.com/Unicorn0-0Cakes">GitHub</a></p>
                         </div>
-                    </div>
                 </section>
+                        <div class="container">
                 <div class="footer-content">
                     <div class="footer-brand">
                         <h3>Candice Cantrelle</h3>
@@ -57,6 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="footer-column">
                </div>
             </div>
+                    </div> <!-- footer-content -->
+                        </div> <!-- container -->
         </footer>
         `;
             
