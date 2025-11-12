@@ -60,6 +60,17 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                 </div>
             </div>
+
+                            <!-- Contact & Consultation Section -->
+                <div class="footer-consultation">
+                    <h2>Contact & Private Consultation</h2>
+                    <p>Discretion and excellence are at the heart of every partnership. Schedule a private conversation to explore how signature visual artistry can elevate your brand.</p>
+                    <p class="consultation-details">For inquiries or to book a confidential consult, use the form below or email hello@candicecantrelle.com</p>
+                    <a href="https://candice-cantrelle.breely.com/form/10405" class="cta-btn-large">Request Consultation</a>
+                    <div class="contact-info">
+                        <p>Connect: <a href="https://linkedin.com/in/candicecantrelle">LinkedIn</a> | <a href="https://github.com/Unicorn0-0Cakes">GitHub</a></p>
+                    </div>
+                </div>
             
             <div class="footer-bottom">
                 <p>&copy; 2025 Candice Cantrelle. All Rights Reserved.</p>
