@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Footer HTML
     const footerHTML = `
         <footer>
+                    <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
                     <h3>Candice Cantrelle</h3>
@@ -64,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <p>&copy; 2025 Candice Cantrelle. All Rights Reserved.</p>
                 <p class="footer-tagline">Discretion. Excellence. Artistry.</p>
             </div>
+                        </div>
         </footer>
     `;
 
