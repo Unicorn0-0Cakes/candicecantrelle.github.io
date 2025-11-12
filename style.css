@@ -40,6 +40,113 @@ body {
     padding: 40px 20px;
 }
 
+/* Header Styling */
+header {
+    background: var(--background-white);
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0;
+}
+
+header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    max-width: 1400px;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+}
+
+header h1 .static-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+header h1 .static-link:hover {
+    color: var(--gold-accent);
+}
+
+header p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 5px 0 0 0;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.header-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+header nav {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 35px;
+    align-items: center;
+}
+
+header nav ul li {
+    margin: 0;
+}
+
+header nav ul li a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+header nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 16px;
+    right: 16px;
+    height: 2px;
+    background: var(--gold-accent);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+header nav ul li a:hover {
+    color: var(--gold-accent);
+    background: rgba(212, 175, 55, 0.08);
+}
+
+header nav ul li a:hover::after {
+    transform: scaleX(1);
+}
+
+header nav ul li a:visited {
+    color: var(--text-primary);
+}
+
+
 /* Hero Section */
 #hero {
     background: linear-gradient(135deg, var(--gold-accent) 0%, var(--rose-gold) 100%);
@@ -361,6 +468,33 @@ a:hover {
     .container {
         width: 95%;
         padding: 20px 10px;
+
+           header .container {
+        flex-direction: column;
+        padding: 15px 20px;
+        gap: 15px;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    header p {
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    header nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    header nav ul li a {
+        font-size: 0.95rem;
+        padding: 6px 12px;
+    }
     }
 }
 
@@ -384,5 +518,27 @@ a:hover {
     .cta-btn, .cta-btn-large {
         padding: 12px 25px;
         font-size: 1rem;
+
+           header .container {
+        padding: 12px 15px;
+        gap: 12px;
+    }
+
+    header h1 {
+        font-size: 1.3rem;
+    }
+
+    header p {
+        font-size: 0.75rem;
+    }
+
+    header nav ul {
+        gap: 10px;
+    }
+
+    header nav ul li a {
+        font-size: 0.85rem;
+        padding: 5px 10px;
+    }
     }
 }
