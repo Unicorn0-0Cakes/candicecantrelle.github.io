@@ -669,3 +669,111 @@ footer {
         font-size: 0.85rem;
     }
 }
+
+/* Footer Consultation Section */
+.footer-consultation {
+    background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--sapphire-accent) 100%);
+    padding: 60px 40px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    text-align: center;
+    color: white;
+}
+
+.footer-consultation h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.footer-consultation p {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footer-consultation .consultation-details {
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+.footer-consultation .cta-btn-large {
+    display: inline-block;
+    background: white;
+    color: var(--text-primary);
+    padding: 15px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin-bottom: 25px;
+}
+
+.footer-consultation .cta-btn-large:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    color: var(--gold-accent);
+}
+
+.footer-consultation .contact-info {
+    margin-top: 20px;
+}
+
+.footer-consultation .contact-info p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.footer-consultation .contact-info a {
+    color: white;
+    text-decoration: underline;
+    transition: opacity 0.3s ease;
+}
+
+.footer-consultation .contact-info a:hover {
+    opacity: 0.8;
+}
+
+/* Responsive Consultation Section */
+@media (max-width: 768px) {
+    .footer-consultation {
+        padding: 40px 25px;
+    }
+
+    .footer-consultation h2 {
+        font-size: 1.6rem;
+    }
+
+    .footer-consultation p {
+        font-size: 0.95rem;
+    }
+
+    .footer-consultation .cta-btn-large {
+        font-size: 1rem;
+        padding: 12px 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-consultation {
+        padding: 30px 20px;
+    }
+
+    .footer-consultation h2 {
+        font-size: 1.4rem;
+    }
+
+    .footer-consultation p {
+        font-size: 0.9rem;
+    }
+
+    .footer-consultation .cta-btn-large {
+        font-size: 0.95rem;
+        padding: 12px 25px;
+    }
+}
