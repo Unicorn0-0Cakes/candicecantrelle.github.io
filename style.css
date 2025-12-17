@@ -884,3 +884,265 @@ footer {
     }
 }
  
+
+
+/* ====================================
+   Work With Me Page Styling
+   Luxury 3-tier pricing & partnership sections
+==================================== */
+
+/* Pricing Table Styling */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 40px 0;
+    background: var(--background-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+table thead {
+    background: linear-gradient(135deg, var(--gold-accent) 0%, var(--rose-gold) 100%);
+    color: var(--background-white);
+}
+
+table th {
+    padding: 20px 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    border-bottom: 3px solid rgba(255,255,255,0.3);
+}
+
+table td {
+    padding: 20px 15px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+table tbody tr {
+    transition: background 0.3s ease;
+}
+
+table tbody tr:hover {
+    background: var(--cream);
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+table td:first-child {
+    font-weight: 600;
+    color: var(--gold-accent);
+}
+
+/* Tier Sections */
+.tier-section {
+    background: var(--background-white);
+    padding: 50px 40px;
+    margin: 40px 0;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-left: 6px solid var(--gold-accent);
+    transition: all 0.3s ease;
+}
+
+.tier-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+.tier-section h2 {
+    color: var(--gold-accent);
+    margin-bottom: 25px;
+}
+
+.tier-section h3 {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+}
+
+.tier-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 25px 0;
+}
+
+.tier-section ul li {
+    padding: 12px 0;
+    padding-left: 30px;
+    position: relative;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.tier-section ul li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--emerald-accent);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.tier-section p strong,
+.tier-section strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Highlighted Tier (Most Popular/Requested) */
+.tier-section.featured {
+    border-left-color: var(--emerald-accent);
+    background: linear-gradient(to right, rgba(80, 200, 120, 0.03), var(--background-white));
+}
+
+.tier-section.featured h2 {
+    color: var(--emerald-accent);
+}
+
+/* Blockquote styling for visual audit call-out */
+blockquote {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(183, 110, 121, 0.08));
+    border-left: 5px solid var(--gold-accent);
+    padding: 25px 30px;
+    margin: 30px 0;
+    border-radius: 8px;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+blockquote p {
+    margin: 0;
+}
+
+blockquote strong {
+    color: var(--gold-accent);
+    font-weight: 600;
+    font-style: normal;
+}
+
+/* Fit Check / Visual Audit list styling */
+ol {
+    counter-reset: item;
+    list-style: none;
+    padding-left: 0;
+}
+
+ol li {
+    counter-increment: item;
+    padding: 15px 0 15px 50px;
+    position: relative;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+ol li:before {
+    content: counter(item);
+    position: absolute;
+    left: 0;
+    top: 15px;
+    background: var(--gold-accent);
+    color: var(--background-white);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Section separators */
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-accent), transparent);
+    margin: 60px 0;
+}
+
+/* Call-to-action links in tier sections */
+.tier-section a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 14px 35px;
+    background: var(--gold-accent);
+    color: var(--background-white);
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.tier-section a:hover {
+    background: var(--emerald-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(80, 200, 120, 0.4);
+}
+
+/* Responsive adjustments for Work With Me page */
+@media (max-width: 768px) {
+    table {
+        font-size: 0.9rem;
+    }
+    
+    table th,
+    table td {
+        padding: 15px 10px;
+    }
+    
+    .tier-section {
+        padding: 35px 25px;
+    }
+    
+    .tier-section ul li {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    table {
+        font-size: 0.85rem;
+        display: block;
+        overflow-x: auto;
+    }
+    
+    table th,
+    table td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+    
+    .tier-section {
+        padding: 25px 20px;
+        margin: 30px 0;
+    }
+    
+    .tier-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .tier-section h3 {
+        font-size: 1.3rem;
+    }
+    
+    .tier-section ul li {
+        font-size: 0.95rem;
+        padding-left: 25px;
+    }
+    
+    blockquote {
+        padding: 20px;
+        font-size: 0.95rem;
+    }
+}
