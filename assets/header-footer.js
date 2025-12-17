@@ -14,8 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <li><a href="/#services">Services</a></li>
                         <li><a href="/certifications/certifications.html">Credentials</a></li>
                                                             <li><a href="/portfolio.html">Portfolio</a></li>
-                        <li><a href="/work-with-me/">Work With Me</a></li>
-                    </ul>
+                    <li><a href="/work-with-me.html">Work With Me</a></li>                    </ul>
                 </nav>
             </div>
         </header>
