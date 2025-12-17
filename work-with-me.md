@@ -7,135 +7,132 @@ nav_order: 2
 
 # Work With Me
 
-Transform your [client type] business into a predictable, scalable growth engine—without wasting time on tactics that don’t move the needle.
+Signature visual partnerships for luxury brands, fine jewelers, discerning real estate professionals, and boutique owners who refuse to look ordinary.
+
+Every engagement is bespoke, confidential, and crafted to elevate how your brand is seen, experienced, and remembered.
 
 ---
 
 ## Is This for You?
 
-This is a great fit if you:
+This is a perfect fit if you:
 
-- Are an established [industry/niche] business with consistent revenue.
-- Want a strategic partner, not just another freelancer or agency.
-- Are ready to invest in systems that compound over time.
+- Lead a luxury brand, jewelry house, real estate portfolio, or boutique that values refined presentation.
+- Understand that elevated visuals directly influence perceived value, trust, and pricing power.
+- Prefer a discreet, white-glove partnership over transactional, one-off projects.
 
 This is not a fit if you:
 
-- Are looking for one-off quick fixes with no long-term plan.
-- Are unwilling to implement recommendations or give access to key data.
-- Want the cheapest option instead of the best long-term result.
+- Are looking for low-cost, quick templates or generic imagery.
+- Prioritize volume over craftsmanship and brand consistency.
+- Are not ready to invest in a cohesive visual strategy across your key touchpoints.
 
 ---
 
-## Start With a Quick Fit Check
+## Begin With a Private Visual Audit
 
-Before we work together, complete a short, 60-second Fit Check to see which path makes the most sense for you.
+Before any long-term partnership, every client begins with a focused, confidential review of their current visual presence.
 
-> **Fit Check:** Answer 6 quick questions about your current situation, goals, and timeline.
+> **Signature Visual Audit:** A curated review of your existing imagery, digital touchpoints, and brand presentation, with specific opportunities to elevate perception.
 
-[Start the Fit Check](#fit-check)
+[Start Your Visual Audit](#visual-audit)
 
 ---
 
-## Your Options at a Glance
+## Partnership Paths at a Glance
 
-Below are three ways to work together, depending on how much support and implementation you need.
+Below are three ways to work together, depending on how deeply you want to integrate visual excellence into your brand.
 
 | Tier | Best For | Primary Outcome | Commitment | Investment |
 |------|----------|-----------------|------------|------------|
-| **Clarity Intensive** | Leaders who want a clear plan before committing to ongoing support | A prioritized roadmap and concrete next steps you can execute immediately | 1–2 weeks | Fixed, one-time fee (applied toward ongoing work if we continue) |
-| **Growth Partnership** | Teams ready to implement and iterate with expert guidance | Ongoing strategy, implementation support, and optimization to hit specific growth targets | 3–6 month minimum | Monthly retainer |
-| **Private Advisory** | High-growth leaders who want a strategic partner on call | White-glove, highly personalized advisory and oversight across key initiatives | 6–12 month partnership | Custom engagement, limited availability |
+| **Signature Visual Audit** | Brands seeking clear direction before a larger engagement | A curated audit and visual roadmap to elevate your brand's presence | 1–2 weeks | Fixed, one-time fee (credited toward select partnerships) |
+| **Ongoing Visual Partnership** | Brands that need consistent high-end visuals and campaigns | Continuous creation of on-brand imagery and experiences across key channels | 3–6 month minimum | Monthly retainer |
+| **Private Creative Advisory** | Leaders who want a trusted visual strategist on call | High-level guidance, review, and direction for all major visual decisions | 6–12 month partnership | Custom, invitation-only |
 
 ---
 
-## Tier 1: Clarity Intensive
+## Tier 1: Signature Visual Audit
 
-A focused, short engagement designed to give you clarity and a concrete action plan.
+A focused starting point designed for clarity and direction.
 
-**What you get:**
+**What you receive:**
 
-- Pre-engagement questionnaire to understand your current state and goals.
-- 1–2 deep-dive strategy sessions (live).
-- A written roadmap outlining priorities, timelines, and recommended stack/process.
-- Option to apply the full fee toward a longer engagement if we both agree it’s a fit.
+- A discreet review of your existing visuals, website, portfolio, and key brand touchpoints.
+- Identification of where your current presentation is undercutting your positioning or pricing.
+- A bespoke visual roadmap: recommended directions, priorities, and opportunities for immediate elevation.
+- Clear options for next steps—whether you continue independently or move into a deeper partnership.
 
-**Ideal if:** You want expert eyes on your situation and a clear path forward before committing to a monthly engagement.
+**Ideal if:** You want expert eyes on your brand's visual presence before committing to an ongoing engagement.
 
-[Apply for a Clarity Intensive](#apply)
-
----
-
-## Tier 2: Growth Partnership (Most Popular)
-
-Ongoing, hands-on partnership to implement, refine, and scale.
-
-**What you get:**
-
-- Recurring strategy and implementation sessions (e.g., weekly or biweekly).
-- Implementation support across agreed focus areas.
-- Metrics tracking and regular reviews to keep everything accountable.
-- Priority async support for questions and adjustments between sessions.
-
-**Ideal if:** You want a partner to help you execute the plan, not just hand you a document.
-
-[Apply for a Growth Partnership](#apply)
+[Request Your Visual Audit](#apply)
 
 ---
 
-## Tier 3: Private Advisory
+## Tier 2: Ongoing Visual Partnership (Most Requested)
 
-A high-touch, bespoke advisory relationship designed for high-growth leaders.
+A collaborative, month-to-month relationship focused on consistently presenting your brand at its highest level.
 
-**What you get:**
+**What you receive:**
 
-- Direct access via a private channel during business hours.
-- Quarterly or monthly strategic planning sessions.
-- Review of key decisions, proposals, and initiatives before they go live.
-- Coordination with your internal team or other partners as needed.
+- Regular production of custom visuals (e.g., AI-generated scenes, product imagery, virtual staging, editorial-style compositions) aligned with your brand's aesthetic.
+- Visual support for launches, campaigns, collections, and key listings.
+- Iteration and refinement based on performance, feedback, and evolving goals.
+- Priority access and communication for time-sensitive needs.
 
-**Ideal if:** You want a strategic partner embedded in your decision-making, not just periodic check-ins.
+**Ideal if:** You want a trusted visual partner to handle the "how it looks" so you can focus on growing the business.
 
-[Request Private Advisory Details](#apply)
-
----
-
-## How It Works
-
-1. **Complete the Fit Check**  
-   Share where you are now, what you want to achieve, and your timeline.
-
-2. **Book a Consultation**  
-   If there’s a fit, you’ll be invited to a consultation to review your situation and options.
-
-3. **Start With the Right Tier**  
-   We’ll agree on the best starting point—often a Clarity Intensive or direct entry into the Growth Partnership.
+[Explore Ongoing Partnership](#apply)
 
 ---
 
-## Fit Check
+## Tier 3: Private Creative Advisory
 
-Use the prompts below as your temporary “test” until it’s turned into a form/quiz:
+A highly selective, bespoke advisory relationship for brands and leaders who want a dedicated visual strategist.
 
-1. What best describes your current stage?  
-   - Early but stable  
-   - Growing and hiring  
-   - Scaling and optimizing
+**What you receive:**
 
-2. What is your primary goal for the next 6–12 months?
+- Direct access for high-level input on visual direction, digital presentation, and brand experience.
+- Review and refinement of key visual assets before they go public.
+- Strategic alignment across website, portfolio, campaigns, and physical/digital touchpoints.
+- Collaboration with your internal team or external partners to maintain a unified, elevated standard.
 
-3. What’s your biggest current bottleneck?
+**Ideal if:** You want more than imagery—you want a long-term visual custodian for your brand.
 
-4. How soon are you looking to start working with a partner?
+[Inquire About Private Advisory](#apply)
 
-5. Are you open to a minimum 3–6 month commitment for the right fit?
+---
 
-You can temporarily implement this as an embedded form (Typeform, Tally, etc.) and link the button above directly to it.
+## How Our Collaboration Unfolds
+
+1. **Private Inquiry**  
+   You submit a confidential request outlining your brand, needs, and timeframe.
+
+2. **Signature Consultation**  
+   If there's a mutual fit, we schedule a consultation to review your goals and determine the right partnership path.
+
+3. **Bespoke Engagement**  
+   Your engagement is tailored to your priorities—whether that's a one-time audit, ongoing visuals, or private advisory.
+
+---
+
+## Visual Audit – Fit Check
+
+To help you determine if now is the right time to elevate your visuals, consider:
+
+1. How aligned are your current visuals with the level of clients you want to attract?
+2. Do your website, portfolio, and listings immediately signal "luxury" and "trust"?
+3. Where do you see the biggest gap between how good your work *is* and how it's *presented*?
+4. Which is most urgent right now: product visuals, portfolio cohesion, listings, or overall brand experience?
+5. Are you prepared to invest in a consistent visual standard over the next 3–6 months?
+
+Use your answers as a reference during your consultation so we can focus on what matters most.
 
 ---
 
 ## Apply to Work Together
 
-If you already know you want to move forward, you can skip the Fit Check and apply directly.
+Every partnership begins with a private, no-obligation inquiry.
 
-[Apply to Work With Me](mailto:YOUR_EMAIL_HERE?subject=Work%20With%20Me%20Application)
+[Request a Confidential Consultation](https://candice-cantrelle.breely.com/form/10405)
+
+If you prefer, you may also email directly: [hello@candicecantrelle.com](mailto:hello@candicecantrelle.com)
