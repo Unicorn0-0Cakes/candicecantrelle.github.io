@@ -1147,3 +1147,45 @@ hr {
         font-size: 0.95rem;
     }
 }
+
+/* ====================================
+   Profile Picture Styling
+   Professional headshot display
+==================================== */
+
+.profile-section {
+    text-align: center;
+    margin: 40px 0;
+    padding: 30px 0;
+}
+
+.profile-picture {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--gold-accent);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.profile-picture:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.3);
+    border-color: var(--emerald-accent);
+}
+
+/* Responsive Profile Picture */
+@media (max-width: 768px) {
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-picture {
+        width: 120px;
+        height: 120px;
+    }
+}
