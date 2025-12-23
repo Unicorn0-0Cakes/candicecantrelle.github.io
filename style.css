@@ -404,10 +404,11 @@ h3 {
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-/* Contact CTA Section */
+/* 1547
+*/
 .cta-section {
-    background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--sapphire-accent) 100%);
-    color: var(--background-white);
+    background: linear-gradient(135deg, #2C5F7C 0%, #1a3d52 100%);    
+       color: var(--background-white);
     
     padding: 80px 40px;    text-align: center;
     margin: 0;
