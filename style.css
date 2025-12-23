@@ -678,8 +678,7 @@ footer {
 
 /* Consultation Section - Full Width */
 .consultation-section {
-    background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--sapphire-accent) 100%);
-    width: 100%;
+    background: linear-gradient(135deg, #2C5F7C 0%, #1a3d52 100%);    width: 100%;
     margin: 0;
     padding: 80px 40px;
     text-align: center;
@@ -784,8 +783,7 @@ footer {
     }
 }
 .footer-consultation {
-    background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--sapphire-accent) 100%);
-    padding: 60px 40px;
+    background: linear-gradient(135deg, #2C5F7C 0%, #1a3d52 100%);    padding: 60px 40px;
     border-radius: 12px;
     margin-bottom: 40px;
     text-align: center;
