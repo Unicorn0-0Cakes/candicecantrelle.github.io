@@ -150,7 +150,7 @@ header nav ul li a:visited {
 
 /* Hero Section */
 #hero {
-    background: linear-gradient(135deg, var(--gold-accent) 0%, var(--rose-gold) 100%);
+    background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--sapphire-accent) 100%);
     color: var(--background-white);
     text-align: center;
     padding: 100px 20px;
