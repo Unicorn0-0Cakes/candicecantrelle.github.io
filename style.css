@@ -415,6 +415,10 @@ h3 {
 }
 
 .cta-section h2 {
+    color: white;
+}
+
+.cta-section h2 {
 }
 
 .cta-section h2::after {
