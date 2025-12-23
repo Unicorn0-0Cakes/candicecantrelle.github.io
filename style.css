@@ -418,7 +418,7 @@ h3 {
     color: white;
 }
 
-.cta-section .cta-btn {
+.cta-section .cta-btn-large {
      background: var(--rose-gold);
      color: var(--background-white);
      padding: 15px 40px;
@@ -428,7 +428,7 @@ h3 {
      transition: all 0.3s ease;
    }
 
-.cta-section .cta-btn:hover {
+.cta-section .cta-btn-large:hover {
      background: var(--gold-accent);
      transform: translateY(-2px);
      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
