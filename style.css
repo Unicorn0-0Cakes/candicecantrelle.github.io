@@ -418,8 +418,21 @@ h3 {
     color: white;
 }
 
-.cta-section h2 {
-}
+.cta-section .cta-btn {
+     background: var(--rose-gold);
+     color: var(--background-white);
+     padding: 15px 40px;
+     border-radius: 25px;
+     text-decoration: none;
+     font-weight: 600;
+     transition: all 0.3s ease;
+   }
+
+.cta-section .cta-btn:hover {
+     background: var(--gold-accent);
+     transform: translateY(-2px);
+     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+   }
 
 .cta-section h2::after {
     background: var(--background-white);
