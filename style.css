@@ -229,14 +229,14 @@ header nav ul li a:visited {
 /* Hero CTA Button Override */
 #hero .cta-btn,
 #hero .cta-btn-large {
-    background: #2C2C2C;
-    color: var(--gold-accent);
-    border: 2px solid var(--gold-accent);
+    background: var(--gold-accent);
+    color: white;
+    border: 2px solid transparent;
 }
-
 #hero .cta-btn:hover,
 #hero .cta-btn-large:hover {
-    background: var(--gold-accent);
-    color: #2C2C2C;
+    background: white;
+    color: var(--gold-accent);
     border-color: var(--gold-accent);
+}    border-color: var(--gold-accent);
 }
