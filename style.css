@@ -185,6 +185,7 @@ header nav ul li a:visited {
     font-size: 1.3rem;
     margin-bottom: 30px;
     font-weight: 300;
+       color: white;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -197,6 +198,21 @@ header nav ul li a:visited {
 /* CTA Buttons */
 .cta-btn, .cta-btn-large {
     display: inline-block;
+
+   /* Hero CTA Button Override */
+#hero .cta-btn,
+#hero .cta-btn-large {
+    background: #2C2C2C;
+    color: var(--gold-accent);
+    border: 2px solid var(--gold-accent);
+}
+
+#hero .cta-btn:hover,
+#hero .cta-btn-large:hover {
+    background: var(--gold-accent);
+    color: #2C2C2C;
+    border-color: var(--gold-accent);
+}
     padding: 15px 40px;
     background: var(--background-white);
     color: var(--gold-accent);
