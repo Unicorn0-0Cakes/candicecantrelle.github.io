@@ -24,40 +24,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const footerHTML = `
         <footer>
             
-                <!-- CONTACT & PRIVATE CONSULTATION -->
-                <section id="consultation" class="cta-section">
-                        <h2>Contact & Private Consultation</h2>
-                        <p>Discretion and excellence are at the heart of every partnership. Schedule a private conversation to explore how signature visual artistry can elevate your brand.</p>
-                        <p class="consultation-details">For inquiries or to book a confidential consult, use the form below or email hello@candicecantrelle.com</p>
-                        
-                        <a href="https://candice-cantrelle.breely.com/form/10405" class="cta-btn-large">Request Consultation</a>
-                        
-                        <div class="contact-info">
-                            <p>Connect: <a href="https://linkedin.com/in/candicecantrelle">LinkedIn</a> | <a href="https://github.com/Unicorn0-0Cakes">GitHub</a></p>
-                        </div>
-                </section>
-                        <div class="container">
-                <div class="footer-content">
-                    <div class="footer-brand">
-                        <h3>Candice Cantrelle</h3>
-                        <p>Crafting elevated digital experiences for iconic brands and luxury professionals.</p>
-                    </div>
-                                                                                                                
-                    <div class="footer-links">
-                        <div class="footer-column">
-                            <h4>Services</h4>
-                                <ul>
-                                    <li><a href="/#services">Bespoke AI Visual Creation</a></li>
-                                    <li><a href="/#services">Luxury Virtual Staging</a></li>
-                                    <li><a href="/#services">Brand Identity & Strategy</a></li>
-                                    <li><a href="/#services">Interactive Experiences</a></li>
-                                </ul>
-                        </div>
-                    <div class="footer-column">
-               </div>
-            </div>
-                    </div> <!-- footer-content -->
-                        </div> <!-- container -->
+        <!-- CONTACT -->
+    <section id="contact">
+        <div class="container">
+            <h2>Contact & Private Consultation</h2>
+            <p>Discretion and excellence are at the heart of every partnership. Schedule a private conversation to explore how signature visual artistry can elevate your brand.</p>
+            <p class="consultation-details">For inquiries or to book a confidential consult, use the form below or email hello@candicecantrelle.com</p>
+            
+            <a href="https://candice-cantrelle.breely.com/form/10405" class="cta-btn">Request Consultation</a>
+            
+            <p class="social-links">Connect: <a href="https://linkedin.com/in/candicecantrelle">LinkedIn</a> | <a href="https://github.com/Unicorn0-0Cakes">GitHub</a></p>
+        </div>
+    </section>
+
+
         </footer>
         `;
             
