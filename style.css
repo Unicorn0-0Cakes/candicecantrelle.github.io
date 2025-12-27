@@ -20,6 +20,7 @@
     --gold-accent: #D4AF37;
     --emerald-accent: #50C878;
     --sapphire-accent: #0F52BA;
+       --navy-accent: #1A2F3F;
     --rose-gold: #B76E79;
     --cream: #FFF8E7;
     --border-light: #E5E5E5;
@@ -1620,5 +1621,486 @@ h3 {
     
     #hero h1 {
         font-size: 2rem;
+    }
+}
+
+
+/* ========================================
+   LUXURY REDESIGN - NEW SECTIONS
+   Deep Navy Accent: #1A2F3F
+======================================== */
+
+/* === HERO SECTION === */
+.hero {
+    position: relative;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--navy-accent);
+}
+
+.hero-media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(26,47,63,0.85) 0%, rgba(26,47,63,0.6) 100%);
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    max-width: 800px;
+    padding: 60px 20px;
+    text-align: center;
+    color: white;
+}
+
+.hero-copy .section-kicker {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-accent);
+    margin-bottom: 1rem;
+}
+
+.hero-copy h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: rgba(255,255,255,0.9);
+}
+
+.hero-cta {
+    display: inline-block;
+    background: var(--navy-accent);
+    color: white;
+    padding: 16px 40px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid var(--gold-accent);
+}
+
+.hero-cta:hover {
+    background: var(--gold-accent);
+    color: var(--navy-accent);
+    transform: translateY(-2px);
+}
+
+/* === DNA SNAPSHOT CARD === */
+.dna-card {
+    position: relative;
+    z-index: 3;
+    max-width: 600px;
+    margin: -80px auto 0;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    border: 1px solid var(--border-light);
+}
+
+.dna-card h2 {
+    font-size: 1.8rem;
+    color: var(--navy-accent);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.dna-intro {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.dna-fields {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.dna-fields label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.dna-fields input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-light);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.dna-fields input:focus {
+    outline: none;
+    border-color: var(--navy-accent);
+}
+
+.dna-btn {
+    width: 100%;
+    background: var(--gold-accent);
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dna-btn:hover {
+    background: var(--navy-accent);
+    transform: translateY(-2px);
+}
+
+.dna-benefits-hero {
+    list-style: none;
+    margin: 1.5rem 0;
+    padding: 0;
+}
+
+.dna-benefits-hero li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.icon-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--gold-accent);
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.dna-note-hero {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.dna-link {
+    color: var(--navy-accent);
+    text-decoration: underline;
+}
+
+/* === GALLERY SHOWCASE === */
+.gallery-showcase {
+    padding: 100px 20px;
+    background: var(--background-light);
+    text-align: center;
+}
+
+.gallery-showcase .section-title {
+    font-size: 2.5rem;
+    margin-bottom: 60px;
+    color: var(--navy-accent);
+}
+
+.gallery-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-10px);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+/* === CASE STUDIES WITH BEFORE/AFTER === */
+.case-studies {
+    padding: 100px 20px;
+    background: white;
+}
+
+.case-study-primary {
+    max-width: 1000px;
+    margin: 0 auto 60px;
+    text-align: center;
+}
+
+.case-study-primary h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--navy-accent);
+}
+
+.before-after {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.ba-image {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.ba-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.ba-label {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: var(--navy-accent);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 40px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--gold-accent);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* === TESTIMONIALS === */
+.testimonials-section {
+    padding: 100px 20px;
+    background: var(--background-light);
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.testimonial-card {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-left: 4px solid var(--gold-accent);
+}
+
+.testimonial-card blockquote {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    font-style: italic;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem 0;
+}
+
+.testimonial-attribution {
+    font-size: 0.95rem;
+    color: var(--navy-accent);
+    font-weight: 600;
+}
+
+/* === CREDENTIALS === */
+.credentials-section {
+    padding: 100px 20px;
+    background: white;
+    text-align: center;
+}
+
+.credentials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 40px auto;
+}
+
+.credential-tile {
+    background: var(--background-light);
+    padding: 30px;
+    border-radius: 8px;
+    border: 2px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.credential-tile:hover {
+    border-color: var(--navy-accent);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.credential-tile h4 {
+    font-size: 1.3rem;
+    color: var(--navy-accent);
+    margin-bottom: 0.75rem;
+}
+
+.credential-tile p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.cert-link {
+    margin-top: 40px;
+}
+
+.cert-link a {
+    color: var(--navy-accent);
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.cert-link a:hover {
+    color: var(--gold-accent);
+}
+
+/* === SECTION KICKER === */
+.section-kicker {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-accent);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* === CTA BUTTON === */
+.cta-btn {
+    display: inline-block;
+    background: var(--navy-accent);
+    color: white;
+    padding: 16px 40px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.cta-btn:hover {
+    background: transparent;
+    border-color: var(--navy-accent);
+    color: var(--navy-accent);
+    transform: translateY(-2px);
+}
+
+.cta-btn.secondary {
+    background: var(--gold-accent);
+}
+
+.cta-btn.secondary:hover {
+    background: transparent;
+    border-color: var(--gold-accent);
+    color: var(--gold-accent);
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 768px) {
+    .hero-copy h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .dna-card {
+        margin: -40px 20px 0;
+        padding: 30px 20px;
+    }
+    
+    .gallery-strip {
+        grid-template-columns: 1fr;
+    }
+    
+    .before-after {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-row {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .credentials-grid {
+        grid-template-columns: 1fr;
     }
 }
