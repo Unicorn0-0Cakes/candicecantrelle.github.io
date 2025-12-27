@@ -1893,11 +1893,12 @@ h3 {
 
 .ba-image img {
     width: 100%;
-    height: auto;
-    display: block;
-}
+    height: 500px;
+    object-fit: cover;
+       display: block;
+   }
 
-.ba-label {
+.ba-la500px;
     position: absolute;
     top: 20px;
     left: 20px;
