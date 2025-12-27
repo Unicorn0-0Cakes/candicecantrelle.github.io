@@ -2,22 +2,27 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Header HTML
     const headerHTML = `
-        <header>
-            <div class="container">
-                            <div class="header-brand">
-                <h1><a href="/" class="static-link">Candice Cantrelle</a></h1>
-                <p>Signature Visual Solutions for Luxury Brands</p>
-                            </div>
-                <nav>
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/#services">Services</a></li>
-                        <li><a href="/certifications/certifications.html">Credentials</a></li>
-                                                            <li><a href="/portfolio.html">Portfolio</a></li>
-                    <li><a href="/work-with-me.html">Work With Me</a></li>                    </ul>
-                </nav>
-            </div>
-        </header>
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <div class="header-brand">
+        <h1>
+          <a href="/" class="static-link">Candice Cantrelle</a>
+        </h1>
+        <p>Signature visual solutions for fine &amp; estate jewelry houses</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/jewelry/">Jewelry</a></li>
+          <li><a href="/real-estate/">Real Estate (Select)</a></li>
+          <li><a href="/portfolio.html">Portfolio</a></li>
+          <li><a href="/work-with-me.html">Work with Me</a></li>
+          <li><a href="https://candice-cantrelle.breely.com/form/10405">Consultation</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
     `;
 
     // Footer HTML
