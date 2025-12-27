@@ -29,18 +29,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const footerHTML = `
         <footer>
             
-        <!-- CONTACT -->
-    <section id="contact">
-        <div class="container">
-            <h2>Contact & Private Consultation</h2>
-            <p>Discretion and excellence are at the heart of every partnership. Schedule a private conversation to explore how signature visual artistry can elevate your brand.</p>
-            <p class="consultation-details">For inquiries or to book a confidential consult, use the form below or email hello@candicecantrelle.com</p>
-            
-            <a href="https://candice-cantrelle.breely.com/form/10405" class="cta-btn">Request Consultation</a>
-            
-            <p class="social-links">Connect: <a href="https://linkedin.com/in/candicecantrelle">LinkedIn</a> | <a href="https://github.com/Unicorn0-0Cakes">GitHub</a></p>
-        </div>
-    </section>
+<!-- CONTACT -->
+<section class="contact-section">
+    <h2>Contact & Private Consultation</h2>
+    <p>
+        Discretion and excellence are at the heart of every partnership. Schedule a private conversation to explore how signature visual artistry can elevate your brand.
+    </p>
+    <p>
+        For inquiries or to book a confidential consult, request a time below or email <a href="mailto:hello@candicecantrelle.com">hello@candicecantrelle.com</a>.
+    </p>
+    <a class="cta-btn" href="https://candice-cantrelle.breely.com/form/10405">
+        Request Consultation
+    </a>
+    <p class="social-links">
+        Connect: <a href="https://linkedin.com/in/candicecantrelle">LinkedIn</a> | <a href="https://github.com/Unicorn0-0Cakes">GitHub</a>
+    </p>
+</section>
 
 
     <div class="container">
