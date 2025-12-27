@@ -151,8 +151,7 @@ header nav ul li a:visited {
 
 /* Hero Section */
 #hero {
-    background: url('assets/images/background.png') no-repeat center center; background-size: 100% 100%;    color: varwhitetext-align: center;
-    padding: 100px 20px;
+    background: url('jewelry/images/luxury-environment.png') no-repeat center center; background-size: cover; color: var(--text-primary); text-align: center;    padding: 100px 20px;
     position: relative;
     overflow: hidden;
 }
@@ -198,8 +197,8 @@ header nav ul li a:visited {
 .cta-btn, .cta-btn-large {
     display: inline-block;
     padding: 15px 40px;
-    background: var(--background-white);
-    color: var(--gold-accent);
+    background: var(--navy-accent);   
+    color: white;
     text-decoration: none;
     font-weight: 600;
     border-radius: 50px;
@@ -210,8 +209,7 @@ header nav ul li a:visited {
 
 .cta-btn:hover, .cta-btn-large:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    background: var(--gold-accent);
+    box-shadow: 0 8px 24px rgba(26,47,63,0.4);    
     color: var(--background-white);
     border-color: var(--background-white);
 }
