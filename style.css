@@ -241,12 +241,12 @@ h2::after {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 50%;    width: 200px;
-       transform: translateX(-50%);
+    left: 50%;    width: 80px;
+   transform: translateX(-50%);
     height: 3px;
     background: linear-gradient(90deg, var(--gold-accent), var(--rose-gold));
-    left: 50%;     width: 200px;
-h3 {
+    left: 50%;    width: 80px;
+   h3 {
     color: var(--text-primary);
     font-size: 1.8rem;
     margin-bottom: 15px;
