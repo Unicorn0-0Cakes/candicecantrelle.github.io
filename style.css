@@ -244,7 +244,9 @@ h2::after {
     left: 50%;    width: 150px;   transform: translateX(-50%);
     height: 3px;
     background: linear-gradient(90deg, var(--gold-accent), var(--rose-gold));
-    left: 50%;    width: 150px;   h3 {
+    left: 50%;    width: 150px;   
+   h3 {
+       }
     color: var(--text-primary);
     font-size: 1.8rem;
     margin-bottom: 15px;
