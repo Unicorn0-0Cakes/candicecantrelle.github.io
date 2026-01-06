@@ -1697,9 +1697,9 @@ h3 {
     color: rgba(255,255,255,0.9);
 }
 
-.hero-cta {
+1700
+
     display: inline-block;
-    background: var(--navy-accent);
     color: white;
     padding: 16px 40px;
     border-radius: 4px;
@@ -1894,8 +1894,8 @@ h3 {
     position: absolute;
     top: 20px;
     left: 20px;
-    background: var(--navy-accent);
-    color: white;
+3327
+   color: white;
     padding: 8px 20px;
     border-radius: 4px;
     font-weight: 600;
