@@ -241,12 +241,11 @@ h2::after {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 50%;    width: 80px;
+    left: 50%;    width: 200px;
        transform: translateX(-50%);
     height: 3px;
     background: linear-gradient(90deg, var(--gold-accent), var(--rose-gold));
-}
-
+    left: 50%;     width: 200px;
 h3 {
     color: var(--text-primary);
     font-size: 1.8rem;
@@ -2374,7 +2373,8 @@ section h2::after {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px;
+  244
+   
   height: 4px;
   background: linear-gradient(90deg, #1A2F3F 0%, #D4AF37 50%, #1A2F3F 100%);
   border-radius: 2px;
