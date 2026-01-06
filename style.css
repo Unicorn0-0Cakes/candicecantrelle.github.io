@@ -3322,5 +3322,19 @@ button:active,
     animation-duration: 0.5s !important;
   }
 }
-transform: translateY(0);
+t
+   
+   /* Hero CTA Button - Gold Color */
+.hero-cta {
+  background: var(--gold-accent) !important;
+  border-color: var(--gold-accent) !important;
+  color: var(--navy-accent) !important;
+}
+
+.hero-cta:hover {
+  background: #c99d2e !important;
+  border-color: #c99d2e !important;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+}ransform: translateY(0);
 }
