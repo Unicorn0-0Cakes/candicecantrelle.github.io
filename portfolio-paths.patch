@@ -1,0 +1,3146 @@
+From 4149a33ac0360be7f97834f19ee30217c00a7d9f Mon Sep 17 00:00:00 2001
+From: Candice Cantrelle <glowstick.2017@gmail.com>
+Date: Thu, 13 Aug 2026 02:26:08 +0000
+Subject: [PATCH] Resolve every path against the site's mount point, and repair
+ the archive
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The rebuild addressed everything from the domain root. The repository is
+owned by Unicorn0-0Cakes and named candicecantrelle.github.io, which makes
+it a project site served under /candicecantrelle.github.io/ rather than a
+user site, so all 304 root-relative references resolved one level above the
+site and returned 404 — unstyled HTML with dead navigation.
+
+Static references in the 40 HTML pages are now depth-correct relative paths.
+shell.js works the base out from its own script URL and exposes it to
+cards.js, so JavaScript-generated navigation, card links and registry image
+paths resolve the same way. 404.html resolves its own base at parse time,
+since a 404 is served at whatever depth was requested. Nothing is hardcoded
+to the current host, so moving to a user site or a custom domain later needs
+no further changes.
+
+Separately, moving the old site into /archive/ had shifted every page one
+level deeper without adjusting its references, so 101 of them pointed at
+nothing — that was broken at the domain root too, not a side effect of the
+subpath. Each is re-resolved against where its target actually lives now.
+Also fixes a filename typo the old site shipped with (luxury-environment.png
+against a file named luxury-enviroment.png).
+
+Verified by crawling all 40 pages under a simulated project subpath with a
+headless browser: every stylesheet, script, image and internal link returns
+200. The five remaining 404s are archived pages referencing images that were
+never committed to this repository, broken on the live site since 2024.
+---
+ 404.html                                      | 59 ++++++++++++++-----
+ about/credentials/index.html                  | 26 ++++----
+ about/index.html                              | 30 +++++-----
+ ai-ml/facial-emotion-detection/index.html     | 24 ++++----
+ ai-ml/index.html                              | 24 ++++----
+ ai-ml/svhn-digit-recognition/index.html       | 24 ++++----
+ archive/brand-boutique/index.html             | 10 ++--
+ archive/certifications/certifications.html    | 16 ++---
+ .../programs/google-cybersecurity.html        | 22 +++----
+ .../programs/google-data-analytics.html       | 24 ++++----
+ .../programs/google-it-support.html           | 18 +++---
+ .../programs/google-project-management.html   | 20 +++----
+ .../programs/google-ux-design.html            | 20 +++----
+ .../certifications/programs/hp-esports.html   | 14 ++---
+ .../programs/ibm-ai-developer.html            | 28 ++++-----
+ .../programs/ibm-ai-engineering.html          | 32 +++++-----
+ .../programs/ibm-cybersecurity-analyst.html   | 24 ++++----
+ .../programs/ibm-full-stack.html              | 38 ++++++------
+ .../programs/individual-certifications.html   |  6 +-
+ .../programs/math-for-engineers.html          | 18 +++---
+ .../programs/mit-applied-data-science.html    |  6 +-
+ archive/index.html                            | 44 +++++++-------
+ archive/jewelry/images/index.html             |  2 +-
+ archive/jewelry/index.html                    |  8 +--
+ archive/legacy-header-footer.js               | 39 +++++++++---
+ archive/legacy-index.html                     | 12 ++--
+ archive/legacy-style.css                      |  2 +-
+ archive/portfolio.html                        | 20 +++----
+ archive/projects/ai-simulation.html           |  8 +--
+ archive/projects/emotion-detector.html        |  8 +--
+ archive/projects/street-recognition.html      |  8 +--
+ archive/real-estate/index.html                |  8 +--
+ archive/work-with-me.html                     | 18 +++---
+ assets/js/cards.js                            | 15 +++--
+ assets/js/shell.js                            | 55 +++++++++++++----
+ design/index.html                             | 54 ++++++++---------
+ games/index.html                              | 24 ++++----
+ index.html                                    | 46 +++++++--------
+ projects/cube-timer/index.html                |  2 +-
+ research/index.html                           | 24 ++++----
+ research/multimodal-archaeology/index.html    | 24 ++++----
+ simulations/index.html                        | 24 ++++----
+ software/index.html                           | 26 ++++----
+ software/key-to-stl/index.html                | 24 ++++----
+ workshop/index.html                           | 24 ++++----
+ 45 files changed, 544 insertions(+), 458 deletions(-)
+
+diff --git a/404.html b/404.html
+index 86251cb..87b8971 100644
+--- a/404.html
++++ b/404.html
+@@ -6,24 +6,44 @@
+ <title>Page not found — Candice Cantrelle</title>
+ <meta name="description" content="That page does not exist here.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/404">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/404">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Page not found — Candice Cantrelle">
+ <meta property="og:description" content="That page does not exist here.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/404">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/404">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<script>
++/* ---------------------------------------------------------------------
++   This is the only file on the site that resolves its own base URL.
++
++   A 404 is served under whatever path the visitor asked for, so the page
++   has no fixed depth and ordinary relative paths cannot work here. It
++   reads the mount point back out of the URL and falls back to the domain
++   root, which means it keeps working if the site is ever moved to one.
++
++   Written during parsing so the stylesheets still block render as normal
++   and there is no flash of unstyled content.
++   --------------------------------------------------------------------- */
++(function () {
++  var MOUNT = "candicecantrelle.github.io";
++  var path = location.pathname;
++  var base = path.indexOf("/" + MOUNT + "/") === 0 ? "/" + MOUNT + "/" : "/";
++  window.__CCBASE__ = base;
++
++  var css = ["tokens", "base", "shell", "cards", "worlds"];
++  var out = '<link rel="icon" type="image/png" href="' + base + 'favicon.png">';
++  for (var i = 0; i < css.length; i++) {
++    out += '<link rel="stylesheet" href="' + base + 'assets/css/' + css[i] + '.css">';
++  }
++  out += '<scr' + 'ipt src="' + base + 'assets/js/shell.js"><\/scr' + 'ipt>';
++  document.write(out);
++})();
++</script>
+ </head>
+ 
+ <body>
+@@ -35,20 +55,29 @@
+       <h1 style="font-size:var(--t-display);margin:16px 0 20px">That page is not here.</h1>
+       <p class="lede">
+         It may have moved when this site was rebuilt in 2026. The previous version of the site is
+-        preserved at <a href="/archive/">/archive/</a>, and everything current is one of the seven
+-        wings below.
++        preserved at <a id="cc-archive" href="/candicecantrelle.github.io/archive/">/archive/</a>, and
++        everything current is one of the seven wings below.
+       </p>
+       <nav class="doors" id="doors" aria-label="Disciplines" style="margin-top:40px"></nav>
+-      <p style="margin-top:32px"><a class="back-link" href="/">Back to the portfolio</a></p>
++      <p style="margin-top:32px"><a class="back-link" id="cc-home" href="/candicecantrelle.github.io/">Back to the portfolio</a></p>
+     </div>
+   </section>
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
+ <script>
+-CC.doors("#doors");
++(function () {
++  var base = window.__CCBASE__ || "/";
++  var a = document.getElementById("cc-archive");
++  var h = document.getElementById("cc-home");
++  if (a) a.href = base + "archive/";
++  if (h) h.href = base;
++  document.write('<scr' + 'ipt src="' + base + 'data/projects.js"><\/scr' + 'ipt>');
++  document.write('<scr' + 'ipt src="' + base + 'assets/js/cards.js"><\/scr' + 'ipt>');
++})();
++</script>
++<script>
++if (window.CC && CC.doors) CC.doors("#doors");
+ </script>
+ </body>
+ </html>
+diff --git a/about/credentials/index.html b/about/credentials/index.html
+index 9a39db9..1286e0b 100644
+--- a/about/credentials/index.html
++++ b/about/credentials/index.html
+@@ -6,24 +6,24 @@
+ <title>Credentials — Candice Cantrelle</title>
+ <meta name="description" content="Thirteen certificate programmes and their component coursework: MIT, IBM, Google, HKUST, HP and University of Edinburgh.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/about/credentials/">
++<link rel="icon" type="image/png" href="../../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/about/credentials/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Credentials — Candice Cantrelle">
+ <meta property="og:description" content="Thirteen certificate programmes and their component coursework: MIT, IBM, Google, HKUST, HP and University of Edinburgh.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/about/credentials/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/about/credentials/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../../assets/css/tokens.css">
++<link rel="stylesheet" href="../../assets/css/base.css">
++<link rel="stylesheet" href="../../assets/css/shell.css">
++<link rel="stylesheet" href="../../assets/css/cards.css">
++<link rel="stylesheet" href="../../assets/css/worlds.css">
++<script src="../../assets/js/shell.js"></script>
+ 
+ <style>
+ .prog { border-top: 1px solid var(--rf-line); padding: var(--s-5) 0; }
+@@ -50,7 +50,7 @@
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><a href="/about/">About</a></li><li><span aria-current="page">Credentials</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../about/">About</a></li><li><span aria-current="page">Credentials</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -181,13 +181,13 @@
+         evidence of capability. The projects on this site are the second kind. This page exists
+         because the first kind is still worth being able to check.
+       </p>
+-      <p><a class="back-link" href="/about/">Back to About</a></p>
++      <p><a class="back-link" href="../../about/">Back to About</a></p>
+     </div>
+   </section>
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../../data/projects.js"></script>
++<script src="../../assets/js/cards.js"></script>
+ </body>
+ </html>
+diff --git a/about/index.html b/about/index.html
+index 5dfe090..437d8cc 100644
+--- a/about/index.html
++++ b/about/index.html
+@@ -6,24 +6,24 @@
+ <title>About — Candice Cantrelle</title>
+ <meta name="description" content="How I work, what I have built, and what I have studied. Systems thinking across simulation, machine learning, software, research and design.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/about/">
++<link rel="icon" type="image/png" href="../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/about/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="About — Candice Cantrelle">
+ <meta property="og:description" content="How I work, what I have built, and what I have studied. Systems thinking across simulation, machine learning, software, research and design.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/about/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/about/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../assets/css/tokens.css">
++<link rel="stylesheet" href="../assets/css/base.css">
++<link rel="stylesheet" href="../assets/css/shell.css">
++<link rel="stylesheet" href="../assets/css/cards.css">
++<link rel="stylesheet" href="../assets/css/worlds.css">
++<script src="../assets/js/shell.js"></script>
+ 
+ <style>
+ .bio { display:grid; grid-template-columns: 260px minmax(0,1fr); gap: var(--s-8); align-items:start; }
+@@ -51,7 +51,7 @@
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><span aria-current="page">About</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">About</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -68,7 +68,7 @@
+   <section class="doc">
+     <div class="wrap bio">
+       <div>
+-        <img class="bio__portrait" src="/assets/images/site/headshot.webp" alt="Portrait of Candice Cantrelle" width="380" height="507" loading="lazy" decoding="async">
++        <img class="bio__portrait" src="../assets/images/site/headshot.webp" alt="Portrait of Candice Cantrelle" width="380" height="507" loading="lazy" decoding="async">
+         <p class="bio__caption">Candice Cantrelle</p>
+       </div>
+       <div>
+@@ -149,7 +149,7 @@
+         development, security, UX, project management, engineering mathematics and game
+         development. These are completed coursework, not degrees, and they are listed that way.
+       </p>
+-      <p><a class="btn" href="/about/credentials/">Full credential list &amp; coursework</a></p>
++      <p><a class="btn" href="../about/credentials/">Full credential list &amp; coursework</a></p>
+     </div>
+   </section>
+ 
+@@ -187,7 +187,7 @@
+             <code>/data/projects.js</code>. Nothing is read from the GitHub API at runtime, so
+             the site does not change shape when a repository does.</dd>
+         <dt>Archive</dt>
+-        <dd>The previous version of this site is preserved at <a href="/archive/">/archive/</a>,
++        <dd>The previous version of this site is preserved at <a href="../archive/">/archive/</a>,
+             unlinked and marked <code>noindex</code>. Nothing was deleted.</dd>
+       </dl>
+     </div>
+@@ -195,7 +195,7 @@
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../data/projects.js"></script>
++<script src="../assets/js/cards.js"></script>
+ </body>
+ </html>
+diff --git a/ai-ml/facial-emotion-detection/index.html b/ai-ml/facial-emotion-detection/index.html
+index 31e71c4..57f2a41 100644
+--- a/ai-ml/facial-emotion-detection/index.html
++++ b/ai-ml/facial-emotion-detection/index.html
+@@ -6,24 +6,24 @@
+ <title>Facial Emotion Detection — Candice Cantrelle</title>
+ <meta name="description" content="Four-class facial expression recognition with VGG16 transfer learning: 72.66% test accuracy, 72.80% F1, and the class imbalance that partly explains both.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/ai-ml/facial-emotion-detection/">
++<link rel="icon" type="image/png" href="../../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/ai-ml/facial-emotion-detection/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Facial Emotion Detection — Candice Cantrelle">
+ <meta property="og:description" content="Four-class facial expression recognition with VGG16 transfer learning: 72.66% test accuracy, 72.80% F1, and the class imbalance that partly explains both.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/ai-ml/facial-emotion-detection/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/ai-ml/facial-emotion-detection/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../../assets/css/tokens.css">
++<link rel="stylesheet" href="../../assets/css/base.css">
++<link rel="stylesheet" href="../../assets/css/shell.css">
++<link rel="stylesheet" href="../../assets/css/cards.css">
++<link rel="stylesheet" href="../../assets/css/worlds.css">
++<script src="../../assets/js/shell.js"></script>
+ 
+ <style>
+ .case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@@ -59,7 +59,7 @@ h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spac
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><a href="/ai-ml/">AI + ML</a></li><li><span aria-current="page">Facial Emotion Detection</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../ai-ml/">AI + ML</a></li><li><span aria-current="page">Facial Emotion Detection</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -169,7 +169,7 @@ h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spac
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../../data/projects.js"></script>
++<script src="../../assets/js/cards.js"></script>
+ </body>
+ </html>
+diff --git a/ai-ml/index.html b/ai-ml/index.html
+index cf03f08..2e0fbd2 100644
+--- a/ai-ml/index.html
++++ b/ai-ml/index.html
+@@ -6,24 +6,24 @@
+ <title>AI & Machine Learning — Candice Cantrelle</title>
+ <meta name="description" content="Vision and prediction projects reported with the numbers that were actually measured — and clearly marked where no verified numbers exist.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/ai-ml/">
++<link rel="icon" type="image/png" href="../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/ai-ml/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="AI & Machine Learning — Candice Cantrelle">
+ <meta property="og:description" content="Vision and prediction projects reported with the numbers that were actually measured — and clearly marked where no verified numbers exist.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/ai-ml/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/ai-ml/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../assets/css/tokens.css">
++<link rel="stylesheet" href="../assets/css/base.css">
++<link rel="stylesheet" href="../assets/css/shell.css">
++<link rel="stylesheet" href="../assets/css/cards.css">
++<link rel="stylesheet" href="../assets/css/worlds.css">
++<script src="../assets/js/shell.js"></script>
+ 
+ <style>
+ .rule-box { border:1px solid var(--rf-line); border-left:3px solid var(--w-accent);
+@@ -37,7 +37,7 @@
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><span aria-current="page">AI + ML</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">AI + ML</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -97,8 +97,8 @@
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../data/projects.js"></script>
++<script src="../assets/js/cards.js"></script>
+ <script>
+ CC.renderInto("#ml", CC.curated(CC.byCategory("ai-ml")));
+ </script>
+diff --git a/ai-ml/svhn-digit-recognition/index.html b/ai-ml/svhn-digit-recognition/index.html
+index 8d8513f..4b2c2e0 100644
+--- a/ai-ml/svhn-digit-recognition/index.html
++++ b/ai-ml/svhn-digit-recognition/index.html
+@@ -6,24 +6,24 @@
+ <title>SVHN Digit Recognition — Candice Cantrelle</title>
+ <meta name="description" content="Four architectures compared on Street View House Numbers — not only on accuracy, but on what each one cost to train.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/ai-ml/svhn-digit-recognition/">
++<link rel="icon" type="image/png" href="../../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/ai-ml/svhn-digit-recognition/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="SVHN Digit Recognition — Candice Cantrelle">
+ <meta property="og:description" content="Four architectures compared on Street View House Numbers — not only on accuracy, but on what each one cost to train.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/ai-ml/svhn-digit-recognition/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/ai-ml/svhn-digit-recognition/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../../assets/css/tokens.css">
++<link rel="stylesheet" href="../../assets/css/base.css">
++<link rel="stylesheet" href="../../assets/css/shell.css">
++<link rel="stylesheet" href="../../assets/css/cards.css">
++<link rel="stylesheet" href="../../assets/css/worlds.css">
++<script src="../../assets/js/shell.js"></script>
+ 
+ <style>
+ .case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@@ -59,7 +59,7 @@ h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spac
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><a href="/ai-ml/">AI + ML</a></li><li><span aria-current="page">SVHN Digit Recognition</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../ai-ml/">AI + ML</a></li><li><span aria-current="page">SVHN Digit Recognition</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -170,7 +170,7 @@ h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spac
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../../data/projects.js"></script>
++<script src="../../assets/js/cards.js"></script>
+ </body>
+ </html>
+diff --git a/archive/brand-boutique/index.html b/archive/brand-boutique/index.html
+index 5439ce1..63d6cfe 100644
+--- a/archive/brand-boutique/index.html
++++ b/archive/brand-boutique/index.html
+@@ -12,8 +12,8 @@
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Fira+Cormorant+Garamond:wght@400;500;600;700
+     
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
+-    <link rel="icon" type="image/png" href="/favicon.png">
++    <link rel="stylesheet" href="../../archive/legacy-style.css">
++    <link rel="icon" type="image/png" href="../../favicon.png">
+ 
+ 
+     <style>
+@@ -134,7 +134,7 @@
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -169,7 +169,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 </p>
+                 <div class="project-images">
+                     
+-                        <img src="assets/images/business_dna_sample.jpeg" alt="Brand DNA Analysis - Basic" class="project-image"/>      
++                        <img src="../../assets/images/business_dna_sample.jpeg" alt="Brand DNA Analysis - Basic" class="project-image"/>      
+ 
+                 </div>
+                 <ul class="project-details">
+@@ -363,7 +363,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                     <li>Responsive service for your promotional campaigns</li>
+ </main>
+ 
+-<script src="/archive/legacy-header-footer.js"></script>
++<script src="../../archive/legacy-header-footer.js"></script>
+ </body>
+ </html>
+ 260
+diff --git a/archive/certifications/certifications.html b/archive/certifications/certifications.html
+index 1a61af4..22fb71e 100644
+--- a/archive/certifications/certifications.html
++++ b/archive/certifications/certifications.html
+@@ -14,8 +14,8 @@
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+-    <link rel="stylesheet" href="/archive/legacy-style.css" />
+-    <link rel="icon" type="image/png" href="/favicon.png">
++    <link rel="stylesheet" href="../../archive/legacy-style.css" />
++    <link rel="icon" type="image/png" href="../../favicon.png">
+ 
+     <style>
+         .credentials-hero {
+@@ -132,7 +132,7 @@
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -152,25 +152,25 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+             
+             <div class="cert-grid-premium">
+                 <div class="cert-card-premium">
+-                    <img src="../assets/images/mit/mit-logo.png" alt="MIT" class="cert-logo">
++                    <img src="../../assets/images/mit/mit-logo.png" alt="MIT" class="cert-logo">
+                     <h3>MIT Applied Data Science</h3>
+                     <p>MIT-trained expertise powering custom strategies and innovative solutions for luxury brands.</p>
+                 </div>
+                 
+                 <div class="cert-card-premium">
+-                    <img src="../assets/images/ibm/ibm-logo.png" alt="IBM" class="cert-logo">
++                    <img src="../../assets/images/ibm/ibm-logo.png" alt="IBM" class="cert-logo">
+                     <h3>IBM AI Development</h3>
+                     <p>Pioneering innovation and cutting-edge technology for high-impact visual solutions.</p>
+                 </div>
+                 
+                 <div class="cert-card-premium">
+-                    <img src="../assets/images/google/google-logo.png" alt="Google" class="cert-logo">
++                    <img src="../../assets/images/google/google-logo.png" alt="Google" class="cert-logo">
+                     <h3>Google UX Design</h3>
+                     <p>Human-centered design principles for unforgettable brand experiences that resonate.</p>
+                 </div>
+                 
+                 <div class="cert-card-premium">
+-                    <img src="../assets/images/ibm/ibm-logo.png" alt="IBM" class="cert-logo">
++                    <img src="../../assets/images/ibm/ibm-logo.png" alt="IBM" class="cert-logo">
+                     <h3>IBM Full-Stack Development</h3>
+                     <p>Comprehensive technical capabilities ensuring seamless execution and flawless delivery.</p>
+                 </div>
+@@ -226,7 +226,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ </main>
+ 
+ <!-- HEADER/FOOTER -->
+-<script src="/archive/legacy-header-footer.js"></script>
++<script src="../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/google-cybersecurity.html b/archive/certifications/programs/google-cybersecurity.html
+index 74ddc7b..91f33dc 100644
+--- a/archive/certifications/programs/google-cybersecurity.html
++++ b/archive/certifications/programs/google-cybersecurity.html
+@@ -9,12 +9,12 @@
+   <meta property="og:type" content="website" />
+   <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/google-cybersecurity.html" />
+   <title>Google Cybersecurity Professional Certificate | Candice Cantrelle</title>
+-  <link rel="stylesheet" href="/archive/legacy-style.css" />
++  <link rel="stylesheet" href="../../../archive/legacy-style.css" />
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -49,7 +49,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 1 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/foundations-of-cybersecurity" target="_blank">
+-            <img src="../../assets/images/google/google-logo.png" alt="Foundations of Cybersecurity" />
++            <img src="../../../assets/images/google/google-logo.png" alt="Foundations of Cybersecurity" />
+           </a>
+           <h3>Foundations of Cybersecurity</h3>
+           <p>Explore the cybersecurity landscape, ethics, career paths, and core responsibilities.</p>
+@@ -58,7 +58,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 2 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/manage-security-risks" target="_blank">
+-            <img src="../../assets/images/google/google-logo.png" alt="Play It Safe: Manage Security Risks" />
++            <img src="../../../assets/images/google/google-logo.png" alt="Play It Safe: Manage Security Risks" />
+           </a>
+           <h3>Manage Security Risks</h3>
+           <p>Learn about threats, risks, and security frameworks like NIST. Practice using SIEM tools.</p>
+@@ -67,7 +67,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 3 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/networks-and-network-security" target="_blank">
+-            <img src="../../assets/images/google/google-logo.png" alt="Connect and Protect: Networks and Network Security" />
++            <img src="../../../assets/images/google/google-logo.png" alt="Connect and Protect: Networks and Network Security" />
+           </a>
+           <h3>Networks & Network Security</h3>
+           <p>Secure networks against intrusion and explore TCP/IP, CLI tools, and network protocols.</p>
+@@ -76,7 +76,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 4 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/linux-and-sql" target="_blank">
+-            <img src="../../assets/images/google/google-logo.png" alt="Tools of the Trade: Linux and SQL" />
++            <img src="../../../assets/images/google/google-logo.png" alt="Tools of the Trade: Linux and SQL" />
+           </a>
+           <h3>Linux and SQL Tools</h3>
+           <p>Use Linux command line and SQL to manage systems and query data for security operations.</p>
+@@ -85,7 +85,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 5 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/assets-threats-and-vulnerabilities" target="_blank">
+-            <img src="../../assets/images/google/google-logo.png" alt="Assets, Threats, and Vulnerabilities" />
++            <img src="../../../assets/images/google/google-logo.png" alt="Assets, Threats, and Vulnerabilities" />
+           </a>
+           <h3>Assets, Threats & Vulnerabilities</h3>
+           <p>Identify common threats, analyze attack surfaces, and classify assets and vulnerabilities.</p>
+@@ -94,7 +94,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 6 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/detection-and-response" target="_blank">
+-            <img src="../../assets/images/google/google-logo.png" alt="Sound the Alarm: Detection and Response" />
++            <img src="../../../assets/images/google/google-logo.png" alt="Sound the Alarm: Detection and Response" />
+           </a>
+           <h3>Detection & Response</h3>
+           <p>Use IDS, packet analysis, and SIEM queries to respond to cybersecurity incidents.</p>
+@@ -103,7 +103,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 7 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/automate-cyber-tasks" target="_blank">
+-            <img src="../../assets/images/google/google-logo.png" alt="Automate Cybersecurity Tasks with Python" />
++            <img src="../../../assets/images/google/google-logo.png" alt="Automate Cybersecurity Tasks with Python" />
+           </a>
+           <h3>Automate Cybersecurity Tasks</h3>
+           <p>Learn Python for automating repetitive security tasks and enhancing workflows.</p>
+@@ -112,7 +112,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 8 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/cybersecurity-capstone" target="_blank">
+-            <img src="../../assets/images/google/google-logo.png" alt="Put It to Work: Prepare for Cybersecurity Jobs" />
++            <img src="../../../assets/images/google/google-logo.png" alt="Put It to Work: Prepare for Cybersecurity Jobs" />
+           </a>
+           <h3>Capstone: Prepare for Cybersecurity Jobs</h3>
+           <p>Showcase your skills through a portfolio project and prepare for job interviews.</p>
+@@ -127,7 +127,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+   </div>
+ 
+   <!-- Inject Header and Footer -->
+-  <script src="/archive/legacy-header-footer.js"></script>
++  <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/google-data-analytics.html b/archive/certifications/programs/google-data-analytics.html
+index e83adee..828897f 100644
+--- a/archive/certifications/programs/google-data-analytics.html
++++ b/archive/certifications/programs/google-data-analytics.html
+@@ -9,12 +9,12 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/google-data-analytics.html">
+     <title>Google Data Analytics Professional Certificate | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
++    <link rel="stylesheet" href="../../../archive/legacy-style.css">
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -42,7 +42,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Main Program Certificate -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/professional-certificates/google-data-analytics" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Google Data Analytics Professional Certificate">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Google Data Analytics Professional Certificate">
+                     </a>
+                     <h3>Google Data Analytics Professional Certificate</h3>
+                     <p>Master the complete data analysis process and prepare for real-world data analyst roles.</p>
+@@ -51,7 +51,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 1 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/foundations-data" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Foundations: Data, Data, Everywhere">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Foundations: Data, Data, Everywhere">
+                     </a>
+                     <h3>Foundations: Data, Data, Everywhere</h3>
+                     <p>Introduction to data roles, data-driven decision making, and the data life cycle.</p>
+@@ -60,7 +60,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 2 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/data-preparation" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Ask Questions to Make Data-Driven Decisions">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Ask Questions to Make Data-Driven Decisions">
+                     </a>
+                     <h3>Ask Questions to Make Data-Driven Decisions</h3>
+                     <p>Define business tasks and apply critical thinking to ensure analytical success.</p>
+@@ -69,7 +69,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 3 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/data-cleaning" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Prepare Data for Exploration">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Prepare Data for Exploration">
+                     </a>
+                     <h3>Prepare Data for Exploration</h3>
+                     <p>Organize, clean, and protect data using spreadsheets and SQL queries.</p>
+@@ -78,7 +78,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 4 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/process-data" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Process Data from Dirty to Clean">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Process Data from Dirty to Clean">
+                     </a>
+                     <h3>Process Data from Dirty to Clean</h3>
+                     <p>Use data transformation techniques and verify data integrity before analysis.</p>
+@@ -87,7 +87,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 5 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/analyze-data" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Analyze Data to Answer Questions">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Analyze Data to Answer Questions">
+                     </a>
+                     <h3>Analyze Data to Answer Questions</h3>
+                     <p>Apply functions, queries, and calculations to derive insights from data.</p>
+@@ -96,7 +96,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 6 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/data-visualization" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Share Data Through the Art of Visualization">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Share Data Through the Art of Visualization">
+                     </a>
+                     <h3>Data Visualization</h3>
+                     <p>Build dashboards and visual stories using Tableau and spreadsheets.</p>
+@@ -105,7 +105,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 7 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/data-analysis-capstone" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Data Analysis with R Programming">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Data Analysis with R Programming">
+                     </a>
+                     <h3>Data Analysis with R Programming</h3>
+                     <p>Perform statistical analysis and create visualizations using R and RStudio.</p>
+@@ -114,7 +114,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 8 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/google-data-analytics-capstone" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Google Data Analytics Capstone Project">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Google Data Analytics Capstone Project">
+                     </a>
+                     <h3>Capstone: Complete a Case Study</h3>
+                     <p>Apply your full skill set to a guided case study to demonstrate job readiness.</p>
+@@ -128,7 +128,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     </div>
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/google-it-support.html b/archive/certifications/programs/google-it-support.html
+index c69207d..3359e37 100644
+--- a/archive/certifications/programs/google-it-support.html
++++ b/archive/certifications/programs/google-it-support.html
+@@ -9,12 +9,12 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/google-it-support.html">
+     <title>Google IT Support Professional Certificate | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
++    <link rel="stylesheet" href="../../../archive/legacy-style.css">
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -42,7 +42,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Main Program Certificate -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/professional-certificates/google-it-support" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Google IT Support Professional Certificate">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Google IT Support Professional Certificate">
+                     </a>
+                     <h3>Google IT Support Professional Certificate</h3>
+                     <p>Complete professional certification in IT support fundamentals, networking, and troubleshooting.</p>
+@@ -51,7 +51,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 1 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/technical-support-fundamentals" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Technical Support Fundamentals">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Technical Support Fundamentals">
+                     </a>
+                     <h3>Technical Support Fundamentals</h3>
+                     <p>Introduction to IT, covering computer hardware, software, troubleshooting, and customer service.</p>
+@@ -60,7 +60,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 2 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/computer-networking" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="The Bits and Bytes of Computer Networking">
++                        <img src="../../../assets/images/google/google-logo.png" alt="The Bits and Bytes of Computer Networking">
+                     </a>
+                     <h3>Computer Networking</h3>
+                     <p>Learn networking protocols, troubleshooting, DNS, cloud concepts, and TCP/IP fundamentals.</p>
+@@ -69,7 +69,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 3 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/os-power-user" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Operating Systems and You: Becoming a Power User">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Operating Systems and You: Becoming a Power User">
+                     </a>
+                     <h3>Operating Systems: Power User</h3>
+                     <p>Master Windows and Linux systems, CLI tools, file systems, permissions, and processes.</p>
+@@ -78,7 +78,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 4 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/system-administration-it-infrastructure-services" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="System Administration and IT Infrastructure Services">
++                        <img src="../../../assets/images/google/google-logo.png" alt="System Administration and IT Infrastructure Services">
+                     </a>
+                     <h3>System Administration & Infrastructure</h3>
+                     <p>Gain system admin skills including managing services, hardware, and networks at scale.</p>
+@@ -87,7 +87,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 5 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/it-security" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="IT Security: Defense against the digital dark arts">
++                        <img src="../../../assets/images/google/google-logo.png" alt="IT Security: Defense against the digital dark arts">
+                     </a>
+                     <h3>IT Security</h3>
+                     <p>Understand encryption, authentication, firewalls, and how to protect systems from threats.</p>
+@@ -101,7 +101,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     </div>
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/google-project-management.html b/archive/certifications/programs/google-project-management.html
+index cb74072..e3019cd 100644
+--- a/archive/certifications/programs/google-project-management.html
++++ b/archive/certifications/programs/google-project-management.html
+@@ -9,12 +9,12 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/google-project-management.html">
+     <title>Google Project Management Professional Certificate | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
++    <link rel="stylesheet" href="../../../archive/legacy-style.css">
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -40,7 +40,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Main Program Certificate -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/professional-certificates/google-project-management" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Google Project Management Professional Certificate">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Google Project Management Professional Certificate">
+                     </a>
+                     <h3>Google Project Management Professional Certificate</h3>
+                     <p>Comprehensive program covering project management fundamentals, methodologies, and tools.</p>
+@@ -49,7 +49,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Individual Course Certificates -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/project-management-foundations" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Foundations of Project Management">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Foundations of Project Management">
+                     </a>
+                     <h3>Foundations of Project Management</h3>
+                     <p>Introduction to the basics of project management, including key concepts and terminology.</p>
+@@ -57,7 +57,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/project-initiation" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Project Initiation: Starting a Successful Project">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Project Initiation: Starting a Successful Project">
+                     </a>
+                     <h3>Project Initiation: Starting a Successful Project</h3>
+                     <p>Strategies and best practices for initiating and planning successful projects.</p>
+@@ -65,7 +65,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/project-planning" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Project Planning: Putting It All Together">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Project Planning: Putting It All Together">
+                     </a>
+                     <h3>Project Planning: Putting It All Together</h3>
+                     <p>Comprehensive guide to creating detailed project plans, including scope, schedule, and resources.</p>
+@@ -73,7 +73,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/project-execution" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Project Execution: Running the Project">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Project Execution: Running the Project">
+                     </a>
+                     <h3>Project Execution: Running the Project</h3>
+                     <p>Techniques for effectively executing and monitoring project progress to ensure success.</p>
+@@ -81,7 +81,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/agile-project-management" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Agile Project Management">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Agile Project Management">
+                     </a>
+                     <h3>Agile Project Management</h3>
+                     <p>Exploration of agile methodologies and their application in project management.</p>
+@@ -89,7 +89,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/project-management-capstone" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Capstone: Applying Project Management in the Real World">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Capstone: Applying Project Management in the Real World">
+                     </a>
+                     <h3>Capstone: Applying Project Management in the Real World</h3>
+                     <p>Final project applying learned skills to real-world project management scenarios.</p>
+@@ -103,7 +103,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     </div>
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/google-ux-design.html b/archive/certifications/programs/google-ux-design.html
+index 881ef7e..a3127b3 100644
+--- a/archive/certifications/programs/google-ux-design.html
++++ b/archive/certifications/programs/google-ux-design.html
+@@ -9,12 +9,12 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/google-ux-design.html">
+     <title>Google UX Design Professional Certificate | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
++    <link rel="stylesheet" href="../../../archive/legacy-style.css">
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -42,7 +42,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Main Program Certificate -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/professional-certificates/google-ux-design" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Google UX Design Professional Certificate">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Google UX Design Professional Certificate">
+                     </a>
+                     <h3>Google UX Design Professional Certificate</h3>
+                     <p>Full certification series covering the UX design process and portfolio development.</p>
+@@ -51,7 +51,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 1 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/foundations-user-experience-design" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Foundations of User Experience (UX) Design">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Foundations of User Experience (UX) Design">
+                     </a>
+                     <h3>Foundations of UX Design</h3>
+                     <p>Introduction to user-centered design, accessibility, equity-focused design, and the design process.</p>
+@@ -60,7 +60,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 2 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/start-the-ux-design-process-empathize-define-and-ideate" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Start the UX Design Process">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Start the UX Design Process">
+                     </a>
+                     <h3>Start the UX Design Process</h3>
+                     <p>Empathize with users, define pain points, and ideate solutions using design thinking methods.</p>
+@@ -69,7 +69,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 3 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/build-wireframes-and-low-fidelity-prototypes" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Build Wireframes and Low-Fidelity Prototypes">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Build Wireframes and Low-Fidelity Prototypes">
+                     </a>
+                     <h3>Wireframes & Low-Fidelity Prototypes</h3>
+                     <p>Build paper and digital wireframes, storyboards, and low-fidelity prototypes using Figma.</p>
+@@ -78,7 +78,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 4 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/conduct-ux-research-and-test-early-concepts" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Conduct UX Research and Test Concepts">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Conduct UX Research and Test Concepts">
+                     </a>
+                     <h3>UX Research & Testing</h3>
+                     <p>Plan and conduct usability studies, analyze feedback, and iterate on design solutions.</p>
+@@ -87,7 +87,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 5 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/create-high-fidelity-designs-and-prototypes-in-figma" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Create High-Fidelity Designs and Prototypes in Figma">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Create High-Fidelity Designs and Prototypes in Figma">
+                     </a>
+                     <h3>High-Fidelity Designs in Figma</h3>
+                     <p>Design pixel-perfect mockups, apply visual design principles, and build high-fidelity prototypes.</p>
+@@ -96,7 +96,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Course 6 -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/build-dynamic-user-interfaces" target="_blank">
+-                        <img src="../../assets/images/google/google-logo.png" alt="Build Dynamic User Interfaces (UI) for Websites">
++                        <img src="../../../assets/images/google/google-logo.png" alt="Build Dynamic User Interfaces (UI) for Websites">
+                     </a>
+                     <h3>Build Dynamic User Interfaces</h3>
+                     <p>Use HTML, CSS, and frameworks to design functional, interactive UIs with user-friendly components.</p>
+@@ -110,7 +110,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     </div>
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/hp-esports.html b/archive/certifications/programs/hp-esports.html
+index 12df5cb..356b8a3 100644
+--- a/archive/certifications/programs/hp-esports.html
++++ b/archive/certifications/programs/hp-esports.html
+@@ -9,12 +9,12 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/hp-esports.html">
+     <title>HP Esports Management & Game Development Certification | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css"> <!-- Corrected CSS path -->
++    <link rel="stylesheet" href="../../../archive/legacy-style.css"> <!-- Corrected CSS path -->
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -42,7 +42,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+             <div class="cert-grid">
+                 <div class="cert-item">
+                     <a href="https://credentials.edx.org/credentials/b503ee5495e9458b8d042140a83fba6f/" target="_blank">
+-                        <img src="../../assets/images/hp-esports/hp-cert1.png" alt="Esports Management and Game Development">
++                        <img src="../../../assets/images/hp-esports/hp-cert1.png" alt="Esports Management and Game Development">
+                     </a>
+                     <h3>Esports Management & Game Development</h3>
+                     <p>Comprehensive certification covering game development, esports management, and marketing strategies.</p>
+@@ -50,7 +50,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://courses.edx.org/certificates/966d2cee05bd40d58fb188efe375477c" target="_blank">
+-                        <img src="../../assets/images/hp-esports/hp-cert2.png" alt="The What and How of Esports Management!">
++                        <img src="../../../assets/images/hp-esports/hp-cert2.png" alt="The What and How of Esports Management!">
+                     </a>
+                     <h3>The What & How of Esports Management</h3>
+                     <p>Deep dive into team management, tournament organization, and the business of esports.</p>
+@@ -58,7 +58,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://courses.edx.org/certificates/5df297e6f5dd470eb734de1b1023a29c" target="_blank">
+-                        <img src="../../assets/images/hp-esports/hp-cert3.png" alt="A Complete Guide to Game Design">
++                        <img src="../../../assets/images/hp-esports/hp-cert3.png" alt="A Complete Guide to Game Design">
+                     </a>
+                     <h3>A Complete Guide to Game Design</h3>
+                     <p>Explores game mechanics, level design, and player experience in modern game development.</p>
+@@ -66,7 +66,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://courses.edx.org/certificates/001a49a3af8d42b6ab3ddf81087dd5b8" target="_blank">
+-                        <img src="../../assets/images/hp-esports/hp-cert4.png" alt="From Code to Creation: Mastering Game Programming">
++                        <img src="../../../assets/images/hp-esports/hp-cert4.png" alt="From Code to Creation: Mastering Game Programming">
+                     </a>
+                     <h3>From Code to Creation: Mastering Game Programming</h3>
+                     <p>Coding essentials for game development, covering programming logic, scripting, and AI behaviors.</p>
+@@ -80,7 +80,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     </div>
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script> <!-- Corrected script path -->
++    <script src="../../../archive/legacy-header-footer.js"></script> <!-- Corrected script path -->
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/ibm-ai-developer.html b/archive/certifications/programs/ibm-ai-developer.html
+index 8f32746..3e3898e 100644
+--- a/archive/certifications/programs/ibm-ai-developer.html
++++ b/archive/certifications/programs/ibm-ai-developer.html
+@@ -9,12 +9,12 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/ibm-ai-developer.html">
+     <title>IBM AI Developer Certification | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css"> <!-- Ensure correct path -->
++    <link rel="stylesheet" href="../../../archive/legacy-style.css"> <!-- Ensure correct path -->
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -48,7 +48,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Main Program Certificate -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/professional-certificates/applied-artifical-intelligence-ibm-watson-ai?myLearningTab=IN_PROGRESS" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="IBM AI Developer Certification">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="IBM AI Developer Certification">
+                     </a>
+                     <h3>IBM AI Developer Certification</h3>
+                     <p>Main certification for completing the full IBM AI Developer program.</p>
+@@ -57,7 +57,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Individual Course Certificates -->
+                 <div class="cert-item">
+                     <a href="https://coursera.org/share/468592f0f74499d7a483a061e1f9dff8" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-cert01.jpeg" alt="Introduction to Software Engineering">
++                        <img src="../../../assets/images/ibm/ibm-cert01.jpeg" alt="Introduction to Software Engineering">
+                     </a>
+                     <h3>Introduction to Software Engineering</h3>
+                     <p>Fundamentals of software development, best practices, and agile methodologies.</p>
+@@ -65,7 +65,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://coursera.org/share/cb9c55fefd397ea08cefe3732b82f127" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-cert02.jpeg" alt="Introduction to Artificial Intelligence">
++                        <img src="../../../assets/images/ibm/ibm-cert02.jpeg" alt="Introduction to Artificial Intelligence">
+                     </a>
+                     <h3>Introduction to Artificial Intelligence</h3>
+                     <p>Core concepts of AI, machine learning, and real-world applications.</p>
+@@ -73,7 +73,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://coursera.org/share/746ca983cca5baf843efb7a85821a76e" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-cert03.jpeg" alt="Generative AI: Introduction and Applications">
++                        <img src="../../../assets/images/ibm/ibm-cert03.jpeg" alt="Generative AI: Introduction and Applications">
+                     </a>
+                     <h3>Generative AI: Introduction and Applications</h3>
+                     <p>Exploring generative AI models, including ChatGPT and diffusion models.</p>
+@@ -81,7 +81,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://coursera.org/share/44055e841e2bf9958df55d5c9d5705bc" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-cert04.jpeg" alt="Generative AI: Prompt Engineering Basics">
++                        <img src="../../../assets/images/ibm/ibm-cert04.jpeg" alt="Generative AI: Prompt Engineering Basics">
+                     </a>
+                     <h3>Generative AI: Prompt Engineering Basics</h3>
+                     <p>Optimizing AI-generated responses through structured prompts.</p>
+@@ -89,7 +89,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://coursera.org/share/a9ed3cbc90166b1b59ef31b29afbf585" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-cert05.jpeg" alt="Introduction to HTML, CSS, & JavaScript">
++                        <img src="../../../assets/images/ibm/ibm-cert05.jpeg" alt="Introduction to HTML, CSS, & JavaScript">
+                     </a>
+                     <h3>Introduction to HTML, CSS, & JavaScript</h3>
+                     <p>Fundamental front-end web development for AI-powered applications.</p>
+@@ -97,7 +97,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://coursera.org/share/77169ea6bf073b00f5441032be5c475c" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-cert09.jpeg" alt="Python for Data Science, AI & Development">
++                        <img src="../../../assets/images/ibm/ibm-cert09.jpeg" alt="Python for Data Science, AI & Development">
+                     </a>
+                     <h3>Python for Data Science, AI & Development</h3>
+                     <p>Data science, AI development, and automation with Python.</p>
+@@ -105,7 +105,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/python-project-for-ai-application-development?specialization=applied-artifical-intelligence-ibm-watson-ai" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Developing AI Applications with Python and Flask">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Developing AI Applications with Python and Flask">
+                     </a>
+                     <h3>Developing AI Applications with Python and Flask</h3>
+                     <p>Building AI-powered applications using Flask and IBM Watson APIs.</p>
+@@ -113,7 +113,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://coursera.org/share/8aa66819c496ffcaacf0ab2cd4145ea6" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-cert08.jpeg" alt="Building Generative AI-Powered Applications">
++                        <img src="../../../assets/images/ibm/ibm-cert08.jpeg" alt="Building Generative AI-Powered Applications">
+                     </a>
+                     <h3>Building Generative AI-Powered Applications</h3>
+                     <p>Deploying generative AI in software projects and automation workflows.</p>
+@@ -121,7 +121,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://coursera.org/share/dcd0cdbc77686d0b3ab6bbe95f9afdc0" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-cert10.jpeg" alt="Generative AI: Elevate Your Software Development Career">
++                        <img src="../../../assets/images/ibm/ibm-cert10.jpeg" alt="Generative AI: Elevate Your Software Development Career">
+                     </a>
+                     <h3>Generative AI: Elevate Your Software Development Career</h3>
+                     <p>Applying generative AI to accelerate coding and engineering workflows.</p>
+@@ -129,7 +129,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://coursera.org/share/5d2609f7d284d7401c00ec7abeab1755" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-cert11.jpeg" alt="Software Developer Career Guide and Interview Prep">
++                        <img src="../../../assets/images/ibm/ibm-cert11.jpeg" alt="Software Developer Career Guide and Interview Prep">
+                     </a>
+                     <h3>Software Developer Career Guide & Interview Prep</h3>
+                     <p>Preparing for software development roles and AI-related job interviews.</p>
+@@ -145,7 +145,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/ibm-ai-engineering.html b/archive/certifications/programs/ibm-ai-engineering.html
+index 716b458..f92016e 100644
+--- a/archive/certifications/programs/ibm-ai-engineering.html
++++ b/archive/certifications/programs/ibm-ai-engineering.html
+@@ -9,12 +9,12 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/ibm-ai-engineering.html">
+     <title>IBM AI Engineering Certification | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css"> <!-- Ensure correct path -->
++    <link rel="stylesheet" href="../../../archive/legacy-style.css"> <!-- Ensure correct path -->
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -45,7 +45,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Main Program Certificate Placeholder -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/professional-certificates/ai-engineer" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="IBM AI Engineering Certification">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="IBM AI Engineering Certification">
+                     </a>
+                     <h3>IBM AI Engineering Certification</h3>
+                     <p>Main certification for completing the full AI Engineering program.</p>
+@@ -54,7 +54,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                 <!-- Individual Course Placeholders -->
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/machine-learning-with-python" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Machine Learning with Python">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Machine Learning with Python">
+                     </a>
+                     <h3>Machine Learning with Python</h3>
+                     <p>Understanding supervised and unsupervised learning using Python.</p>
+@@ -62,7 +62,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/introduction-deep-learning-neural-networks-keras" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Introduction to Deep Learning & Neural Networks with Keras">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Introduction to Deep Learning & Neural Networks with Keras">
+                     </a>
+                     <h3>Introduction to Deep Learning & Neural Networks with Keras</h3>
+                     <p>Exploring artificial neural networks and deep learning principles.</p>
+@@ -70,7 +70,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/deep-learning-keras-and-tensorflow" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Deep Learning with Keras and TensorFlow">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Deep Learning with Keras and TensorFlow">
+                     </a>
+                     <h3>Deep Learning with Keras and TensorFlow</h3>
+                     <p>Building and training deep learning models using Keras & TensorFlow.</p>
+@@ -78,7 +78,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/introduction-neural-networks-pytorch" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Introduction to Neural Networks and PyTorch">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Introduction to Neural Networks and PyTorch">
+                     </a>
+                     <h3>Introduction to Neural Networks and PyTorch</h3>
+                     <p>Understanding neural networks and AI model training using PyTorch.</p>
+@@ -86,7 +86,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/deep-learning-with-pytorch" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Deep Learning with PyTorch">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Deep Learning with PyTorch">
+                     </a>
+                     <h3>Deep Learning with PyTorch</h3>
+                     <p>Building deep learning models using PyTorch.</p>
+@@ -94,7 +94,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/ai-capstone-project-deep-learning" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="AI Capstone Project with Deep Learning">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="AI Capstone Project with Deep Learning">
+                     </a>
+                     <h3>AI Capstone Project with Deep Learning</h3>
+                     <p>Final hands-on AI engineering project applying deep learning techniques.</p>
+@@ -102,7 +102,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/generative-ai-llms-architecture-data-preparation" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Generative AI and LLMs">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Generative AI and LLMs">
+                     </a>
+                     <h3>Generative AI & LLMs</h3>
+                     <p>Exploring large language models and generative AI architectures.</p>
+@@ -110,7 +110,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/generative-ai-foundational-models-nlp" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Gen AI NLP & Language Understanding">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Gen AI NLP & Language Understanding">
+                     </a>
+                     <h3>Gen AI NLP & Language Understanding</h3>
+                     <p>Training generative AI for NLP tasks.</p>
+@@ -118,7 +118,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/generative-ai-language-modeling-transformers" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Generative AI Language Modeling">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Generative AI Language Modeling">
+                     </a>
+                     <h3>Generative AI Language Modeling</h3>
+                     <p>Using transformers to build advanced language models.</p>
+@@ -126,7 +126,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/generative-ai-engineering-fine-tuning-transformers" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Fine-Tuning Transformers">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Fine-Tuning Transformers">
+                     </a>
+                     <h3>Fine-Tuning Transformers</h3>
+                     <p>Optimizing transformer-based models for AI tasks.</p>
+@@ -134,7 +134,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/ai-agents-rag-langchain" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="AI Agents Using RAG and LangChain">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="AI Agents Using RAG and LangChain">
+                     </a>
+                     <h3>AI Agents Using RAG & LangChain</h3>
+                     <p>Deploying retrieval-augmented generation (RAG) with LangChain.</p>
+@@ -142,7 +142,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+                 <div class="cert-item">
+                     <a href="https://www.coursera.org/learn/project-generative-ai-applications-rag-langchain" target="_blank">
+-                        <img src="../../assets/images/ibm/ibm-logo.png" alt="Gen AI Applications with RAG and LangChain">
++                        <img src="../../../assets/images/ibm/ibm-logo.png" alt="Gen AI Applications with RAG and LangChain">
+                     </a>
+                     <h3>Gen AI Applications with RAG & LangChain</h3>
+                     <p>Final project using RAG-based generative AI models.</p>
+@@ -158,7 +158,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/ibm-cybersecurity-analyst.html b/archive/certifications/programs/ibm-cybersecurity-analyst.html
+index bad6198..a23d074 100644
+--- a/archive/certifications/programs/ibm-cybersecurity-analyst.html
++++ b/archive/certifications/programs/ibm-cybersecurity-analyst.html
+@@ -9,12 +9,12 @@
+   <meta property="og:type" content="website" />
+   <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/ibm-cybersecurity-analyst.html" />
+   <title>IBM Cybersecurity Analyst Professional Certificate | Candice Cantrelle</title>
+-  <link rel="stylesheet" href="/archive/legacy-style.css" />
++  <link rel="stylesheet" href="../../../archive/legacy-style.css" />
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -40,7 +40,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Main Program Certificate -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/professional-certificates/ibm-cybersecurity-analyst" target="_blank">
+-            <img src="../../assets/images/ibm/ibm-logo.png" alt="IBM Cybersecurity Analyst Professional Certificate" />
++            <img src="../../../assets/images/ibm/ibm-logo.png" alt="IBM Cybersecurity Analyst Professional Certificate" />
+           </a>
+           <h3>IBM Cybersecurity Analyst Professional Certificate</h3>
+           <p>Comprehensive certification covering key areas of cybersecurity with industry tools and labs.</p>
+@@ -49,7 +49,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 1 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/intro-cyber-attacks" target="_blank">
+-            <img src="../../assets/images/ibm/ibm-logo.png" alt="Introduction to Cybersecurity Tools & Cyber Attacks" />
++            <img src="../../../assets/images/ibm/ibm-logo.png" alt="Introduction to Cybersecurity Tools & Cyber Attacks" />
+           </a>
+           <h3>Intro to Cybersecurity Tools & Attacks</h3>
+           <p>Overview of common cybersecurity tools, cyber threats, and basic defense strategies.</p>
+@@ -58,7 +58,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 2 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/cybersecurity-operations" target="_blank">
+-            <img src="../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Roles, Processes & Operating System Security" />
++            <img src="../../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Roles, Processes & Operating System Security" />
+           </a>
+           <h3>Roles, Processes & OS Security</h3>
+           <p>Learn key job functions, OS administration, permissions, and securing endpoints.</p>
+@@ -67,7 +67,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 3 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/cybersecurity-compliance-framework" target="_blank">
+-            <img src="../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Compliance Framework & System Administration" />
++            <img src="../../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Compliance Framework & System Administration" />
+           </a>
+           <h3>Compliance & System Admin</h3>
+           <p>Understand frameworks like NIST, GDPR, and system-level security hardening.</p>
+@@ -76,7 +76,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 4 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/network-security" target="_blank">
+-            <img src="../../assets/images/ibm/ibm-logo.png" alt="Network Security & Database Vulnerabilities" />
++            <img src="../../../assets/images/ibm/ibm-logo.png" alt="Network Security & Database Vulnerabilities" />
+           </a>
+           <h3>Network Security & Vulnerabilities</h3>
+           <p>Explore networking basics, intrusion detection, and vulnerability scanning.</p>
+@@ -85,7 +85,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 5 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/threat-intelligence" target="_blank">
+-            <img src="../../assets/images/ibm/ibm-logo.png" alt="Cyber Threat Intelligence" />
++            <img src="../../../assets/images/ibm/ibm-logo.png" alt="Cyber Threat Intelligence" />
+           </a>
+           <h3>Cyber Threat Intelligence</h3>
+           <p>Analyze threat actors, threat models, and intelligence tools for cyber defense.</p>
+@@ -94,7 +94,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 6 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/incident-response" target="_blank">
+-            <img src="../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Capstone: Breach Response Case Studies" />
++            <img src="../../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Capstone: Breach Response Case Studies" />
+           </a>
+           <h3>Incident Response</h3>
+           <p>Learn how to detect, analyze, and respond to security breaches using real tools.</p>
+@@ -103,7 +103,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 7 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/digital-forensics" target="_blank">
+-            <img src="../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Analyst Capstone: Digital Forensics" />
++            <img src="../../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Analyst Capstone: Digital Forensics" />
+           </a>
+           <h3>Digital Forensics</h3>
+           <p>Collect and analyze digital evidence for cybercrime investigations and audits.</p>
+@@ -112,7 +112,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 8 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/cybersecurity-analyst-capstone" target="_blank">
+-            <img src="../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Analyst Capstone Project" />
++            <img src="../../../assets/images/ibm/ibm-logo.png" alt="Cybersecurity Analyst Capstone Project" />
+           </a>
+           <h3>Capstone Project</h3>
+           <p>Complete a real-world project investigating and mitigating a simulated cyber breach.</p>
+@@ -127,7 +127,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+   </div>
+ 
+   <!-- Inject Header and Footer -->
+-  <script src="/archive/legacy-header-footer.js"></script>
++  <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/ibm-full-stack.html b/archive/certifications/programs/ibm-full-stack.html
+index 5f4eeee..2627a9a 100644
+--- a/archive/certifications/programs/ibm-full-stack.html
++++ b/archive/certifications/programs/ibm-full-stack.html
+@@ -9,12 +9,12 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/ibm-full-stack.html">
+     <title>IBM Full Stack Cloud Developer Certification | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css"> <!-- Ensure correct path -->
++    <link rel="stylesheet" href="../../../archive/legacy-style.css"> <!-- Ensure correct path -->
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -45,7 +45,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Main Program Certificate Placeholder -->
+         <div class="cert-item">
+             <a href="https://www.coursera.org/professional-certificates/ibm-full-stack-cloud-developer" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="IBM Full Stack Cloud Developer Certification">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="IBM Full Stack Cloud Developer Certification">
+             </a>
+             <h3>IBM Full Stack Cloud Developer Certification</h3>
+             <p>Main certification for completing the full program.</p>
+@@ -54,7 +54,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Individual Course Placeholders -->
+         <div class="cert-item">
+             <a href="https://coursera.org/share/468592f0f74499d7a483a061e1f9dff8" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-cert01.jpeg" alt="Introduction to Software Engineering">
++                <img src="../../../assets/images/ibm/ibm-cert01.jpeg" alt="Introduction to Software Engineering">
+             </a>
+             <h3>Introduction to Software Engineering</h3>
+             <p>Understanding the fundamentals of software engineering principles.</p>
+@@ -62,7 +62,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://coursera.org/share/0c1f678dacf5452199343be4bb76c64e" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-cert12.jpeg" alt="Introduction to Cloud Computing">
++                <img src="../../../assets/images/ibm/ibm-cert12.jpeg" alt="Introduction to Cloud Computing">
+             </a>
+             <h3>Introduction to Cloud Computing</h3>
+             <p>Understanding cloud computing concepts and IBM Cloud fundamentals.</p>
+@@ -70,7 +70,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://coursera.org/share/a9ed3cbc90166b1b59ef31b29afbf585" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-cert05.jpeg" alt="Introduction to HTML, CSS, & JavaScript">
++                <img src="../../../assets/images/ibm/ibm-cert05.jpeg" alt="Introduction to HTML, CSS, & JavaScript">
+             </a>
+             <h3>Introduction to HTML, CSS, & JavaScript</h3>
+             <p>Creating interactive web applications with core web technologies.</p>
+@@ -78,7 +78,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://www.coursera.org/learn/getting-started-with-git-and-github" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="Getting Started with Git and GitHub">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="Getting Started with Git and GitHub">
+             </a>
+             <h3>Getting Started with Git and GitHub</h3>
+             <p>Learning version control and collaboration with GitHub.</p>
+@@ -86,7 +86,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://www.coursera.org/learn/react-basics" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="Developing Front-End Apps with React">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="Developing Front-End Apps with React">
+             </a>
+             <h3>Developing Front-End Apps with React</h3>
+             <p>Building modern, responsive UI components using React.js.</p>
+@@ -94,7 +94,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://www.coursera.org/learn/node-js-express" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="Developing Back-End Apps with Node.js and Express">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="Developing Back-End Apps with Node.js and Express">
+             </a>
+             <h3>Developing Back-End Apps with Node.js and Express</h3>
+             <p>Creating RESTful APIs and backend applications.</p>
+@@ -102,7 +102,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://coursera.org/share/77169ea6bf073b00f5441032be5c475c" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-cert09.jpeg" alt="Python for Data Science, AI & Development">
++                <img src="../../../assets/images/ibm/ibm-cert09.jpeg" alt="Python for Data Science, AI & Development">
+             </a>
+             <h3>Python for Data Science, AI & Development</h3>
+             <p>Mastering Python for full-stack and AI applications.</p>
+@@ -110,7 +110,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://www.coursera.org/learn/developing-ai-applications-with-python-and-flask" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="Developing AI Applications with Python and Flask">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="Developing AI Applications with Python and Flask">
+             </a>
+             <h3>Developing AI Applications with Python and Flask</h3>
+             <p>Build AI-powered applications using Flask and integrate Python models.</p>
+@@ -118,7 +118,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://www.coursera.org/learn/django-application-development" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="Django Application Development with SQL and Databases">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="Django Application Development with SQL and Databases">
+             </a>
+             <h3>Django Application Development</h3>
+             <p>Developing web applications with Django and SQL databases.</p>
+@@ -126,7 +126,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://www.coursera.org/learn/introduction-to-containers-with-docker-kubernetes-and-openshift" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="Introduction to Containers with Docker, Kubernetes & OpenShift">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="Introduction to Containers with Docker, Kubernetes & OpenShift">
+             </a>
+             <h3>Introduction to Containers w/ Docker, Kubernetes & OpenShift</h3>
+             <p>Learn containerization concepts and deploy apps with modern orchestration tools.</p>
+@@ -134,7 +134,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://www.coursera.org/learn/application-development-using-microservices-and-serverless" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="Application Development using Microservices and Serverless">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="Application Development using Microservices and Serverless">
+             </a>
+             <h3>Application Development using Microservices and Serverless</h3>
+             <p>Architect scalable applications with microservices and serverless frameworks.</p>
+@@ -142,7 +142,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://www.coursera.org/learn/full-stack-application-development-capstone" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="Full Stack Application Development Capstone Project">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="Full Stack Application Development Capstone Project">
+             </a>
+             <h3>Full Stack Application Development Capstone</h3>
+             <p>Final hands-on project demonstrating full-stack expertise.</p>
+@@ -150,7 +150,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://www.coursera.org/learn/full-stack-application-development-capstone" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-logo.png" alt="Full Stack Software Developer Assessment">
++                <img src="../../../assets/images/ibm/ibm-logo.png" alt="Full Stack Software Developer Assessment">
+             </a>
+             <h3>Full Stack Software Developer Assessment</h3>
+             <p>Final exam assessing full stack knowledge and development skills.</p>
+@@ -158,7 +158,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://coursera.org/share/dcd0cdbc77686d0b3ab6bbe95f9afdc0" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-cert14.jpeg" alt="Generative AI: Elevate your Software Development Career">
++                <img src="../../../assets/images/ibm/ibm-cert14.jpeg" alt="Generative AI: Elevate your Software Development Career">
+             </a>
+             <h3>Generative AI: Elevate your Software Development Career</h3>
+             <p>Explore how generative AI tools enhance software development workflows.</p>
+@@ -166,7 +166,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+         <div class="cert-item">
+             <a href="https://coursera.org/share/5d2609f7d284d7401c00ec7abeab1755" target="_blank">
+-                <img src="../../assets/images/ibm/ibm-cert13.jpeg" alt="Software Developer Career Guide and Interview Preparation">
++                <img src="../../../assets/images/ibm/ibm-cert13.jpeg" alt="Software Developer Career Guide and Interview Preparation">
+             </a>
+             <h3>Software Developer Career Guide and Interview Preparation</h3>
+             <p>Prepare for job interviews and build your career with practical guidance.</p>
+@@ -183,7 +183,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/individual-certifications.html b/archive/certifications/programs/individual-certifications.html
+index 0833633..bdbd65a 100644
+--- a/archive/certifications/programs/individual-certifications.html
++++ b/archive/certifications/programs/individual-certifications.html
+@@ -9,12 +9,12 @@
+   <meta property="og:type" content="website" />
+   <meta property="og:url" content="https://candicecantrelle.com/certifications/individual/index.html" />
+   <title>Individual Certifications | Candice Cantrelle</title>
+-  <link rel="stylesheet" href="/archive/legacy-style.css" />
++  <link rel="stylesheet" href="../../../archive/legacy-style.css" />
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -58,7 +58,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+   </div>
+ 
+   <!-- Inject Header and Footer -->
+-  <script src="/archive/legacy-header-footer.js"></script>
++  <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/math-for-engineers.html b/archive/certifications/programs/math-for-engineers.html
+index efc4ddf..e2d14c8 100644
+--- a/archive/certifications/programs/math-for-engineers.html
++++ b/archive/certifications/programs/math-for-engineers.html
+@@ -9,12 +9,12 @@
+   <meta property="og:type" content="website" />
+   <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/mathematics-engineers.html" />
+   <title>Mathematics for Engineers Specialization | Candice Cantrelle</title>
+-  <link rel="stylesheet" href="/archive/legacy-style.css" />
++  <link rel="stylesheet" href="../../../archive/legacy-style.css" />
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -43,7 +43,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Main Program Certificate -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/specializations/mathematics-engineers" target="_blank">
+-            <img src="../../assets/images/uhk/uhk-logo.png" alt="Mathematics for Engineers Specialization Certificate" />
++            <img src="../../../assets/images/uhk/uhk-logo.png" alt="Mathematics for Engineers Specialization Certificate" />
+           </a>
+           <h3>Mathematics for Engineers Specialization</h3>
+           <p>Advanced mathematical foundations for engineering, including applied MATLAB projects.</p>
+@@ -52,7 +52,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 1 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/matrix-algebra-engineers" target="_blank">
+-            <img src="../../assets/images/uhk/uhk-logo.png" alt="Matrix Algebra for Engineers" />
++            <img src="../../../assets/images/uhk/uhk-logo.png" alt="Matrix Algebra for Engineers" />
+           </a>
+           <h3>Matrix Algebra for Engineers</h3>
+           <p>Linear systems, Gaussian elimination, vector spaces, eigenvalues, and diagonalization.</p>
+@@ -61,7 +61,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 2 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/differential-equations-engineers" target="_blank">
+-            <img src="../../assets/images/uhk/uhk-logo.png" alt="Differential Equations for Engineers" />
++            <img src="../../../assets/images/uhk/uhk-logo.png" alt="Differential Equations for Engineers" />
+           </a>
+           <h3>Differential Equations for Engineers</h3>
+           <p>First- and second-order ODEs, Laplace transforms, and partial differential equations.</p>
+@@ -70,7 +70,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 3 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/vector-calculus-engineers" target="_blank">
+-            <img src="../../assets/images/uhk/uhk-logo.png" alt="Vector Calculus for Engineers" />
++            <img src="../../../assets/images/uhk/uhk-logo.png" alt="Vector Calculus for Engineers" />
+           </a>
+           <h3>Vector Calculus for Engineers</h3>
+           <p>Multivariable calculus, vector fields, surface integrals, divergence and Stokes' theorems.</p>
+@@ -79,7 +79,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 4 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/numerical-methods-engineers" target="_blank">
+-            <img src="../../assets/images/uhk/uhk-logo.png" alt="Numerical Methods for Engineers" />
++            <img src="../../../assets/images/uhk/uhk-logo.png" alt="Numerical Methods for Engineers" />
+           </a>
+           <h3>Numerical Methods for Engineers</h3>
+           <p>Root finding, ODE/PDE solving, interpolation, and scientific programming in MATLAB.</p>
+@@ -88,7 +88,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Course 5 -->
+         <div class="cert-item">
+           <a href="https://www.coursera.org/learn/mathematics-engineers-capstone" target="_blank">
+-            <img src="../../assets/images/uhk/uhk-logo.png" alt="Mathematics for Engineers Capstone" />
++            <img src="../../../assets/images/uhk/uhk-logo.png" alt="Mathematics for Engineers Capstone" />
+           </a>
+           <h3>Capstone: Fluid Flow Around a Cylinder</h3>
+           <p>Simulate the Kármán vortex street using MATLAB to apply engineering math in practice.</p>
+@@ -103,7 +103,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+   </div>
+ 
+   <!-- Inject Header and Footer -->
+-  <script src="/archive/legacy-header-footer.js"></script>
++  <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/certifications/programs/mit-applied-data-science.html b/archive/certifications/programs/mit-applied-data-science.html
+index 51448c1..21baf3b 100644
+--- a/archive/certifications/programs/mit-applied-data-science.html
++++ b/archive/certifications/programs/mit-applied-data-science.html
+@@ -9,12 +9,12 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/certifications/programs/mit-applied-data-science.html">
+     <title>MIT Applied Data Science Certification | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css"> <!-- Ensure correct path -->
++    <link rel="stylesheet" href="../../../archive/legacy-style.css"> <!-- Ensure correct path -->
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -59,7 +59,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     </div>
+     
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/index.html b/archive/index.html
+index 5b448ca..db5fc59 100644
+--- a/archive/index.html
++++ b/archive/index.html
+@@ -6,25 +6,25 @@
+ <title>Archive — Candice Cantrelle</title>
+ <meta name="description" content="The previous version of this site, preserved unchanged and unlinked.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/archive/">
++<link rel="icon" type="image/png" href="../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/archive/">
+ <meta name="robots" content="noindex, nofollow">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Archive — Candice Cantrelle">
+ <meta property="og:description" content="The previous version of this site, preserved unchanged and unlinked.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/archive/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/archive/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../assets/css/tokens.css">
++<link rel="stylesheet" href="../assets/css/base.css">
++<link rel="stylesheet" href="../assets/css/shell.css">
++<link rel="stylesheet" href="../assets/css/cards.css">
++<link rel="stylesheet" href="../assets/css/worlds.css">
++<script src="../assets/js/shell.js"></script>
+ 
+ <style>
+ .arc { list-style:none; padding:0; margin:0; }
+@@ -41,7 +41,7 @@
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><span aria-current="page">Archive</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Archive</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -60,7 +60,7 @@
+       <h2 class="sec-head"><span class="idx">01</span> Why these are archived rather than deleted <span class="trail"></span></h2>
+       <p style="max-width:72ch">
+         Three reasons. The work itself is real and has been brought forward into
+-        <a href="/design/">Design</a>, re-encoded and without the marketing wrapper. The pages
++        <a href="../design/">Design</a>, re-encoded and without the marketing wrapper. The pages
+         also carry engagement percentages, time-on-market figures and client testimonials that
+         cannot be substantiated, and deleting them quietly would be a worse answer than leaving
+         them somewhere they can be seen for what they are. And nothing on a portfolio should
+@@ -78,38 +78,38 @@
+     <div class="wrap">
+       <h2 class="sec-head"><span class="idx">02</span> Contents <span class="trail"></span></h2>
+       <ul class="arc">
+-        <li><div><a href="/archive/legacy-index.html">Homepage</a>
++        <li><div><a href="../archive/legacy-index.html">Homepage</a>
+           <p>The jewellery-services landing page, with hero, service list, testimonials and lead-capture forms.</p></div>
+           <span class="tag">Superseded by /</span></li>
+-        <li><div><a href="/archive/portfolio.html">Portfolio</a>
++        <li><div><a href="../archive/portfolio.html">Portfolio</a>
+           <p>Three service cards: jewellery, virtual staging, brand and boutique.</p></div>
+           <span class="tag">Superseded by /design/</span></li>
+-        <li><div><a href="/archive/work-with-me.html">Work with me</a>
++        <li><div><a href="../archive/work-with-me.html">Work with me</a>
+           <p>Services and engagement page for client enquiries.</p></div>
+           <span class="tag">Retired</span></li>
+-        <li><div><a href="/archive/jewelry/">Jewellery</a>
++        <li><div><a href="../archive/jewelry/">Jewellery</a>
+           <p>Product and editorial gallery.</p></div>
+           <span class="tag">Superseded by /design/</span></li>
+-        <li><div><a href="/archive/real-estate/">Real estate</a>
++        <li><div><a href="../archive/real-estate/">Real estate</a>
+           <p>Virtual staging gallery with before-and-after pairs.</p></div>
+           <span class="tag">Superseded by /design/</span></li>
+-        <li><div><a href="/archive/brand-boutique/">Brand &amp; boutique</a>
++        <li><div><a href="../archive/brand-boutique/">Brand &amp; boutique</a>
+           <p>Identity studies built around a helix motif.</p></div>
+           <span class="tag">Superseded by /design/</span></li>
+-        <li><div><a href="/archive/certifications/certifications.html">Certifications</a>
++        <li><div><a href="../archive/certifications/certifications.html">Certifications</a>
+           <p>Fourteen pages covering thirteen certificate programmes and their coursework.</p></div>
+           <span class="tag">Superseded by /about/credentials/</span></li>
+-        <li><div><a href="/archive/projects/emotion-detector.html">Project pages</a>
++        <li><div><a href="../archive/projects/emotion-detector.html">Project pages</a>
+           <p>Three early project write-ups — emotion detection, street-number recognition, AI simulation — that were never linked from the site's navigation.</p></div>
+           <span class="tag">Superseded by /ai-ml/</span></li>
+       </ul>
+-      <p style="margin-top:var(--s-6)"><a class="back-link" href="/">Back to the portfolio</a></p>
++      <p style="margin-top:var(--s-6)"><a class="back-link" href="../">Back to the portfolio</a></p>
+     </div>
+   </section>
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../data/projects.js"></script>
++<script src="../assets/js/cards.js"></script>
+ </body>
+ </html>
+diff --git a/archive/jewelry/images/index.html b/archive/jewelry/images/index.html
+index 041d3be..94b2a5a 100644
+--- a/archive/jewelry/images/index.html
++++ b/archive/jewelry/images/index.html
+@@ -1,5 +1,5 @@
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ <meta name="robots" content="noindex, nofollow">
+ 
+diff --git a/archive/jewelry/index.html b/archive/jewelry/index.html
+index 9e73b5f..be83cca 100644
+--- a/archive/jewelry/index.html
++++ b/archive/jewelry/index.html
+@@ -12,8 +12,8 @@
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+     
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
+-    <link rel="icon" type="image/png" href="/favicon.png">
++    <link rel="stylesheet" href="../../archive/legacy-style.css">
++    <link rel="icon" type="image/png" href="../../favicon.png">
+ 
+     
+     <style>
+@@ -216,7 +216,7 @@
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+     <header id="header"></header>
+@@ -322,6 +322,6 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     
+     <footer id="footer"></footer>
+     
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../archive/legacy-header-footer.js"></script>
+ </body>
+ </html>
+diff --git a/archive/legacy-header-footer.js b/archive/legacy-header-footer.js
+index 1f21b82..2877e5a 100644
+--- a/archive/legacy-header-footer.js
++++ b/archive/legacy-header-footer.js
+@@ -1,4 +1,25 @@
+ // Inject Header & Footer when the DOM is fully loaded
++
++// Where this archived copy is mounted. Worked out from this script's own
++// URL, so the snapshot's internal navigation survives the site moving host
++// or sitting on a project subpath. Its pages were relocated under
++// /archive/ during the rebuild, so old root links are remapped here.
++var ARCHIVE = (function () {
++  var s = document.currentScript;
++  var src = s && s.src ? s.src : null;
++  if (!src) {
++    var all = document.getElementsByTagName("script");
++    for (var i = all.length - 1; i >= 0; i--) {
++      if (all[i].src && all[i].src.indexOf("legacy-header-footer.js") !== -1) {
++        src = all[i].src;
++        break;
++      }
++    }
++  }
++  if (!src) return "/archive/";
++  try { return new URL("./", src).pathname; } catch (e) { return "/archive/"; }
++})();
++var SITE = ARCHIVE.replace(/archive\/$/, "");
+ document.addEventListener("DOMContentLoaded", function () {
+     // Header HTML
+     const headerHTML = `
+@@ -7,16 +28,16 @@ document.addEventListener("DOMContentLoaded", function () {
+     <div class="container">
+       <div class="header-brand">
+         <h1>
+-          <a href="/" class="static-link">Candice Cantrelle</a>
++          <a href="${SITE}" class="static-link">Candice Cantrelle</a>
+         </h1>
+         <p>Signature visual solutions for fine &amp; estate jewelry houses</p>
+       </div>
+       <nav>
+         <ul>
+-          <li><a href="/jewelry/">Jewelry</a></li>
+-          <li><a href="/real-estate/">Real Estate (Select)</a></li>
+-          <li><a href="/portfolio.html">Portfolio</a></li>
+-          <li><a href="/work-with-me.html">Work with Me</a></li>
++          <li><a href="${ARCHIVE}jewelry/">Jewelry</a></li>
++          <li><a href="${ARCHIVE}real-estate/">Real Estate (Select)</a></li>
++          <li><a href="${ARCHIVE}portfolio.html">Portfolio</a></li>
++          <li><a href="${ARCHIVE}work-with-me.html">Work with Me</a></li>
+           <li><a href="https://candice-cantrelle.breely.com/form/10405">Consultation</a></li>
+         </ul>
+       </nav>
+@@ -65,15 +86,15 @@ document.addEventListener("DOMContentLoaded", function () {
+           <div class="footer-column">
+             <h4>Studio</h4>
+             <ul>
+-              <li><a href="/portfolio.html">Portfolio</a></li>
+-              <li><a href="/work-with-me.html">Work with Me</a></li>
++              <li><a href="${ARCHIVE}portfolio.html">Portfolio</a></li>
++              <li><a href="${ARCHIVE}work-with-me.html">Work with Me</a></li>
+             </ul>
+           </div>
+           <div class="footer-column">
+             <h4>Specializations</h4>
+             <ul>
+-              <li><a href="/jewelry/">Jewelry</a></li>
+-              <li><a href="/real-estate/">Real Estate</a></li>
++              <li><a href="${ARCHIVE}jewelry/">Jewelry</a></li>
++              <li><a href="${ARCHIVE}real-estate/">Real Estate</a></li>
+             </ul>
+           </div>
+           <div class="footer-column">
+diff --git a/archive/legacy-index.html b/archive/legacy-index.html
+index 8f03e8f..d858870 100644
+--- a/archive/legacy-index.html
++++ b/archive/legacy-index.html
+@@ -12,12 +12,12 @@
+   <meta charset="UTF-8" />
+   <title>Candice Cantrelle | Signature Visual Solutions for Fine & Estate Jewelry Houses</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+-  <link rel="stylesheet" href="/archive/legacy-style.css" />
++  <link rel="stylesheet" href="../archive/legacy-style.css" />
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -26,7 +26,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ <section class="hero">
+     <div class="hero-media">
+         <!-- Full-width cinematic hero -->
+-        <img src="assets/images/luxury-jewelry-background.png" alt="Luxury jewelry environment" />        <div class="hero-overlay"></div>
++        <img src="../assets/images/luxury-jewelry-background.png" alt="Luxury jewelry environment" />        <div class="hero-overlay"></div>
+     </div>
+ 
+     <div class="hero-content">
+@@ -216,7 +216,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+           <p>
+             Stunning product visualizations that capture every facet and sparkle. Transform your collection into an immersive digital showcase that resonates with collectors and connoisseurs alike.
+           </p>
+-          <a class="cta-btn" href="/jewelry/">For Jewelry Houses</a>
++          <a class="cta-btn" href="jewelry/">For Jewelry Houses</a>
+         </article>
+ 
+         <article class="audience audience-secondary">
+@@ -225,7 +225,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+           <p>
+             Sophisticated virtual staging and property presentations that sell faster. Offered as a select collaboration for listings that demand elevated, art-directed visuals.
+           </p>
+-          <a class="cta-btn" href="/real-estate/">For Real Estate Professionals</a>
++          <a class="cta-btn" href="real-estate/">For Real Estate Professionals</a>
+         </article>
+       </div>
+     </section>
+@@ -376,7 +376,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ </main>
+ 
+ <!-- HEADER/FOOTER -->
+-<script src="/archive/legacy-header-footer.js"></script>
++<script src="../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/legacy-style.css b/archive/legacy-style.css
+index e35c4b2..a37654e 100644
+--- a/archive/legacy-style.css
++++ b/archive/legacy-style.css
+@@ -151,7 +151,7 @@ header nav ul li a:visited {
+ 
+ /* Hero Section */
+ #hero {
+-    background: url('jewelry/images/luxury-environment.png') no-repeat center center; background-size: cover; color: var(--text-primary); text-align: center;    padding: 100px 20px;
++    background: url('jewelry/images/luxury-enviroment.png') no-repeat center center; background-size: cover; color: var(--text-primary); text-align: center;    padding: 100px 20px;
+     position: relative;
+     overflow: hidden;
+ }
+diff --git a/archive/portfolio.html b/archive/portfolio.html
+index 9ed9d71..564ef85 100644
+--- a/archive/portfolio.html
++++ b/archive/portfolio.html
+@@ -4,13 +4,13 @@
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Portfolio | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
+-    <link rel="icon" type="image/png" href="/favicon.png">
++    <link rel="stylesheet" href="../archive/legacy-style.css">
++    <link rel="icon" type="image/png" href="../favicon.png">
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -31,11 +31,11 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+         <!-- Jewelry Visualization -->
+         <div class="portfolio-card">
+             <div class="portfolio-image">
+-                <h3><a href="/jewelry/">Jewelry Visualization</a></h3>
++                <h3><a href="jewelry/">Jewelry Visualization</a></h3>
+             </div>
+             <div class="portfolio-content">
+                 <p>Photorealistic 3D renderings that capture every facet, sparkle, and detail. Transform your jewelry collection into stunning digital showcases that resonate with discerning collectors.</p>
+-                <a href="/jewelry/" class="cta-btn">View Full Jewelry Portfolio →</a>
++                <a href="jewelry/" class="cta-btn">View Full Jewelry Portfolio →</a>
+             </div>
+         </div>
+ 
+@@ -46,9 +46,9 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+             </div>
+ 
+             <div class="portfolio-content">
+-                <h3><a href="/real-estate/">Virtual Staging</a></h3>
++                <h3><a href="real-estate/">Virtual Staging</a></h3>
+                 <p>Sophisticated virtual staging for real estate professionals. Transform vacant or outdated listings into move-in ready showcases that attract qualified buyers and renters.</p>
+-                <a href="/real-estate/" class="cta-btn">View Virtual Staging Portfolio →</a>
++                <a href="real-estate/" class="cta-btn">View Virtual Staging Portfolio →</a>
+             </div>
+         </div>
+ 
+@@ -59,9 +59,9 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+                                                             </div>
+ 
+                                         <div class="portfolio-content">
+-                                                                <h3><a href="/brand-boutique/">Brand & Boutique Visual Design</a></h3>
++                                                                <h3><a href="brand-boutique/">Brand & Boutique Visual Design</a></h3>
+                                                                 <p>High-end CGI and visualization for luxury brands, fashion from product showcases to immersive brand environments—everything you need to communicate your brand's story, capture, fit, and the essence of your brand.</p>
+-                                                                <a href="/brand-boutique/" class="cta-btn">View Brand & Boutique Portfolio →</a>
++                                                                <a href="brand-boutique/" class="cta-btn">View Brand & Boutique Portfolio →</a>
+                                                             </div>
+                                     </div>
+ 
+@@ -75,6 +75,6 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ 
+ </section>
+ 
+-<script src="/archive/legacy-header-footer.js"></script>
++<script src="../archive/legacy-header-footer.js"></script>
+ </body>
+ </html>
+diff --git a/archive/projects/ai-simulation.html b/archive/projects/ai-simulation.html
+index 360f842..86d0d0f 100644
+--- a/archive/projects/ai-simulation.html
++++ b/archive/projects/ai-simulation.html
+@@ -9,14 +9,14 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/projects/ai-simulation.html">
+     <title>AI-Driven Simulation Project | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
+-    <link rel="icon" type="image/png" href="/favicon.png">
++    <link rel="stylesheet" href="../../archive/legacy-style.css">
++    <link rel="icon" type="image/png" href="../../favicon.png">
+ 
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -97,7 +97,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     </div>
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/projects/emotion-detector.html b/archive/projects/emotion-detector.html
+index eafb780..b764afd 100644
+--- a/archive/projects/emotion-detector.html
++++ b/archive/projects/emotion-detector.html
+@@ -9,14 +9,14 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/projects/emotion-detector.html">
+     <title>Facial Emotion Detector Project | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
+-    <link rel="icon" type="image/png" href="/favicon.png">
++    <link rel="stylesheet" href="../../archive/legacy-style.css">
++    <link rel="icon" type="image/png" href="../../favicon.png">
+ 
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -97,7 +97,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     </div>
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/projects/street-recognition.html b/archive/projects/street-recognition.html
+index 87a58a2..d369442 100644
+--- a/archive/projects/street-recognition.html
++++ b/archive/projects/street-recognition.html
+@@ -9,14 +9,14 @@
+     <meta property="og:type" content="website">
+     <meta property="og:url" content="https://candicecantrelle.com/projects/street-recognition.html">
+     <title>Street Number Recognition Project | Candice Cantrelle</title>
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
+-    <link rel="icon" type="image/png" href="/favicon.png">
++    <link rel="stylesheet" href="../../archive/legacy-style.css">
++    <link rel="icon" type="image/png" href="../../favicon.png">
+ 
+ <meta name="robots" content="noindex, nofollow">
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -97,7 +97,7 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+     </div>
+ 
+     <!-- Inject Header and Footer -->
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../archive/legacy-header-footer.js"></script>
+ 
+ </body>
+ </html>
+diff --git a/archive/real-estate/index.html b/archive/real-estate/index.html
+index b13905a..44638ec 100644
+--- a/archive/real-estate/index.html
++++ b/archive/real-estate/index.html
+@@ -12,8 +12,8 @@
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+     
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
+-    <link rel="icon" type="image/png" href="/favicon.png">
++    <link rel="stylesheet" href="../../archive/legacy-style.css">
++    <link rel="icon" type="image/png" href="../../favicon.png">
+ 
+     
+     <style>
+@@ -157,7 +157,7 @@
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+@@ -367,6 +367,6 @@ Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Retu
+ </main>
+ 
+ </body>
+-    <script src="/archive/legacy-header-footer.js"></script>
++    <script src="../../archive/legacy-header-footer.js"></script>
+ 
+ </html>
+diff --git a/archive/work-with-me.html b/archive/work-with-me.html
+index 5dcb7b5..3969865 100644
+--- a/archive/work-with-me.html
++++ b/archive/work-with-me.html
+@@ -10,9 +10,9 @@
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+-    <link rel="stylesheet" href="/archive/legacy-style.css">
++    <link rel="stylesheet" href="../archive/legacy-style.css">
+     <title>Work With Me | Candice Cantrelle</title>
+-    <link rel="icon" type="image/png" href="/favicon.png">
++    <link rel="icon" type="image/png" href="../favicon.png">
+     
+     <style>
+         .hero-gradient { background: linear-gradient(135deg, #D4AF37 0%, #C89B3C 50%, #F0C27B 100%); padding: 120px 40px; text-align: center; color: #2C2C2E; }
+@@ -71,23 +71,23 @@
+ </head>
+ <body>
+ <div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+-Archived page &mdash; superseded &middot; <a href="/" style="color:#FF8A3D">Return to the current portfolio</a>
++Archived page &mdash; superseded &middot; <a href="../" style="color:#FF8A3D">Return to the current portfolio</a>
+ </div>
+ 
+ 
+             <header>
+         <div class="container">
+             <div class="header-brand">
+-                <h1><a href="/" class="static-link">Candice Cantrelle</a></h1>
++                <h1><a href="../" class="static-link">Candice Cantrelle</a></h1>
+                 <p>Signature Visual Solutions for Luxury Brands</p>
+             </div>
+             <nav>
+                 <ul>
+-                    <li><a href="/">Home</a></li>
+-                    <li><a href="/#services">Services</a></li>
+-                    <li><a href="/certifications/certifications.html">Credentials</a></li>
+-                    <li><a href="/portfolio.html">Portfolio</a></li>
+-                    <li><a href="/work-with-me/">Work With Me</a></li>
++                    <li><a href="../">Home</a></li>
++                    <li><a href="../#services">Services</a></li>
++                    <li><a href="certifications/certifications.html">Credentials</a></li>
++                    <li><a href="portfolio.html">Portfolio</a></li>
++                    <li><a href="../work-with-me/">Work With Me</a></li>
+                 </ul>
+             </nav>
+         </div>
+diff --git a/assets/js/cards.js b/assets/js/cards.js
+index 77b71ea..5d569a0 100644
+--- a/assets/js/cards.js
++++ b/assets/js/cards.js
+@@ -14,6 +14,11 @@
+   var P = window.PROJECTS || [];
+   var CATS = window.CATEGORIES || [];
+ 
++  /* Resolve site-absolute registry paths against wherever the site is
++     mounted. shell.js works the base out from its own URL; if it failed
++     to load, fall through unchanged rather than mangling anything. */
++  var U = (window.CCShell && window.CCShell.url) || function (x) { return x; };
++
+   function esc(s) {
+     return String(s == null ? "" : s)
+       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+@@ -63,9 +68,9 @@
+   }
+ 
+   function primaryHref(p) {
+-    if (p.caseStudy) return p.caseStudy;
+-    if (p.links && p.links.live) return p.links.live;
+-    if (p.links && p.links.source) return p.links.source;
++    if (p.caseStudy) return U(p.caseStudy);
++    if (p.links && p.links.live) return U(p.links.live);
++    if (p.links && p.links.source) return U(p.links.source);
+     return null;
+   }
+ 
+@@ -82,7 +87,7 @@
+     if (p.image) {
+       var fit = p.imageFit === "contain" ? ' style="object-fit:contain;padding:8%"' : "";
+       return '<div class="plate-area plate-area--' + t + '">' +
+-               '<img src="' + esc(p.image) + '" alt="' + esc(p.imageAlt || "") + '" loading="lazy" decoding="async"' + fit + ">" +
++               '<img src="' + esc(U(p.image)) + '" alt="' + esc(p.imageAlt || "") + '" loading="lazy" decoding="async"' + fit + ">" +
+                cap +
+              "</div>";
+     }
+@@ -366,7 +371,7 @@
+     var html = shown.map(function (c, i) {
+       var n = countIn(c.id);
+       total += n;
+-      return '<a class="door" href="/' + c.id + '/" style="--door-accent: var(' + c.accent + ')">' +
++      return '<a class="door" href="' + U("/" + c.id + "/") + '" style="--door-accent: var(' + c.accent + ')">' +
+         '<span class="door__n">' + String(i + 1).padStart(2, "0") + "</span>" +
+         '<span class="door__name">' + esc(c.name) + "</span>" +
+         '<span class="door__desc">' + esc(c.tagline) + "</span>" +
+diff --git a/assets/js/shell.js b/assets/js/shell.js
+index f331d70..fabf6ad 100644
+--- a/assets/js/shell.js
++++ b/assets/js/shell.js
+@@ -13,6 +13,36 @@
+ (function () {
+   "use strict";
+ 
++  /* ------------------------------------------------------------------
++     0. BASE — where this site is mounted on its host.
++     ---------------------------------------------------------------------
++     Derived from this script's own URL rather than hardcoded, so the same
++     files work unchanged at a domain root, a user site, or a project
++     subpath like /candicecantrelle.github.io/. Move the site and nothing
++     here needs editing.
++     ------------------------------------------------------------------ */
++  var BASE = (function () {
++    var s = document.currentScript;
++    var src = s && s.src ? s.src : null;
++    if (!src) {
++      var all = document.getElementsByTagName("script");
++      for (var i = all.length - 1; i >= 0; i--) {
++        if (all[i].src && all[i].src.indexOf("assets/js/shell.js") !== -1) {
++          src = all[i].src;
++          break;
++        }
++      }
++    }
++    if (!src) return "/";
++    try { return new URL("../../", src).pathname; } catch (e) { return "/"; }
++  })();
++
++  /* Resolve a site-absolute path ("/design/") against that base. */
++  function U(p) {
++    if (typeof p !== "string" || p.charAt(0) !== "/") return p;
++    return BASE + p.slice(1);
++  }
++
+   /* ------------------------------------------------------------------
+      1. THEME — resolved before paint, so no flash.
+      ------------------------------------------------------------------ */
+@@ -65,7 +95,7 @@
+   var SIM_SITE = "https://unicorn0-0cakes.github.io/simulations/";
+ 
+   function wordmark(cls) {
+-    return '<a class="wordmark ' + (cls || "") + '" href="/">' +
++    return '<a class="wordmark ' + (cls || "") + '" href="' + BASE + '">' +
+              '<em>CC</em><span class="slash">/</span>' +
+              '<span class="sub">Portfolio</span>' +
+            "</a>";
+@@ -74,7 +104,7 @@
+   function header(current) {
+     var items = NAV.map(function (n) {
+       var isCurrent = current === n.href;
+-      return '<li><a class="nav__link" href="' + n.href + '"' +
++      return '<li><a class="nav__link" href="' + U(n.href) + '"' +
+              (isCurrent ? ' aria-current="page"' : "") + ">" + n.label + "</a></li>";
+     }).join("");
+ 
+@@ -120,18 +150,18 @@
+             "</div>" +
+             "<div>" +
+               "<h2>Work</h2><ul>" +
+-                '<li><a href="/simulations/">Simulations</a></li>' +
+-                '<li><a href="/ai-ml/">AI + ML</a></li>' +
+-                '<li><a href="/software/">Software</a></li>' +
+-                '<li><a href="/research/">Research</a></li>' +
++                '<li><a href="' + U("/simulations/") + '">Simulations</a></li>' +
++                '<li><a href="' + U("/ai-ml/") + '">AI + ML</a></li>' +
++                '<li><a href="' + U("/software/") + '">Software</a></li>' +
++                '<li><a href="' + U("/research/") + '">Research</a></li>' +
+               "</ul>" +
+             "</div>" +
+             "<div>" +
+               "<h2>More</h2><ul>" +
+-                '<li><a href="/design/">Design</a></li>' +
+-                '<li><a href="/workshop/">Workshop</a></li>' +
+-                '<li><a href="/about/">About</a></li>' +
+-                '<li><a href="/about/#credentials">Credentials</a></li>' +
++                '<li><a href="' + U("/design/") + '">Design</a></li>' +
++                '<li><a href="' + U("/workshop/") + '">Workshop</a></li>' +
++                '<li><a href="' + U("/about/") + '">About</a></li>' +
++                '<li><a href="' + U("/about/#credentials") + '">Credentials</a></li>' +
+               "</ul>" +
+             "</div>" +
+             "<div>" +
+@@ -156,7 +186,8 @@
+   function currentSection() {
+     var p = location.pathname;
+     for (var i = 0; i < NAV.length; i++) {
+-      if (p === NAV[i].href || p.indexOf(NAV[i].href) === 0) return NAV[i].href;
++      var full = U(NAV[i].href);
++      if (p === full || p.indexOf(full) === 0) return NAV[i].href;
+     }
+     return null;
+   }
+@@ -210,5 +241,5 @@
+     mount();
+   }
+ 
+-  window.CCShell = { setTheme: setTheme, NAV: NAV, GITHUB: GITHUB, SIM_SITE: SIM_SITE };
++  window.CCShell = { setTheme: setTheme, NAV: NAV, GITHUB: GITHUB, SIM_SITE: SIM_SITE, base: BASE, url: U };
+ })();
+diff --git a/design/index.html b/design/index.html
+index 37aaa65..a506702 100644
+--- a/design/index.html
++++ b/design/index.html
+@@ -6,24 +6,24 @@
+ <title>Design — Candice Cantrelle</title>
+ <meta name="description" content="Visual systems and client work: identity for an industrial crane business, fine jewellery visualization, and virtual staging for residential property.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/design/">
++<link rel="icon" type="image/png" href="../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/design/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Design — Candice Cantrelle">
+ <meta property="og:description" content="Visual systems and client work: identity for an industrial crane business, fine jewellery visualization, and virtual staging for residential property.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/design/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/design/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../assets/css/tokens.css">
++<link rel="stylesheet" href="../assets/css/base.css">
++<link rel="stylesheet" href="../assets/css/shell.css">
++<link rel="stylesheet" href="../assets/css/cards.css">
++<link rel="stylesheet" href="../assets/css/worlds.css">
++<script src="../assets/js/shell.js"></script>
+ 
+ <style>
+ .plates { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:var(--s-5); }
+@@ -34,7 +34,7 @@
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><span aria-current="page">Design</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Design</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -68,16 +68,16 @@
+         interpretation of the room.
+       </p>
+       <div class="compare">
+-        <figure><img src="/assets/images/work/estate-waterfront_nola-before.webp" alt="An empty waterfront living room with bare marble floors and a wall of glass doors" loading="lazy" decoding="async"><figcaption>Before</figcaption></figure>
+-        <figure><img src="/assets/images/work/estate-waterfront_nola-staged-a.webp" alt="The same waterfront room digitally staged with a sectional sofa, sideboard, rug and planting" loading="lazy" decoding="async"><figcaption>After</figcaption></figure>
++        <figure><img src="../assets/images/work/estate-waterfront_nola-before.webp" alt="An empty waterfront living room with bare marble floors and a wall of glass doors" loading="lazy" decoding="async"><figcaption>Before</figcaption></figure>
++        <figure><img src="../assets/images/work/estate-waterfront_nola-staged-a.webp" alt="The same waterfront room digitally staged with a sectional sofa, sideboard, rug and planting" loading="lazy" decoding="async"><figcaption>After</figcaption></figure>
+       </div>
+       <div class="sheet" style="margin-top:var(--s-5)">
+-        <figure><img src="/assets/images/work/estate-primary_suite_retreat_nola-staged-a.webp" alt="A primary bedroom digitally staged with a bed, dark feature wall and warm lamplight" loading="lazy" decoding="async"><figcaption>Primary suite · New Orleans</figcaption></figure>
+-        <figure><img src="/assets/images/work/estate-golden_medow_backyard-staged-a.webp" alt="A patio staged with outdoor sofas, a dining set and planting" loading="lazy" decoding="async"><figcaption>Backyard · Golden Meadow</figcaption></figure>
+-        <figure><img src="/assets/images/work/estate-cut_off_front_refresh-staged-a.webp" alt="A single-storey house at dusk with a refreshed red roof, lit windows and mown lawn" loading="lazy" decoding="async"><figcaption>Exterior refresh · Cut Off</figcaption></figure>
+-        <figure><img src="/assets/images/work/estate-dallas_rental-staged-a.webp" alt="An open-plan Dallas rental interior staged with a dining set beneath a black steel staircase" loading="lazy" decoding="async"><figcaption>Rental · Dallas</figcaption></figure>
+-        <figure><img src="/assets/images/work/estate-houston_rental-staged-a.webp" alt="A floor-to-ceiling-glass Houston bedroom staged with a bed, bench and planting" loading="lazy" decoding="async"><figcaption>Rental · Houston</figcaption></figure>
+-        <figure><img src="/assets/images/work/estate-greatroom-before.webp" alt="A waterfront great room, already furnished, photographed before restyling" loading="lazy" decoding="async"><figcaption>Great room · unstaged</figcaption></figure>
++        <figure><img src="../assets/images/work/estate-primary_suite_retreat_nola-staged-a.webp" alt="A primary bedroom digitally staged with a bed, dark feature wall and warm lamplight" loading="lazy" decoding="async"><figcaption>Primary suite · New Orleans</figcaption></figure>
++        <figure><img src="../assets/images/work/estate-golden_medow_backyard-staged-a.webp" alt="A patio staged with outdoor sofas, a dining set and planting" loading="lazy" decoding="async"><figcaption>Backyard · Golden Meadow</figcaption></figure>
++        <figure><img src="../assets/images/work/estate-cut_off_front_refresh-staged-a.webp" alt="A single-storey house at dusk with a refreshed red roof, lit windows and mown lawn" loading="lazy" decoding="async"><figcaption>Exterior refresh · Cut Off</figcaption></figure>
++        <figure><img src="../assets/images/work/estate-dallas_rental-staged-a.webp" alt="An open-plan Dallas rental interior staged with a dining set beneath a black steel staircase" loading="lazy" decoding="async"><figcaption>Rental · Dallas</figcaption></figure>
++        <figure><img src="../assets/images/work/estate-houston_rental-staged-a.webp" alt="A floor-to-ceiling-glass Houston bedroom staged with a bed, bench and planting" loading="lazy" decoding="async"><figcaption>Rental · Houston</figcaption></figure>
++        <figure><img src="../assets/images/work/estate-greatroom-before.webp" alt="A waterfront great room, already furnished, photographed before restyling" loading="lazy" decoding="async"><figcaption>Great room · unstaged</figcaption></figure>
+       </div>
+     </div>
+   </section>
+@@ -91,12 +91,12 @@
+         and a piece that looks correct in one will often look wrong in the other.
+       </p>
+       <div class="sheet">
+-        <figure><img src="/assets/images/work/jewelry-bridal-visualization.webp" alt="An emerald-cut solitaire ring on a pavé band, lit against black with a radiating starburst" loading="lazy" decoding="async"><figcaption>Bridal</figcaption></figure>
+-        <figure><img src="/assets/images/work/jewelry-pendant-visualization.webp" alt="A cushion-cut yellow diamond pendant in a double halo, on a fine chain against pale teal" loading="lazy" decoding="async"><figcaption>Pendant</figcaption></figure>
+-        <figure><img src="/assets/images/work/jewelry-earring-artistry.webp" alt="A diamond drop earring photographed in profile on a model" loading="lazy" decoding="async"><figcaption>Earrings</figcaption></figure>
+-        <figure><img src="/assets/images/work/jewelry-ring-collection.webp" alt="Three turquoise-and-silver rings arranged on red rock" loading="lazy" decoding="async"><figcaption>Collection</figcaption></figure>
+-        <figure><img src="/assets/images/work/jewelry-luxury-set-showcase.webp" alt="A model on a coastal cliff wearing a matched green-stone collar necklace and drop earrings" loading="lazy" decoding="async"><figcaption>Set, worn</figcaption></figure>
+-        <figure><img src="/assets/images/work/jewelry-luxury-enviroment.webp" alt="A pair of pear-cut yellow diamond drop earrings on cream silk" loading="lazy" decoding="async"><figcaption>Yellow diamond drops</figcaption></figure>
++        <figure><img src="../assets/images/work/jewelry-bridal-visualization.webp" alt="An emerald-cut solitaire ring on a pavé band, lit against black with a radiating starburst" loading="lazy" decoding="async"><figcaption>Bridal</figcaption></figure>
++        <figure><img src="../assets/images/work/jewelry-pendant-visualization.webp" alt="A cushion-cut yellow diamond pendant in a double halo, on a fine chain against pale teal" loading="lazy" decoding="async"><figcaption>Pendant</figcaption></figure>
++        <figure><img src="../assets/images/work/jewelry-earring-artistry.webp" alt="A diamond drop earring photographed in profile on a model" loading="lazy" decoding="async"><figcaption>Earrings</figcaption></figure>
++        <figure><img src="../assets/images/work/jewelry-ring-collection.webp" alt="Three turquoise-and-silver rings arranged on red rock" loading="lazy" decoding="async"><figcaption>Collection</figcaption></figure>
++        <figure><img src="../assets/images/work/jewelry-luxury-set-showcase.webp" alt="A model on a coastal cliff wearing a matched green-stone collar necklace and drop earrings" loading="lazy" decoding="async"><figcaption>Set, worn</figcaption></figure>
++        <figure><img src="../assets/images/work/jewelry-luxury-enviroment.webp" alt="A pair of pear-cut yellow diamond drop earrings on cream silk" loading="lazy" decoding="async"><figcaption>Yellow diamond drops</figcaption></figure>
+       </div>
+     </div>
+   </section>
+@@ -106,7 +106,7 @@
+       <h2 class="sec-head"><span class="idx">04</span> Archive <span class="trail"></span></h2>
+       <p class="note" style="max-width:70ch">
+         This site previously ran as a jewellery and virtual-staging services studio. Those pages
+-        are kept at <a href="/archive/">/archive/</a> for reference. They are not linked from the
++        are kept at <a href="../archive/">/archive/</a> for reference. They are not linked from the
+         navigation and are marked <code>noindex</code>; several of them carry performance figures
+         and testimonials that cannot be substantiated, which is why the work has been brought
+         forward here without them.
+@@ -116,8 +116,8 @@
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../data/projects.js"></script>
++<script src="../assets/js/cards.js"></script>
+ <script>
+ CC.renderInto("#dz", CC.curated(CC.byCategory("design")));
+ </script>
+diff --git a/games/index.html b/games/index.html
+index ecd476f..ca99cb5 100644
+--- a/games/index.html
++++ b/games/index.html
+@@ -6,24 +6,24 @@
+ <title>Games — Candice Cantrelle</title>
+ <meta name="description" content="A games wing built and waiting for its first release. The presentation system is complete; the shelf is not.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/games/">
++<link rel="icon" type="image/png" href="../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/games/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Games — Candice Cantrelle">
+ <meta property="og:description" content="A games wing built and waiting for its first release. The presentation system is complete; the shelf is not.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/games/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/games/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../assets/css/tokens.css">
++<link rel="stylesheet" href="../assets/css/base.css">
++<link rel="stylesheet" href="../assets/css/shell.css">
++<link rel="stylesheet" href="../assets/css/cards.css">
++<link rel="stylesheet" href="../assets/css/worlds.css">
++<script src="../assets/js/shell.js"></script>
+ 
+ <style>
+ .empty-state {
+@@ -39,7 +39,7 @@
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><span aria-current="page">Games</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Games</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -109,8 +109,8 @@
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../data/projects.js"></script>
++<script src="../assets/js/cards.js"></script>
+ <script>
+ CC.renderInto("#gm", CC.curated(CC.byCategory("games")));
+ </script>
+diff --git a/index.html b/index.html
+index 0b36942..e6c97dd 100644
+--- a/index.html
++++ b/index.html
+@@ -6,24 +6,24 @@
+ <title>Candice Cantrelle — Systems, Software, Simulation, Research, Design</title>
+ <meta name="description" content="A portfolio of scientific simulations, machine learning, software, research and design. Nine browser instruments, a computer-vision pipeline, and work that states plainly what it has and has not demonstrated.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/">
++<link rel="icon" type="image/png" href="favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Candice Cantrelle — Systems, Software, Simulation, Research, Design">
+ <meta property="og:description" content="The medium changes. The systems thinking does not.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="assets/css/tokens.css">
++<link rel="stylesheet" href="assets/css/base.css">
++<link rel="stylesheet" href="assets/css/shell.css">
++<link rel="stylesheet" href="assets/css/cards.css">
++<link rel="stylesheet" href="assets/css/worlds.css">
++<script src="assets/js/shell.js"></script>
+ 
+ <style>
+   /* ---- Homepage only. The calmest page on the site: one accent, one
+@@ -107,10 +107,10 @@
+ <noscript>
+   <div class="wrap" style="padding-top:16px">
+     <nav aria-label="Primary" class="fallback" style="border:1px solid var(--rf-line);padding:12px 16px;border-radius:3px">
+-      <a href="/simulations/">Simulations</a> · <a href="/ai-ml/">AI + ML</a> ·
+-      <a href="/software/">Software</a> · <a href="/research/">Research</a> ·
+-      <a href="/design/">Design</a> · <a href="/workshop/">Workshop</a> ·
+-      <a href="/about/">About</a>
++      <a href="simulations/">Simulations</a> · <a href="ai-ml/">AI + ML</a> ·
++      <a href="software/">Software</a> · <a href="research/">Research</a> ·
++      <a href="design/">Design</a> · <a href="workshop/">Workshop</a> ·
++      <a href="about/">About</a>
+     </nav>
+   </div>
+ </noscript>
+@@ -198,12 +198,12 @@
+       <nav class="doors" id="doors" aria-label="Disciplines"></nav>
+       <noscript>
+         <div class="fallback" style="margin-top:16px">
+-          <p><a href="/simulations/">Simulations</a> — an atlas of scientific instruments</p>
+-          <p><a href="/ai-ml/">AI + ML</a> — models, datasets, and what they actually scored</p>
+-          <p><a href="/software/">Software</a> — tools built to be used</p>
+-          <p><a href="/research/">Research</a> — questions in progress</p>
+-          <p><a href="/design/">Design</a> — identity, interface and image</p>
+-          <p><a href="/workshop/">Workshop</a> — small things, kept honest</p>
++          <p><a href="simulations/">Simulations</a> — an atlas of scientific instruments</p>
++          <p><a href="ai-ml/">AI + ML</a> — models, datasets, and what they actually scored</p>
++          <p><a href="software/">Software</a> — tools built to be used</p>
++          <p><a href="research/">Research</a> — questions in progress</p>
++          <p><a href="design/">Design</a> — identity, interface and image</p>
++          <p><a href="workshop/">Workshop</a> — small things, kept honest</p>
+         </div>
+       </noscript>
+     </div>
+@@ -220,7 +220,7 @@
+         the work has actually earned.
+       </p>
+       <div class="grid" id="selected-grid"></div>
+-      <p class="selected-note">Full catalogue by discipline above · <a href="/workshop/">Smaller work lives in the Workshop</a></p>
++      <p class="selected-note">Full catalogue by discipline above · <a href="workshop/">Smaller work lives in the Workshop</a></p>
+     </div>
+   </section>
+ 
+@@ -246,7 +246,7 @@
+           of the work that makes the rest of it worth believing.
+         </p>
+         <p>
+-          <a href="/about/">More about how I work →</a>
++          <a href="about/">More about how I work →</a>
+         </p>
+       </div>
+     </div>
+@@ -256,8 +256,8 @@
+ 
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="data/projects.js"></script>
++<script src="assets/js/cards.js"></script>
+ <script>
+   CC.doors("#doors");
+   CC.renderInto("#selected-grid", SELECTED.map(CC.byId).filter(Boolean));
+diff --git a/projects/cube-timer/index.html b/projects/cube-timer/index.html
+index 59db18b..effee5e 100644
+--- a/projects/cube-timer/index.html
++++ b/projects/cube-timer/index.html
+@@ -166,7 +166,7 @@
+ <a class="skip-link cc-skip" href="#main">Skip to content</a>
+ <nav class="cc-return" aria-label="Return to portfolio">
+   <span class="cc-mark"><b>CC</b> / Portfolio &mdash; Software</span>
+-  <span><a href="/software/">&larr; Back to Software</a> &nbsp;&middot;&nbsp; <a href="/">Portfolio home</a></span>
++  <span><a href="../../software/">&larr; Back to Software</a> &nbsp;&middot;&nbsp; <a href="../../">Portfolio home</a></span>
+ </nav>
+ <main id="main">
+ 
+diff --git a/research/index.html b/research/index.html
+index b809ed5..b7b44bd 100644
+--- a/research/index.html
++++ b/research/index.html
+@@ -6,24 +6,24 @@
+ <title>Research — Candice Cantrelle</title>
+ <meta name="description" content="Exploratory work where the investigation is the output. Implemented and proposed are labelled separately, and no performance claims are made without evidence.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/research/">
++<link rel="icon" type="image/png" href="../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/research/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Research — Candice Cantrelle">
+ <meta property="og:description" content="Exploratory work where the investigation is the output. Implemented and proposed are labelled separately, and no performance claims are made without evidence.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/research/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/research/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../assets/css/tokens.css">
++<link rel="stylesheet" href="../assets/css/base.css">
++<link rel="stylesheet" href="../assets/css/shell.css">
++<link rel="stylesheet" href="../assets/css/cards.css">
++<link rel="stylesheet" href="../assets/css/worlds.css">
++<script src="../assets/js/shell.js"></script>
+ 
+ <style>
+ .principle { border-top: 1px solid var(--rf-line); padding-top: var(--s-4); }
+@@ -36,7 +36,7 @@
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><span aria-current="page">Research</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Research</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -103,8 +103,8 @@
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../data/projects.js"></script>
++<script src="../assets/js/cards.js"></script>
+ <script>
+ CC.renderInto("#rs", CC.curated(CC.byCategory("research")));
+ CC.renderInto("#adjacent", ["cce", "sentinel"].map(CC.byId).filter(Boolean));
+diff --git a/research/multimodal-archaeology/index.html b/research/multimodal-archaeology/index.html
+index 199c21f..57cd7ab 100644
+--- a/research/multimodal-archaeology/index.html
++++ b/research/multimodal-archaeology/index.html
+@@ -6,24 +6,24 @@
+ <title>Multimodal Archaeological Site Detection — Candice Cantrelle</title>
+ <meta name="description" content="A proposed three-tier pipeline for locating unrecorded archaeological sites from satellite, LiDAR and archival text. Architecture built; nothing trained; no performance claimed.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/research/multimodal-archaeology/">
++<link rel="icon" type="image/png" href="../../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/research/multimodal-archaeology/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Multimodal Archaeological Site Detection — Candice Cantrelle">
+ <meta property="og:description" content="A proposed three-tier pipeline for locating unrecorded archaeological sites from satellite, LiDAR and archival text. Architecture built; nothing trained; no performance claimed.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/research/multimodal-archaeology/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/research/multimodal-archaeology/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../../assets/css/tokens.css">
++<link rel="stylesheet" href="../../assets/css/base.css">
++<link rel="stylesheet" href="../../assets/css/shell.css">
++<link rel="stylesheet" href="../../assets/css/cards.css">
++<link rel="stylesheet" href="../../assets/css/worlds.css">
++<script src="../../assets/js/shell.js"></script>
+ 
+ <style>
+ .case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@@ -62,7 +62,7 @@ h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spac
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><a href="/research/">Research</a></li><li><span aria-current="page">Multimodal Archaeology</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../research/">Research</a></li><li><span aria-current="page">Multimodal Archaeology</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -218,7 +218,7 @@ h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spac
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../../data/projects.js"></script>
++<script src="../../assets/js/cards.js"></script>
+ </body>
+ </html>
+diff --git a/simulations/index.html b/simulations/index.html
+index 294c284..8259d14 100644
+--- a/simulations/index.html
++++ b/simulations/index.html
+@@ -6,24 +6,24 @@
+ <title>Simulations — Candice Cantrelle</title>
+ <meta name="description" content="Nine self-contained browser instruments that rebuild documented experiments. Set the conditions, run the world, read what comes out.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/simulations/">
++<link rel="icon" type="image/png" href="../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/simulations/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Simulations — Candice Cantrelle">
+ <meta property="og:description" content="Nine self-contained browser instruments that rebuild documented experiments. Set the conditions, run the world, read what comes out.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/simulations/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/simulations/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../assets/css/tokens.css">
++<link rel="stylesheet" href="../assets/css/base.css">
++<link rel="stylesheet" href="../assets/css/shell.css">
++<link rel="stylesheet" href="../assets/css/cards.css">
++<link rel="stylesheet" href="../assets/css/worlds.css">
++<script src="../assets/js/shell.js"></script>
+ 
+ <style>
+ .atlas-cta {
+@@ -51,7 +51,7 @@
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><span aria-current="page">Simulations</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Simulations</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -143,8 +143,8 @@
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../data/projects.js"></script>
++<script src="../assets/js/cards.js"></script>
+ <script>
+ CC.renderInto("#sims", CC.curated(CC.byCategory("simulations")));
+ /* Deep links leave the portfolio, so mark them and open in place. */
+diff --git a/software/index.html b/software/index.html
+index e3b8189..a9ebffb 100644
+--- a/software/index.html
++++ b/software/index.html
+@@ -6,24 +6,24 @@
+ <title>Software & Tools — Candice Cantrelle</title>
+ <meta name="description" content="Applications and utilities built end to end: a computer-vision pipeline that turns a photograph of a key into a printable model, and a speedcubing timer that runs entirely offline.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/software/">
++<link rel="icon" type="image/png" href="../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/software/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Software & Tools — Candice Cantrelle">
+ <meta property="og:description" content="Applications and utilities built end to end: a computer-vision pipeline that turns a photograph of a key into a printable model, and a speedcubing timer that runs entirely offline.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/software/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/software/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../assets/css/tokens.css">
++<link rel="stylesheet" href="../assets/css/base.css">
++<link rel="stylesheet" href="../assets/css/shell.css">
++<link rel="stylesheet" href="../assets/css/cards.css">
++<link rel="stylesheet" href="../assets/css/worlds.css">
++<script src="../assets/js/shell.js"></script>
+ 
+ <style>
+ .surfaces { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:var(--s-4); }
+@@ -38,7 +38,7 @@
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><span aria-current="page">Software</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Software</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -81,15 +81,15 @@
+           <p>A standalone build for people who will not upload a photograph of their key to a server.</p></div>
+       </div>
+       <p style="margin-top:var(--s-5)">
+-        <a href="/software/key-to-stl/">Read the full case study &rarr;</a>
++        <a href="../software/key-to-stl/">Read the full case study &rarr;</a>
+       </p>
+     </div>
+   </section>
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../data/projects.js"></script>
++<script src="../assets/js/cards.js"></script>
+ <script>
+ CC.renderInto("#sw", CC.curated(CC.byCategory("software")));
+ </script>
+diff --git a/software/key-to-stl/index.html b/software/key-to-stl/index.html
+index c889ce1..7ef3983 100644
+--- a/software/key-to-stl/index.html
++++ b/software/key-to-stl/index.html
+@@ -6,24 +6,24 @@
+ <title>Key → STL — Candice Cantrelle</title>
+ <meta name="description" content="A four-surface system for recovering a printable profile from a photograph of a key: OpenCV core, FastAPI service, browser client, desktop build and an automated release pipeline.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/software/key-to-stl/">
++<link rel="icon" type="image/png" href="../../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/software/key-to-stl/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Key → STL — Candice Cantrelle">
+ <meta property="og:description" content="A four-surface system for recovering a printable profile from a photograph of a key: OpenCV core, FastAPI service, browser client, desktop build and an automated release pipeline.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/software/key-to-stl/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/software/key-to-stl/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../../assets/css/tokens.css">
++<link rel="stylesheet" href="../../assets/css/base.css">
++<link rel="stylesheet" href="../../assets/css/shell.css">
++<link rel="stylesheet" href="../../assets/css/cards.css">
++<link rel="stylesheet" href="../../assets/css/worlds.css">
++<script src="../../assets/js/shell.js"></script>
+ 
+ <style>
+ .case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@@ -59,7 +59,7 @@ h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spac
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><a href="/software/">Software</a></li><li><span aria-current="page">Key → STL</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../software/">Software</a></li><li><span aria-current="page">Key → STL</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -196,7 +196,7 @@ h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spac
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../../data/projects.js"></script>
++<script src="../../assets/js/cards.js"></script>
+ </body>
+ </html>
+diff --git a/workshop/index.html b/workshop/index.html
+index a8142a2..ecf2786 100644
+--- a/workshop/index.html
++++ b/workshop/index.html
+@@ -6,30 +6,30 @@
+ <title>Workshop — Candice Cantrelle</title>
+ <meta name="description" content="Small tools, sketches and experiments. Shown without case studies, because they do not need one.">
+ <meta name="author" content="Candice Cantrelle">
+-<link rel="icon" type="image/png" href="/favicon.png">
+-<link rel="canonical" href="https://candicecantrelle.github.io/workshop/">
++<link rel="icon" type="image/png" href="../favicon.png">
++<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/workshop/">
+ 
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Workshop — Candice Cantrelle">
+ <meta property="og:description" content="Small tools, sketches and experiments. Shown without case studies, because they do not need one.">
+-<meta property="og:url" content="https://candicecantrelle.github.io/workshop/">
++<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/workshop/">
+ 
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+ 
+-<link rel="stylesheet" href="/assets/css/tokens.css">
+-<link rel="stylesheet" href="/assets/css/base.css">
+-<link rel="stylesheet" href="/assets/css/shell.css">
+-<link rel="stylesheet" href="/assets/css/cards.css">
+-<link rel="stylesheet" href="/assets/css/worlds.css">
+-<script src="/assets/js/shell.js"></script>
++<link rel="stylesheet" href="../assets/css/tokens.css">
++<link rel="stylesheet" href="../assets/css/base.css">
++<link rel="stylesheet" href="../assets/css/shell.css">
++<link rel="stylesheet" href="../assets/css/cards.css">
++<link rel="stylesheet" href="../assets/css/worlds.css">
++<script src="../assets/js/shell.js"></script>
+ </head>
+ 
+ <body>
+ <div data-shell-header></div>
+ <main id="main">
+-<div class="wrap"><ol class="crumbs"><li><a href="/">Portfolio</a></li><li><span aria-current="page">Workshop</span></li></ol></div>
++<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Workshop</span></li></ol></div>
+   <header class="plate">
+     <div class="wrap plate__grid">
+       <div>
+@@ -70,8 +70,8 @@
+ </main>
+ <div data-shell-footer></div>
+ 
+-<script src="/data/projects.js"></script>
+-<script src="/assets/js/cards.js"></script>
++<script src="../data/projects.js"></script>
++<script src="../assets/js/cards.js"></script>
+ <script>
+ CC.renderInto("#ws", CC.curated(CC.byCategory("workshop")));
+ </script>
+-- 
+2.43.0
+
