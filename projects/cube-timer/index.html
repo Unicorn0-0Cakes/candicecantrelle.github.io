@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111318">
-  <title>Cube Timer</title>
+  <meta name="description" content="A speedcubing timer that runs entirely in the page: inspection countdown, solve history and session statistics, with no account and no network.">
+  <title>Cube Timer — Candice Cantrelle</title>
   <style>
     :root {
       color-scheme: dark;
@@ -138,9 +139,37 @@
       .row { grid-template-columns: 45px 1fr; }
       .stamp { display: none; }
     }
+
+    /* Return-to-portfolio strip. Every page below the top level carries
+       one; this app keeps its own palette, so the strip adopts it. */
+    .cc-return {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      padding: 10px 18px; border-bottom: 1px solid var(--border);
+      background: rgba(13,15,19,.92);
+      font: 600 10px/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      letter-spacing: .16em; text-transform: uppercase;
+    }
+    .cc-return a { color: var(--accent); text-decoration: none; }
+    .cc-return a:hover, .cc-return a:focus-visible { text-decoration: underline; }
+    .cc-return a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .cc-return .cc-mark { color: var(--muted); }
+    .skip-link cc-skip { position:absolute; left:12px; top:8px; transform:translateY(-200%);
+      background:var(--accent); color:#0d0f13; font:600 10px/1 ui-monospace,Menlo,monospace;
+      letter-spacing:.16em; text-transform:uppercase; padding:8px 14px; border-radius:4px;
+      z-index:50; transition:transform .14s ease; text-decoration:none; }
+    .skip-link cc-skip:focus-visible { transform:translateY(0); }
+    .cc-return .cc-mark b { color: var(--text); font-weight: 700; letter-spacing: .28em; }
   </style>
 </head>
 <body>
+<a class="skip-link cc-skip" href="#main">Skip to content</a>
+<nav class="cc-return" aria-label="Return to portfolio">
+  <span class="cc-mark"><b>CC</b> / Portfolio &mdash; Software</span>
+  <span><a href="../../software/">&larr; Back to Software</a> &nbsp;&middot;&nbsp; <a href="../../">Portfolio home</a></span>
+</nav>
+<main id="main">
+
   <main class="app">
     <header class="topbar">
       <h1>Cube Timer</h1>
@@ -383,5 +412,6 @@
       render();
     })();
   </script>
+</main>
 </body>
 </html>

@@ -1,378 +1,266 @@
-<!--
-    © 2025 Candice Cantrelle | candicecantrelle.com
-    
-    Signature Visual Solutions for Luxury Brands
-    Crafted with excellence and sophistication
--->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Candice Cantrelle | Signature Visual Solutions for Fine & Estate Jewelry Houses</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Candice Cantrelle — Systems, Software, Simulation, Research, Design</title>
+<meta name="description" content="A portfolio of scientific simulations, machine learning, software, research and design. Nine browser instruments, a computer-vision pipeline, and work that states plainly what it has and has not demonstrated.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Candice Cantrelle — Systems, Software, Simulation, Research, Design">
+<meta property="og:description" content="The medium changes. The systems thinking does not.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/shell.css">
+<link rel="stylesheet" href="assets/css/cards.css">
+<link rel="stylesheet" href="assets/css/worlds.css">
+<script src="assets/js/shell.js"></script>
+
+<style>
+  /* ---- Homepage only. The calmest page on the site: one accent, one
+         idea per screen, nothing that moves without being asked. ---- */
+  .hero { padding: var(--s-9) 0 var(--s-8); }
+  .hero__grid { display: grid; grid-template-columns: minmax(0,1.45fr) minmax(0,1fr); gap: var(--s-8); align-items: center; }
+  .hero__grid > * { min-width: 0; }
+  @media (max-width: 940px) { .hero { padding: var(--s-7) 0 var(--s-6); } .hero__grid { grid-template-columns: 1fr; gap: var(--s-6); } }
+
+  .hero__name {
+    font-family: var(--rf-display); font-weight: 700;
+    font-size: clamp(34px, 6.6vw, 68px); line-height: .98;
+    letter-spacing: -.035em; margin: 0 0 var(--s-4);
+  }
+  .hero__disciplines {
+    font-family: var(--rf-mono); font-size: var(--t-micro);
+    letter-spacing: var(--rf-track); text-transform: uppercase;
+    color: var(--rf-ink-dim); margin: 0 0 var(--s-6);
+    display: block;
+  }
+  /* The separator is a pseudo-element, so the only line-break opportunity
+     between items is the whitespace in the source. Keep both. */
+  .hero__disciplines span { white-space: nowrap; }
+  .hero__disciplines span + span::before { content: "·"; color: var(--rf-muted); margin-right: .5em; }
+  .hero__line {
+    font-family: var(--rf-display); font-size: clamp(19px, 2.1vw, 25px);
+    font-weight: 500; line-height: 1.34; letter-spacing: -.018em;
+    margin: 0 0 var(--s-5); max-width: 24ch;
+  }
+  .hero__line mark { background: none; color: var(--w-accent); }
+  .hero__body { font-size: 16px; color: var(--rf-ink-dim); max-width: 52ch; margin: 0 0 var(--s-6); }
+  .hero__cta { display: flex; gap: var(--s-3); flex-wrap: wrap; }
+
+  /* The orbit plate. Six rings, one per discipline, drawn to the same
+     centre — the argument of the whole site, stated as a figure. */
+  .orbit { width: 100%; max-width: 300px; margin: 0 auto; display: block; }
+  .orbit .ring { fill: none; stroke: var(--rf-line); stroke-width: 1; }
+  .orbit .arc  { fill: none; stroke-width: 1.6; stroke-linecap: round; }
+  .orbit .core { fill: var(--rf-panel); stroke: var(--rf-ink); stroke-width: 1.6; }
+  .orbit .node { stroke: none; }
+  .orbit .lbl  { fill: var(--rf-muted); font-family: var(--rf-mono); font-size: 5.6px; letter-spacing: .16em; text-transform: uppercase; }
+  .orbit .ctr  { fill: var(--rf-ink); font-family: var(--rf-mono); font-size: 6.4px; letter-spacing: .18em; text-transform: uppercase; }
+  html[data-theme="night"] .orbit .arc, html[data-theme="night"] .orbit .node { filter: drop-shadow(0 0 4px currentColor); }
+  .orbit .spin { transform-origin: 130px 130px; animation: orbit-spin 90s linear infinite; }
+  .orbit .spin.rev { animation-duration: 140s; animation-direction: reverse; }
+  @keyframes orbit-spin { to { transform: rotate(360deg); } }
+  @media (max-width: 940px) { .orbit { max-width: 220px; } }
+
+  /* Statement block — the throughline, given its own air. */
+  .creed {
+    padding: var(--s-9) 0;
+    border-top: 1px solid var(--rf-line);
+    border-bottom: 1px solid var(--rf-line);
+    margin-top: var(--s-9);
+  }
+  .creed__grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.25fr); gap: var(--s-8); }
+  @media (max-width: 880px) { .creed { padding: var(--s-7) 0; margin-top: var(--s-7); } .creed__grid { grid-template-columns: 1fr; gap: var(--s-5); } }
+  .creed h2 {
+    font-family: var(--rf-display); font-size: clamp(23px, 2.8vw, 32px);
+    font-weight: 600; letter-spacing: -.025em; line-height: 1.18; margin: 0;
+  }
+  .creed h2 em { font-style: normal; color: var(--w-accent); }
+  .creed p { font-size: 15.5px; color: var(--rf-ink-dim); }
+  .creed p + p { margin-top: var(--s-4); }
+
+  .selected-note {
+    font-family: var(--rf-mono); font-size: var(--t-nano);
+    letter-spacing: var(--rf-track-s); text-transform: uppercase;
+    color: var(--rf-muted); margin: var(--s-5) 0 0; text-align: right;
+  }
+  noscript .fallback {
+    border: 1px solid var(--rf-line); border-left: 3px solid var(--w-accent);
+    border-radius: var(--rf-radius); padding: var(--s-5); background: var(--rf-panel);
+  }
+</style>
 </head>
+
 <body>
+<div data-shell-header></div>
 
+<noscript>
+  <div class="wrap" style="padding-top:16px">
+    <nav aria-label="Primary" class="fallback" style="border:1px solid var(--rf-line);padding:12px 16px;border-radius:3px">
+      <a href="simulations/">Simulations</a> · <a href="ai-ml/">AI + ML</a> ·
+      <a href="software/">Software</a> · <a href="research/">Research</a> ·
+      <a href="design/">Design</a> · <a href="workshop/">Workshop</a> ·
+      <a href="about/">About</a>
+    </nav>
+  </div>
+</noscript>
 
-<!-- HERO + BUSINESS DNA -->
-<section class="hero">
-    <div class="hero-media">
-        <!-- Full-width cinematic hero -->
-        <img src="assets/images/luxury-jewelry-background.png" alt="Luxury jewelry environment" />        <div class="hero-overlay"></div>
-    </div>
+<main id="main">
 
-    <div class="hero-content">
-        <div class="hero-copy">
-            <p class="section-kicker">For fine & estate jewelry</p>
-            <h1>Signature Visual Systems for Fine & Estate Jewelry Houses</h1>
-            <p class="hero-subtitle">
-                Refined visual narratives for jewelry houses, estate dealers, and heritage retailers who value discretion, precision, and quiet impact.
-            </p>
-            <a class="cta-btn hero-cta" href="https://candice-cantrelle.breely.com/form/10405">
-                Request Private Consultation
-            </a>
-        </div>
-    </div>
-
-    <aside class="dna-card">
-        <h2>Business DNA Snapshot for Jewelry Brands</h2>
-        <p class="dna-intro">
-            A brief, bespoke overview of your jewelry brand's current visual presence and opportunities.
+  <!-- ══════════════════════════════════════════════════ HERO ══ -->
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div>
+        <h1 class="hero__name">Candice<br>Cantrelle</h1>
+        <p class="hero__disciplines">
+          <span>Systems</span>
+          <span>Software</span>
+          <span>Simulation</span>
+          <span>Research</span>
+          <span>Games</span>
+          <span>Design</span>
         </p>
-        <form class="dna-form" action="#" method="post">
-            <div class="dna-fields">
-                <label>
-                    Brand name
-                    <input type="text" name="brand" required />
-                </label>
-                <label>
-                    Website
-                    <input type="url" name="website" required />
-                </label>
-                <label>
-                    Email
-                    <input type="email" name="email" required />
-                </label>
-            </div>
-            <button type="submit" class="cta-btn dna-btn">
-                Send My Snapshot
-            </button>
-        </form>
-        <ul class="dna-benefits-hero">
-            <li><span class="icon-dot"></span>Concise, human insight—not an automated report.</li>
-            <li><span class="icon-dot"></span>Tailored to fine, estate, and antique jewelry houses.</li>
-        </ul>
-        <p class="dna-note-hero">
-            Prefer a conversation?
-            <a class="dna-link" href="https://candice-cantrelle.breely.com/form/10405">
-                Book a 20-minute consult instead
-            </a>
+        <p class="hero__line">I build things to find out <mark>how they work</mark> — and I report what they didn't tell me.</p>
+        <p class="hero__body">
+          Nine browser instruments that rebuild documented experiments. A computer-vision
+          pipeline that turns a photograph of a key into a printable model. A research
+          framework whose first line says it has proved nothing yet. The medium keeps
+          changing. The way of thinking does not.
         </p>
-    </aside>
-</section>
-
-
-
-    <!-- EDITORIAL INTRO -->
-    <section class="section editorial">
-      <div class="container section-inner">
-        <p class="section-kicker">For fine &amp; estate jewelry</p>
-        <h2>Where Artistry Meets Innovation for Jewelry</h2>
-
-        <p class="section-lead">
-          Welcome to a world of refined elegance. Candice creates <strong>extraordinary visual narratives</strong> that elevate fine, estate, and antique jewelry houses and captivate discerning collectors.
+        <p class="hero__cta">
+          <a class="btn btn--solid" href="#selected">Selected work</a>
+          <a class="btn" href="#disciplines">Browse by discipline</a>
         </p>
-
-        <div class="section-grid">
-          <div>
-            <h3>Focused, intimate storytelling</h3>
-            <p>
-              Small-batch, cinematic imagery that feels like a private salon experience—not mass ecommerce.
-            </p>
-          </div>
-          <div>
-            <h3>Systems that scale gracefully</h3>
-            <p>
-              Cohesive visual systems that keep every listing, lookbook, and campaign aligned without feeling rigid.
-            </p>
-          </div>
-        </div>
       </div>
-    </section>
 
-    <!-- JEWELRY GALLERY SHOWCASE -->
-<section class="gallery-showcase">
-    <h2 class="section-title">Curated Visual Excellence</h2>
-    <div class="gallery-strip">
-        <div class="gallery-item" data-caption="Bridal Jewelry">
-            <img src="jewelry/images/bridal-visualization.png" alt="Bridal jewelry visualization" />
-        </div>
-        <div class="gallery-item" data-caption="Luxury Set Showcase">
-            <img src="jewelry/images/luxury-set-showcase.png" alt="Luxury jewelry set showcase" />
-        </div>
-        <div class="gallery-item" data-caption="Pendant Detail">
-            <img src="jewelry/images/pendant-visualization.png" alt="Pendant visualization" />
-        </div>
-    </div>
-</section>
+      <div>
+        <svg class="orbit" viewBox="0 0 260 260" role="img" aria-labelledby="orbit-t orbit-d">
+          <title id="orbit-t">Six disciplines on concentric orbits around one centre</title>
+          <desc id="orbit-d">A diagram: six rings of different radii share a single centre marked "systems", each carrying one discipline — simulation, machine learning, software, research, games and design.</desc>
 
+          <circle class="ring" cx="130" cy="130" r="34"/>
+          <circle class="ring" cx="130" cy="130" r="52"/>
+          <circle class="ring" cx="130" cy="130" r="70"/>
+          <circle class="ring" cx="130" cy="130" r="88"/>
+          <circle class="ring" cx="130" cy="130" r="106"/>
+          <circle class="ring" cx="130" cy="130" r="122"/>
 
-<!-- CASE STUDIES -->
-<section class="case-studies">
-    <p class="section-kicker">Proven impact</p>
-    
-    <!-- Fine Jewelry Showcase with Before/After -->
-    <div class="case-study-primary">
-        <h2>Fine Jewelry Showcase</h2>
-        <p>
-            Complete digital rebrand for a heritage jewelry house, resulting in a 340% increase in online engagement and unprecedented interest from international collectors.
-        </p>
-        
-        <div class="before-after">
-            <div class="ba-image">
-                <img src="jewelry/images/before.png" alt="Before: Louis Vuitton bracelet and chain set" />
-                <span class="ba-label">Before</span>
-            </div>
-            <div class="ba-image">
-                <img src="jewelry/images/after.jpeg" alt="After: Enhanced Louis Vuitton bracelet and chain set" />
-                <span class="ba-label">After</span>
-            </div>
-        </div>
+          <g class="spin">
+            <path class="arc" style="stroke:var(--rf-orange)" d="M130 24 A106 106 0 0 1 224 78"/>
+            <circle class="node" style="fill:var(--rf-orange)" cx="224" cy="78" r="3.6"/>
+            <path class="arc" style="stroke:var(--rf-teal)"   d="M130 60 A70 70 0 0 1 60 130"/>
+            <circle class="node" style="fill:var(--rf-teal)" cx="60" cy="130" r="3.2"/>
+            <path class="arc" style="stroke:var(--rf-gold)"   d="M130 96 A34 34 0 0 1 156 155"/>
+            <circle class="node" style="fill:var(--rf-gold)" cx="156" cy="155" r="2.8"/>
+          </g>
+          <g class="spin rev">
+            <path class="arc" style="stroke:var(--rf-indigo)" d="M130 42 A88 88 0 0 0 48 172"/>
+            <circle class="node" style="fill:var(--rf-indigo)" cx="48" cy="172" r="3.4"/>
+            <path class="arc" style="stroke:var(--rf-violet)" d="M130 78 A52 52 0 0 0 176 158"/>
+            <circle class="node" style="fill:var(--rf-violet)" cx="176" cy="158" r="3"/>
+            <path class="arc" style="stroke:var(--rf-oxide)"  d="M130 8 A122 122 0 0 0 24 190"/>
+            <circle class="node" style="fill:var(--rf-oxide)" cx="24" cy="190" r="3.4"/>
+          </g>
 
-        <div class="stats-row">
-            <div class="stat">
-                <span class="stat-number">+340%</span>
-                <span class="stat-label">Increase in engagement</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number">Global</span>
-                <span class="stat-label">New collector interest</span>
-            </div>
-        </div>
-    </div>
+          <circle class="core" cx="130" cy="130" r="21"/>
+          <text class="ctr" x="130" y="132" text-anchor="middle">Systems</text>
 
-    <!-- Keep existing secondary case studies -->
-    <div class="case-studies-secondary">
-        <!-- existing content -->
-    </div>
-</section>
-    
-    
-      <aside class="dna-card">
-        <h2>Business DNA Snapshot for Jewelry Brands</h2>
-        <p class="dna-intro">
-          A brief, bespoke overview of your jewelry brand’s current visual presence and opportunities.
-        </p>
-        <form class="dna-form" action="#" method="post">
-          <div class="dna-fields">
-            <label>
-              Brand name
-              <input type="text" name="brand" required />
-            </label>
-            <label>
-              Website
-              <input type="url" name="website" required />
-            </label>
-            <label>
-              Email
-              <input type="email" name="email" required />
-            </label>
-          </div>
-          <button type="submit" class="cta-btn dna-btn">
-            Send My Snapshot
-          </button>
-        </form>
-        <ul class="dna-benefits-card">
-          <li><span class="icon-dot"></span>Concise, human insight—not an automated report.</li>
-          <li><span class="icon-dot"></span>Tailored to fine, estate, and antique jewelry houses.</li>
-        </ul>
-        <p class="dna-note-hero">
-          Prefer a conversation?
-          <a class="dna-link" href="https://candice-cantrelle.breely.com/form/10405">
-            Book a 20-minute consult instead
-          </a>
-        </p>
-      </aside>
+          <text class="lbl" x="130" y="6"   text-anchor="middle">Games</text>
+          <text class="lbl" x="130" y="20"  text-anchor="middle">Simulation</text>
+          <text class="lbl" x="130" y="38"  text-anchor="middle">Machine learning</text>
+          <text class="lbl" x="130" y="56"  text-anchor="middle">Software</text>
+          <text class="lbl" x="130" y="74"  text-anchor="middle">Research</text>
+          <text class="lbl" x="130" y="92"  text-anchor="middle">Design</text>
+        </svg>
+      </div>
     </div>
   </section>
 
-  <main>
-
-    
-    <!-- AUDIENCES -->
-    <section class="section audiences">
-      <div class="container audiences-grid">
-        <article class="audience audience-primary">
-          <p class="section-kicker">Primary focus</p>
-          <h2>Curated Visual Excellence for Jewelry Houses</h2>
-          <p>
-            Stunning product visualizations that capture every facet and sparkle. Transform your collection into an immersive digital showcase that resonates with collectors and connoisseurs alike.
-          </p>
-          <a class="cta-btn" href="/jewelry/">For Jewelry Houses</a>
-        </article>
-
-        <article class="audience audience-secondary">
-          <p class="section-kicker">Select collaborations</p>
-          <h3>For Real Estate Professionals</h3>
-          <p>
-            Sophisticated virtual staging and property presentations that sell faster. Offered as a select collaboration for listings that demand elevated, art-directed visuals.
-          </p>
-          <a class="cta-btn" href="/real-estate/">For Real Estate Professionals</a>
-        </article>
-      </div>
-    </section>
-
-    <!-- SIGNATURE SERVICES -->
-    <section class="section">
-      <div class="container">
-        <p class="section-kicker">Signature services</p>
-        <h2>Signature Services for Jewelry Houses</h2>
-
-        <div class="service-item luxury">
-          <h3>Jewelry Collection Visual Systems</h3>
-          <p>
-            Custom-generated and art-directed visuals for your core collections, from high-value one-of-a-kind pieces to cohesive lines, crafted with meticulous attention to stone, metal, and setting.
-          </p>
+  <!-- ═══════════════════════════════════════════ DISCIPLINES ══ -->
+  <section class="doc" id="disciplines">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">01</span> Explore by discipline <span class="trail"></span></h2>
+      <p class="sec-hint">
+        Seven wings. Each one is allowed to look like itself — an instrument archive does not
+        want to look like a design section — but they share a shell, a status vocabulary and a
+        way of describing a project.
+      </p>
+      <nav class="doors" id="doors" aria-label="Disciplines"></nav>
+      <noscript>
+        <div class="fallback" style="margin-top:16px">
+          <p><a href="simulations/">Simulations</a> — an atlas of scientific instruments</p>
+          <p><a href="ai-ml/">AI + ML</a> — models, datasets, and what they actually scored</p>
+          <p><a href="software/">Software</a> — tools built to be used</p>
+          <p><a href="research/">Research</a> — questions in progress</p>
+          <p><a href="design/">Design</a> — identity, interface and image</p>
+          <p><a href="workshop/">Workshop</a> — small things, kept honest</p>
         </div>
-
-        <div class="service-item luxury">
-          <h3>High-Value Piece Storytelling</h3>
-          <p>
-            Editorial-style imagery and narrative treatments for exceptional pieces, private sales, and special releases, designed to speak directly to serious buyers and collectors.
-          </p>
-        </div>
-
-        <div class="service-item luxury">
-          <h3>Brand Identity &amp; Visual Strategy</h3>
-          <p>
-            Comprehensive visual direction that ensures your jewelry house communicates elegance, trust, and exclusivity at every touchpoint.
-          </p>
-        </div>
-
-        <div class="service-item luxury">
-          <h3>Luxury Virtual Staging (Select Collaborations)</h3>
-          <p>
-            Elevated virtual staging for luxury properties that complement your brand. Offered as a select collaboration for real estate professionals aligned with a refined, high-touch experience.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    
-    <!-- ADDITIONAL CASES -->
-    <section class="section">
-      <div class="container">
-        <div class="case-study">
-          <h3>Waterfront Estate Portfolio (Select Collaboration)</h3>
-          <p>
-            Virtual staging for luxury coastal properties reduced time-on-market by 60% and achieved sale prices exceeding comparables by 18%.
-          </p>
-        </div>
-
-        <div class="case-study">
-          <h3>Boutique Brand Launch</h3>
-          <p>
-            Complete visual identity for an emerging fashion house, establishing immediate credibility and securing placements in premier retail locations.
-          </p>
-        </div>
-
-        <p class="case-study-note">
-          Exclusive case studies and work samples are available during consultation. Confidentiality agreements are respected for all client partnerships.
-        </p>
-      </div>
-    </section>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials-section">
-    <p class="section-kicker">Trusted by discerning professionals</p>
-    <h2>What Clients Say</h2>
-
-    <div class="testimonials-grid">
-        <div class="testimonial-card">
-            <blockquote>
-                "Working with Candice transformed how we present our collection. The visuals are exceptional, and we've seen remarkable engagement from serious collectors. Her understanding of luxury aesthetics is unparalleled."
-            </blockquote>
-            <p class="testimonial-attribution">
-                <strong>Fine Jewelry House, Est. 1952</strong>
-            </p>
-        </div>
-
-        <div class="testimonial-card">
-            <blockquote>
-                "The virtual staging elevated our listings immediately. Properties that sat for months sold within weeks. Our clients specifically mentioned how they could envision living in the spaces. Exceptional service."
-            </blockquote>
-            <p class="testimonial-attribution">
-                <strong>Luxury Real Estate Specialist</strong>
-            </p>
-        </div>
-
-        <div class="testimonial-card">
-            <blockquote>
-                "Finally, someone who understands that luxury isn't just about appearances—it's about creating an experience. The brand identity work exceeded expectations and positioned us exactly where we wanted to be."
-            </blockquote>
-            <p class="testimonial-attribution">
-                <strong>Boutique Owner & Designer</strong>
-            </p>
-        </div>
+      </noscript>
     </div>
-</section>
+  </section>
 
-
-<!-- CREDENTIALS -->
-<section class="credentials-section">
-    <p class="section-kicker">Distinguished credentials</p>
-    <h2>Technical excellence, quietly held</h2>
-
-    <div class="credentials-grid">
-        <div class="credential-tile">
-            <h4>MIT Applied Data Science</h4>
-            <p>Mastery in strategic analytics.</p>
-        </div>
-
-        <div class="credential-tile">
-            <h4>IBM AI Development</h4>
-            <p>Cutting-edge innovation for your brand.</p>
-        </div>
-
-        <div class="credential-tile">
-            <h4>Google UX Design</h4>
-            <p>Human-centered digital craftsmanship.</p>
-        </div>
-
-        <div class="credential-tile">
-            <h4>Full-Stack Development</h4>
-            <p>Reliable, scalable solutions.</p>
-        </div>
+  <!-- ══════════════════════════════════════════════ SELECTED ══ -->
+  <section class="doc" id="selected">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">02</span> Selected work <span class="trail"></span></h2>
+      <p class="sec-hint">
+        Eight projects, chosen rather than sorted. Three instruments, two models, one
+        system built end to end, one research proposal that has not proved anything yet,
+        and one visual piece. Every card carries a status, and the statuses are the ones
+        the work has actually earned.
+      </p>
+      <div class="grid" id="selected-grid"></div>
+      <p class="selected-note">Full catalogue by discipline above · <a href="workshop/">Smaller work lives in the Workshop</a></p>
     </div>
+  </section>
 
-    <p class="cert-link">
-        <a href="certifications/certifications.html">View complete certification gallery</a>
-    </p>
-</section>
-
-      
-    <!-- CLOSING NOTE -->
-    <section class="section closing-note">
-      <div class="container section-inner">
+  <!-- ═════════════════════════════════════════════════ CREED ══ -->
+  <section class="creed">
+    <div class="wrap creed__grid">
+      <div>
+        <h2>The medium changes.<br>The <em>systems thinking</em> does not.</h2>
+      </div>
+      <div>
         <p>
-          For fine, estate, and antique jewelry houses ready to elevate their visual presence, private consultations are available by request.
+          A bacterial population, a convolutional network, a crane company's homepage and a
+          key photographed on a kitchen table are not obviously related. What they have in
+          common is that each one is a system with a boundary, a set of things you can
+          change, and a set of things you can only measure indirectly — and that the
+          interesting work is almost always in the second set.
+        </p>
+        <p>
+          That shows up here as a habit. The simulations charge you bench hours for every
+          measurement, so you have to decide what not to look for. The machine-learning
+          write-ups report the class imbalance next to the accuracy. The research framework
+          opens by saying it has trained nothing. None of that is modesty; it is the part
+          of the work that makes the rest of it worth believing.
+        </p>
+        <p>
+          <a href="about/">More about how I work →</a>
         </p>
       </div>
-    </section>
-  </main>
-
-</body>
-</html>
-
+    </div>
+  </section>
 
 </main>
 
-<!-- HEADER/FOOTER -->
-<script src="assets/header-footer.js"></script>
+<div data-shell-footer></div>
 
+<script src="data/projects.js"></script>
+<script src="assets/js/cards.js"></script>
+<script>
+  CC.doors("#doors");
+  CC.renderInto("#selected-grid", SELECTED.map(CC.byId).filter(Boolean));
+</script>
 </body>
 </html>
-<!-- © 2025 Candice Cantrelle | candicecantrelle.com -->

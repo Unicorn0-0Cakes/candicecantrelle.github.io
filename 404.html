@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — Candice Cantrelle</title>
+<meta name="description" content="That page does not exist here.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/404">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Page not found — Candice Cantrelle">
+<meta property="og:description" content="That page does not exist here.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/candicecantrelle.github.io/404">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<script>
+/* ---------------------------------------------------------------------
+   This is the only file on the site that resolves its own base URL.
+
+   A 404 is served under whatever path the visitor asked for, so the page
+   has no fixed depth and ordinary relative paths cannot work here. It
+   reads the mount point back out of the URL and falls back to the domain
+   root, which means it keeps working if the site is ever moved to one.
+
+   Written during parsing so the stylesheets still block render as normal
+   and there is no flash of unstyled content.
+   --------------------------------------------------------------------- */
+(function () {
+  var MOUNT = "candicecantrelle.github.io";
+  var path = location.pathname;
+  var base = path.indexOf("/" + MOUNT + "/") === 0 ? "/" + MOUNT + "/" : "/";
+  window.__CCBASE__ = base;
+
+  var css = ["tokens", "base", "shell", "cards", "worlds"];
+  var out = '<link rel="icon" type="image/png" href="' + base + 'favicon.png">';
+  for (var i = 0; i < css.length; i++) {
+    out += '<link rel="stylesheet" href="' + base + 'assets/css/' + css[i] + '.css">';
+  }
+  out += '<scr' + 'ipt src="' + base + 'assets/js/shell.js"><\/scr' + 'ipt>';
+  document.write(out);
+})();
+</script>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+  <section class="doc" style="padding-top:96px">
+    <div class="wrap wrap--narrow">
+      <p class="label label--accent">Error 404</p>
+      <h1 style="font-size:var(--t-display);margin:16px 0 20px">That page is not here.</h1>
+      <p class="lede">
+        It may have moved when this site was rebuilt in 2026. The previous version of the site is
+        preserved at <a id="cc-archive" href="/candicecantrelle.github.io/archive/">/archive/</a>, and
+        everything current is one of the seven wings below.
+      </p>
+      <nav class="doors" id="doors" aria-label="Disciplines" style="margin-top:40px"></nav>
+      <p style="margin-top:32px"><a class="back-link" id="cc-home" href="/candicecantrelle.github.io/">Back to the portfolio</a></p>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script>
+(function () {
+  var base = window.__CCBASE__ || "/";
+  var a = document.getElementById("cc-archive");
+  var h = document.getElementById("cc-home");
+  if (a) a.href = base + "archive/";
+  if (h) h.href = base;
+  document.write('<scr' + 'ipt src="' + base + 'data/projects.js"><\/scr' + 'ipt>');
+  document.write('<scr' + 'ipt src="' + base + 'assets/js/cards.js"><\/scr' + 'ipt>');
+})();
+</script>
+<script>
+if (window.CC && CC.doors) CC.doors("#doors");
+</script>
+</body>
+</html>
