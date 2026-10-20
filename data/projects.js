@@ -368,22 +368,6 @@ const PROJECTS = [
      DESIGN
      ═══════════════════════════════════════════════════════════════ */
   {
-    id: "coastline-crane",
-    title: "Coastline Crane",
-    category: "design",
-    portfolioStatus: "showcase",
-    treatment: "image",
-    year: "2026",
-    summary: "Identity and a single-page site for an industrial crane repair and parts business. The brief was trust on first contact: an operator with a broken machine needs to know within seconds that this is a real company that answers the phone.",
-    role: "Identity, art direction, copy, build",
-    tech: ["HTML", "CSS", "Responsive layout"],
-    chips: ["Identity", "Single-page site", "Industrial / municipal"],
-    image: "/assets/images/work/coastline-crane-logo.webp",
-    imageAlt: "The Coastline Crane logo: a red mobile crane beside the company name, over the strapline Serving the Gulf Coast",
-    imageFit: "contain",
-    links: { source: GH + "coastline-crane" }
-  },
-  {
     id: "jewelry-visualization",
     title: "Fine Jewelry Visualization",
     category: "design",
@@ -546,7 +530,7 @@ const CATEGORIES = [
     desc: "Work where the investigation is the output. Implemented and proposed are labelled separately." },
   { id: "design",      name: "Design",       nav: true,  accent: "--rf-gold",
     tagline: "Identity, interface and image",
-    desc: "Visual systems and client work — jewellery, property, and industrial identity." },
+    desc: "Visual systems and client work — jewellery and property." },
   { id: "workshop",    name: "Workshop",     nav: true,  accent: "--rf-moss",
     tagline: "Small things, kept honest",
     desc: "One-day experiments, sketches and utilities. Shown without a case study, because they do not need one." }
