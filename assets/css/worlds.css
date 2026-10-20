@@ -175,43 +175,6 @@ html[data-world="research"] {
 .ledger__col--open li::before { content: "○"; color: var(--rf-watch); }
 
 /* ═══════════════════════════════════════════════════════════════════
-   GAMES — "the anthology"
-   More energy: bigger art, heavier display type, a darker plate that
-   lets wildly different game aesthetics sit side by side without
-   fighting. Sophisticated, not childish.
-   ═══════════════════════════════════════════════════════════════ */
-html[data-world="games"] {
-  --w-accent:   var(--rf-oxide);
-  --w-accent-2: var(--rf-amber);
-  --w-card-top: 0px;
-  --w-radius:   var(--rf-radius);
-}
-[data-world="games"] .plate h1 { letter-spacing: -.03em; font-weight: 700; }
-[data-world="games"] .card { border-top-width: 0; }
-[data-world="games"] .card::before {
-  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; z-index: 2;
-  background: linear-gradient(90deg, var(--rf-oxide), var(--rf-amber));
-}
-[data-world="games"] .plate-area { background: var(--rf-scope); border-bottom-color: var(--rf-scope-line); }
-[data-world="games"] .card__title { font-size: 21px; letter-spacing: -.025em; }
-
-/* The game placard — the full metadata schema, ready for the first
-   real entry. */
-.placard {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: var(--s-5); margin: 0;
-  padding: var(--s-5); border: 1px solid var(--rf-line);
-  border-radius: var(--rf-radius); background: var(--rf-panel);
-}
-.placard dt {
-  font-family: var(--rf-mono); font-size: var(--t-nano);
-  letter-spacing: var(--rf-track-s); text-transform: uppercase;
-  color: var(--rf-muted); font-weight: 600;
-}
-.placard dd { margin: 4px 0 0; font-size: var(--t-small); color: var(--rf-ink); }
-.placard dd.empty { color: var(--rf-muted); font-style: italic; }
-
-/* ═══════════════════════════════════════════════════════════════════
    DESIGN — "the plate section"
    Image-forward and editorial. Chrome recedes; the pictures get the
    room. The only world where a card can be mostly picture.

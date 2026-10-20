@@ -412,18 +412,18 @@ const PROJECTS = [
     portfolioStatus: "showcase",
     treatment: "image",
     year: "2024–25",
-    summary: "Virtual staging for residential listings across Louisiana and Texas — vacant and dated interiors furnished digitally, and exteriors refreshed. Each property was staged in more than one direction so an agent could choose the read that matched the buyer.",
+    summary: "Virtual staging for residential listings — Remote, US — vacant and dated interiors furnished digitally, and exteriors refreshed. Each property was staged in more than one direction so an agent could choose the read that matched the buyer.",
     role: "Art direction, staging, compositing",
     tech: ["3D staging", "Compositing", "Photo restoration"],
     chips: ["Six properties", "Multiple treatments each", "Interior & exterior"],
-    image: "/assets/images/work/estate-primary_suite_retreat_nola-staged-a.webp",
+    image: "/assets/images/work/estate-primary-suite-staged-a.webp",
     imageAlt: "A primary bedroom digitally staged with a bed, dark feature wall and warm lamplight",
-    compare: { before: "/assets/images/work/estate-waterfront_nola-before.webp", after: "/assets/images/work/estate-waterfront_nola-staged-a.webp", label: "Waterfront, New Orleans" },
+    compare: { before: "/assets/images/work/estate-waterfront-before.webp", after: "/assets/images/work/estate-waterfront-staged-a.webp", label: "Waterfront, Remote, US" },
     gallery: [
-      { src: "/assets/images/work/estate-cut_off_front_refresh-staged-a.webp", alt: "Exterior front refresh, staged" },
-      { src: "/assets/images/work/estate-golden_medow_backyard-staged-a.webp", alt: "Backyard staged with landscaping and furniture" },
-      { src: "/assets/images/work/estate-dallas_rental-staged-a.webp", alt: "Dallas rental interior, staged" },
-      { src: "/assets/images/work/estate-houston_rental-staged-a.webp", alt: "Houston rental interior, staged" },
+      { src: "/assets/images/work/estate-front-refresh-staged-a.webp", alt: "Exterior front refresh, staged" },
+      { src: "/assets/images/work/estate-backyard-staged-a.webp", alt: "Backyard staged with landscaping and furniture" },
+      { src: "/assets/images/work/estate-rental-open-staged-a.webp", alt: "Open-plan rental interior, staged" },
+      { src: "/assets/images/work/estate-rental-glass-staged-a.webp", alt: "Glass-walled bedroom, staged" },
       { src: "/assets/images/work/estate-greatroom-before.webp", alt: "Waterfront great room before staging" }
     ],
     links: {}
@@ -488,24 +488,6 @@ const PROJECTS = [
   },
 
   /* ═══════════════════════════════════════════════════════════════════
-     GAMES — the wing is built; the shelf is nearly empty, and the site
-     says so rather than padding it. See /games/.
-     ═══════════════════════════════════════════════════════════════ */
-  {
-    id: "studio-royale",
-    title: "Studio Royale",
-    category: "games",
-    portfolioStatus: "workshop",
-    treatment: "none",
-    year: "2025",
-    summary: "A filmmaking sandbox for Roblox — scene creator, camera rig, script and timeline editors — scoped to an alpha feature set. This is a design document, not a build: the systems are specified and the release checklist exists, but nothing has been implemented.",
-    role: "Game design, systems specification, scope definition",
-    tech: ["Roblox", "Lua"],
-    chips: ["Design document", "Not implemented", "Alpha scope defined"],
-    links: { source: GH + "Portfolio/blob/main/Roblox-Dev/Release/Alpha/studio-royale-alpha.md" }
-  },
-
-  /* ═══════════════════════════════════════════════════════════════════
      HIDDEN — recorded decisions. These never render.
      ═══════════════════════════════════════════════════════════════ */
   {
@@ -546,8 +528,8 @@ const SELECTED = [
 
 /* ---------------------------------------------------------------------
    THE WINGS
-   `nav: false` builds the wing and leaves it reachable by URL without
-   advertising it. Games is set that way until there is a game in it.
+   `nav: false` would build a wing and leave it reachable by URL without
+   advertising it. Every wing here is in the navigation.
    ------------------------------------------------------------------ */
 const CATEGORIES = [
   { id: "simulations", name: "Simulations",  nav: true,  accent: "--rf-orange",
@@ -562,9 +544,6 @@ const CATEGORIES = [
   { id: "research",    name: "Research",     nav: true,  accent: "--rf-violet",
     tagline: "Questions in progress",
     desc: "Work where the investigation is the output. Implemented and proposed are labelled separately." },
-  { id: "games",       name: "Games",        nav: false, accent: "--rf-oxide",
-    tagline: "Systems you play from inside",
-    desc: "Mechanics, interaction and art direction as one design problem." },
   { id: "design",      name: "Design",       nav: true,  accent: "--rf-gold",
     tagline: "Identity, interface and image",
     desc: "Visual systems and client work — jewellery, property, and industrial identity." },
