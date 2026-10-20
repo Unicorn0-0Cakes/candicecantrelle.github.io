@@ -45,6 +45,14 @@
 .colophon dt { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
                text-transform:uppercase; color:var(--w-accent); font-weight:600; }
 .colophon dd { margin:2px 0 var(--s-4); }
+.role { border-top:1px solid var(--rf-line); border-bottom:1px solid var(--rf-line); padding:var(--s-5) 0; }
+.role__head { display:grid; grid-template-columns:140px minmax(0,1fr); gap:var(--s-5); align-items:baseline; }
+@media (max-width: 700px) { .role__head { grid-template-columns:1fr; gap:var(--s-2); } }
+.role__where { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track);
+               text-transform:uppercase; color:var(--w-accent); font-weight:600; margin:0; }
+.role h3 { font-size:17px; margin:0; }
+.role__blurb { font-size:var(--t-small); color:var(--rf-ink-dim); margin:var(--s-3) 0 0 calc(140px + var(--s-5)); max-width:64ch; }
+@media (max-width: 700px) { .role__blurb { margin-left:0; } }
 </style>
 </head>
 
@@ -59,7 +67,7 @@
         <h1>Candice Cantrelle</h1>
         <p class="plate__lede">I work across simulation, machine learning, software, research and design, and I treat that range as one practice rather than several careers.</p>
       </div>
-      <p class="stamp">Systems · Software · Simulation<br>Research · Design<br><b>26</b> projects registered<br>Portfolio rebuilt 2026</p>
+      <p class="stamp">Systems · Software · Simulation<br>Research · Design<br><b>25</b> projects registered<br>Portfolio rebuilt 2026</p>
     </div>
     <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
   </header>
@@ -141,9 +149,26 @@
     </div>
   </section>
 
+  <section class="doc" id="experience">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">03</span> Experience <span class="trail"></span></h2>
+      <article class="role">
+        <header class="role__head">
+          <p class="role__where">Remote, US</p>
+          <h3>Founder, independent AI automation studio</h3>
+        </header>
+        <p class="role__blurb">
+          I build workflow automation, AI agents, dashboards, and web and game builds.
+          Each one is a system with a trigger, a boundary on what it is allowed to do,
+          and an interface a person can read and change.
+        </p>
+      </article>
+    </div>
+  </section>
+
   <section class="doc" id="credentials">
     <div class="wrap">
-      <h2 class="sec-head"><span class="idx">03</span> Credentials <span class="trail"></span></h2>
+      <h2 class="sec-head"><span class="idx">04</span> Credentials <span class="trail"></span></h2>
       <p class="sec-hint">
         Thirteen certificate programmes across data science, AI engineering, full-stack
         development, security, UX, project management, engineering mathematics and game
@@ -155,7 +180,7 @@
 
   <section class="doc">
     <div class="wrap">
-      <h2 class="sec-head"><span class="idx">04</span> Contact <span class="trail"></span></h2>
+      <h2 class="sec-head"><span class="idx">05</span> Contact <span class="trail"></span></h2>
       <div class="contact-grid">
         <div class="contact-card"><h3>Email</h3>
           <a href="mailto:hello@candicecantrelle.com">hello@candicecantrelle.com</a></div>
@@ -171,7 +196,7 @@
 
   <section class="doc">
     <div class="wrap">
-      <h2 class="sec-head"><span class="idx">05</span> Colophon <span class="trail"></span></h2>
+      <h2 class="sec-head"><span class="idx">06</span> Colophon <span class="trail"></span></h2>
       <dl class="colophon" style="max-width:70ch">
         <dt>Build</dt>
         <dd>Static HTML, CSS and vanilla JavaScript served by GitHub Pages. No framework, no
